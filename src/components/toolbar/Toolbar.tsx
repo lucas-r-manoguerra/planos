@@ -22,7 +22,9 @@ import {
   Download,
   X,
   Ruler,
+  Sun,
 } from "lucide-react";
+import { useSunStore } from "@/stores/sun.store";
 
 export function Toolbar() {
   const { zoom, setZoom, toggleGrid, gridVisible } = useCanvasStore();
@@ -30,6 +32,7 @@ export function Toolbar() {
   const { selectedId, clearSelection } = useSelectionStore();
   const { undo, redo, canUndo, canRedo } = useHistoryStore();
   const { active: rulerActive, activate, deactivate, clearMeasurements, measurements } = useRulerStore();
+  const { enabled: sunEnabled, setEnabled: setSunEnabled } = useSunStore();
 
   const handleZoomIn = () => setZoom(Math.min(zoom * 1.2, ZOOM_MAX));
   const handleZoomOut = () => setZoom(Math.max(zoom / 1.2, ZOOM_MIN));
@@ -139,6 +142,17 @@ export function Toolbar() {
           </button>
         )}
       </div>
+
+      {/* Simulación solar */}
+      <button
+        onClick={() => setSunEnabled(!sunEnabled)}
+        className={`p-1.5 rounded ${sunEnabled ? "bg-amber-100 text-amber-700" : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"}`}
+        title={sunEnabled ? "Desactivar simulación solar" : "Activar simulación solar"}
+        aria-label={sunEnabled ? "Desactivar simulación solar" : "Activar simulación solar"}
+        aria-pressed={sunEnabled}
+      >
+        <Sun size={16} />
+      </button>
 
       {/* Info del terreno */}
       <div className="border-l border-gray-200 pl-2 text-gray-500 text-xs">

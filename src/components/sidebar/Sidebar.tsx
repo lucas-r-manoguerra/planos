@@ -9,6 +9,7 @@
 
 import { FloorList } from "./FloorList";
 import { TerrainSettings } from "./TerrainSettings";
+import { SunSettings } from "./SunSettings";
 import { TemplateList } from "./TemplateList";
 import { SurfaceInfo } from "./SurfaceInfo";
 import { RoomForm } from "./RoomForm";
@@ -67,6 +68,11 @@ export function Sidebar() {
         {/* Sección: Terreno */}
         <div className="px-4 py-3 border-b border-gray-100">
           <TerrainSettings />
+        </div>
+
+        {/* Sección: Simulación Solar */}
+        <div className="px-4 py-3 border-b border-gray-100">
+          <SunSettings />
         </div>
 
         {/* Sección: Superficie */}

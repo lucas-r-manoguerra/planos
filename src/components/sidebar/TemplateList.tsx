@@ -19,10 +19,6 @@ export function TemplateList() {
     const template = FLOOR_TEMPLATES.find((t) => t.id === templateId);
     if (!template) return;
 
-    if (!confirm(`¿Aplicar plantilla "${template.name}"? Se reemplazarán todas las habitaciones de esta planta.`)) {
-      return;
-    }
-
     const rooms = applyTemplate(template, terrain.width, terrain.height);
     applyFloorTemplate(rooms);
   };

@@ -4,7 +4,8 @@
  * Guarda y carga el estado completo del plano en localStorage
  */
 
-import { Floor, Terrain } from "@/types/plan";
+import { Floor, SunSettings, Terrain } from "@/types/plan";
+import { DEFAULT_SUN_SETTINGS } from "@/lib/constants";
 
 interface ProjectData {
   version: number;
@@ -12,11 +13,12 @@ interface ProjectData {
   terrain: Terrain;
   floors: Floor[];
   activeFloorId: string;
+  sunSettings: SunSettings;
   savedAt: string;
 }
 
 const STORAGE_KEY = "planos-project";
-const CURRENT_VERSION = 1;
+const CURRENT_VERSION = 2;
 
 // Guardar proyecto en localStorage
 export function saveProject(
@@ -38,8 +40,14 @@ export function loadProject(): ProjectData | null {
 
     const data = JSON.parse(raw) as ProjectData;
 
-    if (data.version < CURRENT_VERSION) {
-      // Migraciones futuras
+    // Migración v1 → v2: agregar northAt al terreno y sunSettings
+    if (data.version < 2) {
+      if (!data.terrain.northAt) {
+        data.terrain = { ...data.terrain, northAt: "top" };
+      }
+      if (!data.sunSettings) {
+        data.sunSettings = { ...DEFAULT_SUN_SETTINGS };
+      }
     }
 
     return data;

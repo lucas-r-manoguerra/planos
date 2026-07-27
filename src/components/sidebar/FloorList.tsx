@@ -11,12 +11,15 @@ import { useFloorsStore } from "@/stores/floors.store";
 import { Layers, Plus, Trash2, ChevronUp, ChevronDown } from "lucide-react";
 
 export function FloorList() {
-  const { floors, activeFloorId, setActiveFloor, addFloor, removeFloor, renameFloor, moveFloorUp, moveFloorDown } =
+  const { floors, activeFloorId, setActiveFloor, addFloor, removeFloor, renameFloor, moveFloorUp, moveFloorDown, setFloorLevel, levelError, clearLevelError } =
     useFloorsStore();
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const [editingLevelId, setEditingLevelId] = useState<string | null>(null);
+  const [levelEditValue, setLevelEditValue] = useState("");
+  const levelInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (editingId && inputRef.current) {
@@ -24,6 +27,13 @@ export function FloorList() {
       inputRef.current.select();
     }
   }, [editingId]);
+
+  useEffect(() => {
+    if (editingLevelId && levelInputRef.current) {
+      levelInputRef.current.focus();
+      levelInputRef.current.select();
+    }
+  }, [editingLevelId]);
 
   const startEditing = (floorId: string, currentName: string) => {
     setEditingId(floorId);
@@ -104,10 +114,58 @@ export function FloorList() {
                   : "border border-transparent hover:bg-gray-50 hover:border-gray-200"
               }`}
             >
-              {/* Nivel badge */}
-              <span className="shrink-0 text-[10px] font-medium text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">
-                Nivel {floor.level + 1}
-              </span>
+              {/* Nivel editable */}
+              {editingLevelId === floor.id ? (
+                <div className="shrink-0 relative">
+                  <input
+                    ref={levelInputRef}
+                    type="number"
+                    min={0}
+                    value={levelEditValue}
+                    onChange={(e) => setLevelEditValue(e.target.value)}
+                    onBlur={() => {
+                      const val = parseInt(levelEditValue, 10);
+                      if (!isNaN(val)) {
+                        setFloorLevel(floor.id, val);
+                      }
+                      setEditingLevelId(null);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        const val = parseInt(levelEditValue, 10);
+                        if (!isNaN(val)) {
+                          setFloorLevel(floor.id, val);
+                        }
+                        setEditingLevelId(null);
+                      }
+                      if (e.key === "Escape") {
+                        setEditingLevelId(null);
+                        clearLevelError();
+                      }
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="w-14 text-[10px] font-medium text-gray-900 bg-white border border-blue-300 rounded px-1 py-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  />
+                  {levelError && editingLevelId === floor.id && (
+                    <div className="absolute top-full left-0 mt-1 text-[10px] text-red-600 whitespace-nowrap z-10 bg-white border border-red-200 rounded px-1.5 py-0.5 shadow-sm">
+                      {levelError}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <span
+                  onDoubleClick={(e) => {
+                    e.stopPropagation();
+                    setEditingLevelId(floor.id);
+                    setLevelEditValue(String(floor.level));
+                    clearLevelError();
+                  }}
+                  className="shrink-0 text-[10px] font-medium text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded cursor-pointer hover:bg-gray-200 hover:text-gray-600 transition-colors"
+                  title="Doble clic para cambiar nivel"
+                >
+                  Nivel {floor.level + 1}
+                </span>
+              )}
 
               {/* Nombre editable */}
               <div className="flex-1 min-w-0">

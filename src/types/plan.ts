@@ -46,6 +46,25 @@ export interface Room {
   height: number;       // Alto en centímetros
   color?: string;       // Color personalizado de la habitación
   opacity?: number;     // 0 a 1, default 1
+  snapEnabled?: boolean; // Default: true. Magnetic snap to terrain edges and other rooms
+  wallWidth?: number;    // Pared en cm (default: 10). 0 = sin paredes
+  enclosed?: boolean;    // true = paredes en los 4 lados. false = abierto
+}
+
+// Configuración de ubicación geográfica
+export interface LocationSettings {
+  latitude: number;   // Latitud en grados decimales
+  longitude: number;  // Longitud en grados decimales
+  timezone: string;   // Zona horaria IANA (ej: "America/Argentina/Buenos_Aires")
+}
+
+// Configuración de simulación solar
+export interface SunSettings {
+  enabled: boolean;           // Si la simulación está activa
+  date: string;               // Fecha en formato YYYY-MM-DD
+  time: number;               // Hora solar en formato decimal (12.5 = 12:30)
+  location: LocationSettings; // Ubicación geográfica
+  floorHeight: number;        // Altura del piso en centímetros
 }
 
 // Interfaz para el terreno (área total disponible)
@@ -55,6 +74,7 @@ export interface Terrain {
   color: string;  // Color del terreno
   backgroundImage?: string; // URL de imagen de textura
   front: "top" | "bottom" | "left" | "right"; // Lado del frente (calle)
+  northAt: "top" | "bottom" | "left" | "right"; // Dirección del norte
 }
 
 // Interfaz para una planta del edificio

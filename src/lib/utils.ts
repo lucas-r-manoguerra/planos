@@ -78,7 +78,7 @@ export function clampPosition(
   snapDistance: number = 25,
   otherRooms: Room[] = []
 ): { x: number; y: number } {
-  // Permitir que se salga un poco para que el snap funcione
+  // Allow slight overflow for snap range
   const extendedMin = -snapDistance;
   const extendedMaxX = terrain.width - room.width + snapDistance;
   const extendedMaxY = terrain.height - room.height + snapDistance;
@@ -89,64 +89,152 @@ export function clampPosition(
   let snapX = rawX;
   let snapY = rawY;
 
-  // Magnetizar a bordes del terreno
+  // --- Terrain edge snapping: find CLOSEST edge ---
   const terrainEdgesX = [0, terrain.width - room.width];
   const terrainEdgesY = [0, terrain.height - room.height];
 
+  let bestDistX = snapDistance;
   for (const edge of terrainEdgesX) {
-    if (Math.abs(rawX - edge) < snapDistance) {
+    const dist = Math.abs(rawX - edge);
+    if (dist < bestDistX) {
+      bestDistX = dist;
       snapX = edge;
-      break;
     }
   }
 
+  let bestDistY = snapDistance;
   for (const edge of terrainEdgesY) {
-    if (Math.abs(rawY - edge) < snapDistance) {
+    const dist = Math.abs(rawY - edge);
+    if (dist < bestDistY) {
+      bestDistY = dist;
       snapY = edge;
-      break;
     }
   }
 
-  // Magnetizar a bordes de otras habitaciones
+  // --- Room-to-room edge snapping: find CLOSEST alignment ---
   for (const other of otherRooms) {
     if (other.id === room.id) continue;
 
-    const otherEdgesX = [
-      other.x,
-      other.x + other.width,
-    ];
+    // X axis
+    const otherEdgesX = [other.x, other.x + other.width];
     const roomEdgesX = [snapX, snapX + room.width];
+
+    let bestRoomEdgeIdx = -1;
+    let bestOtherEdgeX = 0;
+    let bestDistRoomX = snapDistance;
 
     for (const otherEdge of otherEdgesX) {
       for (let i = 0; i < roomEdgesX.length; i++) {
-        if (Math.abs(roomEdgesX[i] - otherEdge) < snapDistance) {
-          snapX = i === 0 ? otherEdge : otherEdge - room.width;
-          break;
+        const dist = Math.abs(roomEdgesX[i] - otherEdge);
+        if (dist < bestDistRoomX) {
+          bestDistRoomX = dist;
+          bestRoomEdgeIdx = i;
+          bestOtherEdgeX = otherEdge;
         }
       }
     }
 
-    const otherEdgesY = [
-      other.y,
-      other.y + other.height,
-    ];
+    if (bestRoomEdgeIdx !== -1) {
+      snapX = bestRoomEdgeIdx === 0 ? bestOtherEdgeX : bestOtherEdgeX - room.width;
+    }
+
+    // Y axis
+    const otherEdgesY = [other.y, other.y + other.height];
     const roomEdgesY = [snapY, snapY + room.height];
+
+    let bestRoomEdgeIdxY = -1;
+    let bestOtherEdgeY = 0;
+    let bestDistRoomY = snapDistance;
 
     for (const otherEdge of otherEdgesY) {
       for (let i = 0; i < roomEdgesY.length; i++) {
-        if (Math.abs(roomEdgesY[i] - otherEdge) < snapDistance) {
-          snapY = i === 0 ? otherEdge : otherEdge - room.height;
-          break;
+        const dist = Math.abs(roomEdgesY[i] - otherEdge);
+        if (dist < bestDistRoomY) {
+          bestDistRoomY = dist;
+          bestRoomEdgeIdxY = i;
+          bestOtherEdgeY = otherEdge;
         }
       }
     }
+
+    if (bestRoomEdgeIdxY !== -1) {
+      snapY = bestRoomEdgeIdxY === 0 ? bestOtherEdgeY : bestOtherEdgeY - room.height;
+    }
   }
 
-  // Finalmente, clamp dentro del terreno
+  // Final clamp within terrain bounds
   const finalX = Math.max(0, Math.min(snapX, terrain.width - room.width));
   const finalY = Math.max(0, Math.min(snapY, terrain.height - room.height));
 
   return { x: finalX, y: finalY };
+}
+
+/**
+ * Semi-magnetismo para fusión de paredes.
+ * Cuando dos habitaciones están a menos de `threshold` cm de compartir borde,
+ * alinea ese borde exactamente.
+ * Se aplica DESPUÉS del clampPosition principal.
+ */
+export function applyWallMergeSnap(
+  x: number,
+  y: number,
+  room: Room,
+  otherRooms: Room[],
+  threshold: number = 5
+): { x: number; y: number } {
+  let snapX = x;
+  let snapY = y;
+
+  for (const other of otherRooms) {
+    if (other.id === room.id) continue;
+
+    // --- Eje X: bordes verticales ---
+    const myEdgesX = [snapX, snapX + room.width];
+    const otherEdgesX = [other.x, other.x + other.width];
+
+    let bestDistX = threshold;
+    let bestSnapX = snapX;
+
+    for (const myEdge of myEdgesX) {
+      for (const otherEdge of otherEdgesX) {
+        const dist = Math.abs(myEdge - otherEdge);
+        if (dist < bestDistX) {
+          bestDistX = dist;
+          // Snap: move room so this edge aligns
+          const myEdgeIdx = myEdge === snapX ? 0 : 1;
+          bestSnapX = myEdgeIdx === 0 ? otherEdge : otherEdge - room.width;
+        }
+      }
+    }
+
+    if (bestDistX < threshold) {
+      snapX = bestSnapX;
+    }
+
+    // --- Eje Y: bordes horizontales ---
+    const myEdgesY = [snapY, snapY + room.height];
+    const otherEdgesY = [other.y, other.y + other.height];
+
+    let bestDistY = threshold;
+    let bestSnapY = snapY;
+
+    for (const myEdge of myEdgesY) {
+      for (const otherEdge of otherEdgesY) {
+        const dist = Math.abs(myEdge - otherEdge);
+        if (dist < bestDistY) {
+          bestDistY = dist;
+          const myEdgeIdx = myEdge === snapY ? 0 : 1;
+          bestSnapY = myEdgeIdx === 0 ? otherEdge : otherEdge - room.height;
+        }
+      }
+    }
+
+    if (bestDistY < threshold) {
+      snapY = bestSnapY;
+    }
+  }
+
+  return { x: snapX, y: snapY };
 }
 
 // Función debounce para optimizar eventos frecuentes

@@ -1,18 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { DEFAULT_TERRAIN } from "@/lib/constants";
 import { Terrain } from "@/types/plan";
 import { MapPin } from "lucide-react";
 
 export function TerrainSettings() {
   const { terrain, updateTerrain, setTerrainColor, setTerrainImage, setTerrainFront } = useTerrainStore();
 
-  const [widthMeters, setWidthMeters] = useState(DEFAULT_TERRAIN.width / 100);
-  const [heightMeters, setHeightMeters] = useState(DEFAULT_TERRAIN.height / 100);
+  const [widthMeters, setWidthMeters] = useState(terrain.width / 100);
+  const [heightMeters, setHeightMeters] = useState(terrain.height / 100);
+
+  useEffect(() => {
+    setWidthMeters(terrain.width / 100);
+    setHeightMeters(terrain.height / 100);
+  }, [terrain.width, terrain.height]);
   const [terrainColor, setTerrainColorLocal] = useState(terrain.color);
 
   const handleWidthChange = (value: string) => {

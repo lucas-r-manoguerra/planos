@@ -18,6 +18,7 @@ import { GridLayer } from "./GridLayer";
 import { TerrainLayer } from "./TerrainLayer";
 import { RoomLayer } from "./RoomLayer";
 import { MeasurementLayer } from "./MeasurementLayer";
+import { WallLayer } from "./WallLayer";
 import { CoordinateDisplay } from "./CoordinateDisplay";
 
 export function PlanCanvas() {
@@ -28,7 +29,7 @@ export function PlanCanvas() {
 
   const { zoom, panX, panY, smoothZoom, setPan } = useCanvasStore();
   const { terrain } = useTerrainStore();
-  const { active: rulerActive, pointA, setPointA, addMeasurement, deactivate } = useRulerStore();
+  const { active: rulerActive, pointA, setPointA, setPointerPos, addMeasurement, deactivate } = useRulerStore();
 
   useEffect(() => {
     const updateSize = () => {
@@ -72,9 +73,12 @@ export function PlanCanvas() {
         const x = Math.round((pos.x - panX) / zoom);
         const y = Math.round((pos.y - panY) / zoom);
         setCursorPos({ x, y });
+        if (rulerActive) {
+          setPointerPos(x, y);
+        }
       }
     },
-    [panX, panY, zoom],
+    [panX, panY, zoom, rulerActive, setPointerPos],
   );
 
   const handleContextMenu = useCallback(
@@ -138,6 +142,7 @@ export function PlanCanvas() {
           <GridLayer />
           <TerrainLayer />
           <RoomLayer />
+          <WallLayer />
           <MeasurementLayer />
         </Layer>
       </Stage>

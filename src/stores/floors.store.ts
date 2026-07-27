@@ -7,9 +7,10 @@
 
 import { create } from "zustand";
 import { Floor, Room } from "@/types/plan";
-import { generateId, snapToGrid, clampPosition } from "@/lib/utils";
-import { DEFAULT_TERRAIN, SNAP_THRESHOLD } from "@/lib/constants";
+import { generateId, snapToGrid, clampPosition, applyWallMergeSnap } from "@/lib/utils";
+import { SNAP_THRESHOLD } from "@/lib/constants";
 import { useHistoryStore } from "@/stores/history.store";
+import { useTerrainStore } from "@/stores/rooms.store";
 
 // Collision detection helpers
 function roomsOverlap(
@@ -60,6 +61,10 @@ interface FloorStore {
   floors: Floor[];
   activeFloorId: string;
 
+  levelError: string | null;
+  setFloorLevel: (id: string, level: number) => boolean;
+  clearLevelError: () => void;
+
   // Acciones de plantas
   addFloor: (name?: string) => void;
   removeFloor: (id: string) => void;
@@ -74,8 +79,11 @@ interface FloorStore {
   moveRoom: (id: string, x: number, y: number) => void;
   renameRoom: (id: string, label: string) => void;
   setRoomColor: (id: string, color: string) => void;
+  setRoomSnap: (id: string, enabled: boolean) => void;
   duplicateRoom: (id: string) => void;
   updateRoomDimensions: (id: string, width: number, height: number) => void;
+  setRoomWallWidth: (id: string, width: number) => void;
+  setRoomEnclosed: (id: string, enclosed: boolean) => void;
 
   applyFloorTemplate: (rooms: Room[]) => void;
 
@@ -97,15 +105,39 @@ export const useFloorsStore = create<FloorStore>((set, get) => {
   // Capturar estado actual antes de cada mutación
   const recordHistory = () => {
     const current = get();
+    const terrain = useTerrainStore.getState().terrain;
     useHistoryStore.getState().pushState({
       floors: current.floors,
       activeFloorId: current.activeFloorId,
+      terrain,
     });
   };
 
   return {
     floors: [defaultFloor],
     activeFloorId: defaultFloor.id,
+    levelError: null,
+
+    setFloorLevel: (id, level) => {
+      const state = get();
+      if (!Number.isInteger(level) || level < 0) {
+        set({ levelError: "El nivel debe ser un número entero ≥ 0" });
+        return false;
+      }
+      const duplicate = state.floors.find((f) => f.id !== id && f.level === level);
+      if (duplicate) {
+        set({ levelError: `Nivel ${level} ya está en uso por "${duplicate.name}"` });
+        return false;
+      }
+      recordHistory();
+      set({
+        floors: state.floors.map((f) => (f.id === id ? { ...f, level } : f)),
+        levelError: null,
+      });
+      return true;
+    },
+
+    clearLevelError: () => set({ levelError: null }),
 
     addFloor: (name) =>
       set((state) => {
@@ -152,12 +184,16 @@ export const useFloorsStore = create<FloorStore>((set, get) => {
         if (!activeFloor) return state;
 
         const id = generateId();
-        const centerX = (DEFAULT_TERRAIN.width - roomData.width) / 2;
-        const centerY = (DEFAULT_TERRAIN.height - roomData.height) / 2;
+        const { terrain } = useTerrainStore.getState();
+        const centerX = (terrain.width - roomData.width) / 2;
+        const centerY = (terrain.height - roomData.height) / 2;
 
         const newRoom: Room = {
           ...roomData,
           id,
+          snapEnabled: roomData.snapEnabled !== false,
+          wallWidth: roomData.wallWidth ?? 10,
+          enclosed: roomData.enclosed ?? true,
           x: snapToGrid(centerX, SNAP_THRESHOLD),
           y: snapToGrid(centerY, SNAP_THRESHOLD),
         };
@@ -194,23 +230,30 @@ export const useFloorsStore = create<FloorStore>((set, get) => {
         const room = activeFloor.rooms.find((r) => r.id === id);
         if (!room) return state;
 
-        const snappedX = snapToGrid(x, SNAP_THRESHOLD);
-        const snappedY = snapToGrid(y, SNAP_THRESHOLD);
-
-        const terrain = { width: DEFAULT_TERRAIN.width, height: DEFAULT_TERRAIN.height } as import("@/types/plan").Terrain;
-        const clamped = clampPosition(snappedX, snappedY, room, terrain, 25, activeFloor.rooms);
-
+        const terrain = useTerrainStore.getState().terrain;
         const otherRooms = activeFloor.rooms.filter((r) => r.id !== id);
-        let finalX = clamped.x;
-        let finalY = clamped.y;
+        const snapEnabled = room.snapEnabled !== false;
+        const clamped = snapEnabled
+          ? clampPosition(x, y, room, terrain, 25, otherRooms)
+          : { x: Math.max(0, Math.min(x, terrain.width - room.width)), y: Math.max(0, Math.min(y, terrain.height - room.height)) };
+
+        // Semi-magnetism for wall merging (5cm threshold)
+        // This runs even when snapEnabled is false — it's specifically for wall alignment
+        const wallMerged = applyWallMergeSnap(clamped.x, clamped.y, room, otherRooms, 5);
+
+        let finalX = wallMerged.x;
+        let finalY = wallMerged.y;
+
+        const snappedToEdgeX = finalX === 0 || finalX === terrain.width - room.width;
+        const snappedToEdgeY = finalY === 0 || finalY === terrain.height - room.height;
 
         const roomRect = { x: finalX, y: finalY, width: room.width, height: room.height };
 
         for (const other of otherRooms) {
           if (roomsOverlap(roomRect, other)) {
             const resolved = resolveCollision(roomRect, other, terrain);
-            finalX = resolved.x;
-            finalY = resolved.y;
+            if (!snappedToEdgeX) finalX = resolved.x;
+            if (!snappedToEdgeY) finalY = resolved.y;
             roomRect.x = finalX;
             roomRect.y = finalY;
           }
@@ -264,6 +307,23 @@ export const useFloorsStore = create<FloorStore>((set, get) => {
         };
       }),
 
+    setRoomSnap: (id, enabled) =>
+      set((state) => {
+        recordHistory();
+        return {
+          floors: state.floors.map((f) =>
+            f.id === state.activeFloorId
+              ? {
+                  ...f,
+                  rooms: f.rooms.map((r) =>
+                    r.id === id ? { ...r, snapEnabled: enabled } : r
+                  ),
+                }
+              : f
+          ),
+        };
+      }),
+
     duplicateRoom: (id) =>
       set((state) => {
         recordHistory();
@@ -302,6 +362,40 @@ export const useFloorsStore = create<FloorStore>((set, get) => {
                   ...f,
                   rooms: f.rooms.map((r) =>
                     r.id === id ? { ...r, width, height } : r
+                  ),
+                }
+              : f
+          ),
+        };
+      }),
+
+    setRoomWallWidth: (id, width) =>
+      set((state) => {
+        recordHistory();
+        return {
+          floors: state.floors.map((f) =>
+            f.id === state.activeFloorId
+              ? {
+                  ...f,
+                  rooms: f.rooms.map((r) =>
+                    r.id === id ? { ...r, wallWidth: width } : r
+                  ),
+                }
+              : f
+          ),
+        };
+      }),
+
+    setRoomEnclosed: (id, enclosed) =>
+      set((state) => {
+        recordHistory();
+        return {
+          floors: state.floors.map((f) =>
+            f.id === state.activeFloorId
+              ? {
+                  ...f,
+                  rooms: f.rooms.map((r) =>
+                    r.id === id ? { ...r, enclosed } : r
                   ),
                 }
               : f

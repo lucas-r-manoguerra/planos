@@ -8,23 +8,25 @@
 
 "use client";
 
+import { useRef } from "react";
 import { Group, Rect, Text } from "react-konva";
 import Konva from "konva";
 import { useFloorsStore } from "@/stores/floors.store";
-import { useTerrainStore } from "@/stores/rooms.store";
 import { useSelectionStore } from "@/stores/selection.store";
 import { Room } from "@/types/plan";
-import { formatDimensions, clampPosition } from "@/lib/utils";
+import { formatDimensions } from "@/lib/utils";
 import { ROOM_COLORS } from "@/lib/constants";
+
+const draggedRoomIdRef = { current: null as string | null };
 
 function RoomRect({ room }: { room: Room }) {
   const { moveRoom } = useFloorsStore();
-  const { terrain } = useTerrainStore();
   const { selectedId, select } = useSelectionStore();
   const isSelected = selectedId === room.id;
 
   const handleDragStart = (e: Konva.KonvaEventObject<DragEvent>) => {
     e.cancelBubble = true;
+    draggedRoomIdRef.current = room.id;
   };
 
   const handleDragMove = (e: Konva.KonvaEventObject<DragEvent>) => {
@@ -33,10 +35,10 @@ function RoomRect({ room }: { room: Room }) {
 
   const handleDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
     e.cancelBubble = true;
+    draggedRoomIdRef.current = null;
     const newX = e.target.x();
     const newY = e.target.y();
-    const clamped = clampPosition(newX, newY, room, terrain);
-    moveRoom(room.id, clamped.x, clamped.y);
+    moveRoom(room.id, newX, newY);
   };
 
   const handleClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
@@ -54,10 +56,16 @@ function RoomRect({ room }: { room: Room }) {
     e.target.getStage()?.container().dispatchEvent(event);
   };
 
+  // During active drag, DON'T set x/y via props — Konva manages position internally
+  // This prevents React re-renders from resetting the drag position
+  const isDragging = draggedRoomIdRef.current === room.id;
+  const posX = isDragging ? undefined : room.x;
+  const posY = isDragging ? undefined : room.y;
+
   return (
     <Group
-      x={room.x}
-      y={room.y}
+      x={posX}
+      y={posY}
       draggable
       onDragStart={handleDragStart}
       onDragMove={handleDragMove}

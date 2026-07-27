@@ -14,7 +14,7 @@ import { X, GripHorizontal } from "lucide-react";
 
 export function PropertiesPanel() {
   const { isOpen, roomId, x, y, closePanel, setPosition } = usePanelStore();
-  const { floors, activeFloorId, renameRoom, setRoomColor, updateRoomDimensions } = useFloorsStore();
+  const { floors, activeFloorId, renameRoom, setRoomColor, updateRoomDimensions, setRoomSnap, setRoomWallWidth, setRoomEnclosed } = useFloorsStore();
   const panelRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<{ startX: number; startY: number; panelX: number; panelY: number } | null>(null);
 
@@ -197,6 +197,99 @@ export function PropertiesPanel() {
             />
             <span className="text-xs text-gray-500 font-mono">{room.color || "#e8f4e8"}</span>
           </div>
+        </div>
+
+        {/* Magnetismo */}
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-gray-500">Magnetismo</label>
+          <button
+            onClick={() => setRoomSnap(room.id, room.snapEnabled === false)}
+            className={`w-full flex items-center justify-between px-3 py-2 rounded-md border transition-colors ${
+              room.snapEnabled !== false
+                ? "bg-blue-50 border-blue-200 text-blue-700"
+                : "bg-gray-50 border-gray-200 text-gray-500"
+            }`}
+            role="switch"
+            aria-checked={room.snapEnabled !== false}
+            aria-label={`Magnetismo ${room.snapEnabled !== false ? "activado" : "desactivado"} para ${room.label}`}
+          >
+            <span className="text-sm">
+              {room.snapEnabled !== false ? "Activado" : "Desactivado"}
+            </span>
+            <div
+              className={`w-9 h-5 rounded-full transition-colors relative ${
+                room.snapEnabled !== false ? "bg-blue-500" : "bg-gray-300"
+              }`}
+            >
+              <div
+                className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${
+                  room.snapEnabled !== false ? "translate-x-4" : "translate-x-0.5"
+                }`}
+              />
+            </div>
+          </button>
+          <p className="text-[10px] text-gray-400">
+            Alineación magnética a bordes del terreno y otras habitaciones
+          </p>
+        </div>
+
+        {/* Paredes */}
+        <div className="space-y-2">
+          <label className="text-xs font-medium text-gray-500">Paredes</label>
+
+          {/* Enclosed toggle */}
+          <button
+            onClick={() => setRoomEnclosed(room.id, room.enclosed === false)}
+            className={`w-full flex items-center justify-between px-3 py-2 rounded-md border transition-colors ${
+              room.enclosed !== false
+                ? "bg-blue-50 border-blue-200 text-blue-700"
+                : "bg-gray-50 border-gray-200 text-gray-500"
+            }`}
+            role="switch"
+            aria-checked={room.enclosed !== false}
+            aria-label={`Paredes ${room.enclosed !== false ? "encerradas" : "abiertas"} para ${room.label}`}
+          >
+            <span className="text-sm">
+              {room.enclosed !== false ? "Encerrada (4 paredes)" : "Abierta"}
+            </span>
+            <div
+              className={`w-9 h-5 rounded-full transition-colors relative ${
+                room.enclosed !== false ? "bg-blue-500" : "bg-gray-300"
+              }`}
+            >
+              <div
+                className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${
+                  room.enclosed !== false ? "translate-x-4" : "translate-x-0.5"
+                }`}
+              />
+            </div>
+          </button>
+
+          {/* Wall width */}
+          <div className="space-y-1">
+            <label className="text-[10px] text-gray-400">Ancho de pared (cm)</label>
+            <input
+              type="number"
+              value={room.wallWidth ?? 10}
+              min={0}
+              max={50}
+              step={1}
+              onChange={(e) => {
+                const w = parseInt(e.target.value) || 0;
+                setRoomWallWidth(room.id, Math.max(0, Math.min(50, w)));
+              }}
+              className="w-full text-sm text-gray-900 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <div className="text-[10px] text-gray-400">
+              {(room.wallWidth ?? 10) > 0
+                ? `= ${((room.wallWidth ?? 10) / 100).toFixed(2)}m`
+                : "Sin paredes"}
+            </div>
+          </div>
+
+          <p className="text-[10px] text-gray-400">
+            Las paredes de habitaciones adyacentes se fusionan automáticamente
+          </p>
         </div>
       </div>
     </div>

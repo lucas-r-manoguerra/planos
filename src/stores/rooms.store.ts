@@ -7,6 +7,8 @@
 import { create } from "zustand";
 import { Terrain } from "@/types/plan";
 import { DEFAULT_TERRAIN } from "@/lib/constants";
+import { useHistoryStore } from "@/stores/history.store";
+import { useFloorsStore } from "@/stores/floors.store";
 
 interface TerrainStore {
   terrain: Terrain;
@@ -14,21 +16,47 @@ interface TerrainStore {
   setTerrainColor: (color: string) => void;
   setTerrainImage: (image: string | undefined) => void;
   setTerrainFront: (front: Terrain["front"]) => void;
+  setTerrainNorth: (northAt: Terrain["northAt"]) => void;
 }
 
-export const useTerrainStore = create<TerrainStore>((set) => ({
-  terrain: {
-    width: DEFAULT_TERRAIN.width,
-    height: DEFAULT_TERRAIN.height,
-    color: "#4ade80",
-    front: "bottom",
-  },
-  updateTerrain: (width, height) =>
-    set((state) => ({ terrain: { ...state.terrain, width, height } })),
-  setTerrainColor: (color) =>
-    set((state) => ({ terrain: { ...state.terrain, color } })),
-  setTerrainImage: (image) =>
-    set((state) => ({ terrain: { ...state.terrain, backgroundImage: image } })),
-  setTerrainFront: (front) =>
-    set((state) => ({ terrain: { ...state.terrain, front } })),
-}));
+export const useTerrainStore = create<TerrainStore>((set, get) => {
+  const recordHistory = () => {
+    const current = get();
+    const { floors, activeFloorId } = useFloorsStore.getState();
+    useHistoryStore.getState().pushState({
+      floors,
+      activeFloorId,
+      terrain: current.terrain,
+    });
+  };
+
+  return {
+    terrain: {
+      width: DEFAULT_TERRAIN.width,
+      height: DEFAULT_TERRAIN.height,
+      color: "#4ade80",
+      front: "bottom",
+      northAt: "top",
+    },
+    updateTerrain: (width, height) => {
+      recordHistory();
+      set((state) => ({ terrain: { ...state.terrain, width, height } }));
+    },
+    setTerrainColor: (color) => {
+      recordHistory();
+      set((state) => ({ terrain: { ...state.terrain, color } }));
+    },
+    setTerrainImage: (image) => {
+      recordHistory();
+      set((state) => ({ terrain: { ...state.terrain, backgroundImage: image } }));
+    },
+    setTerrainFront: (front) => {
+      recordHistory();
+      set((state) => ({ terrain: { ...state.terrain, front } }));
+    },
+    setTerrainNorth: (northAt) => {
+      recordHistory();
+      set((state) => ({ terrain: { ...state.terrain, northAt } }));
+    },
+  };
+});

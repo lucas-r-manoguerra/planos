@@ -13,9 +13,11 @@ import { PlanCanvas } from "@/components/canvas/PlanCanvas";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useHistoryStore } from "@/stores/history.store";
 import { useTerrainStore } from "@/stores/rooms.store";
+import { useSunStore } from "@/stores/sun.store";
 import { useContextMenuStore } from "@/stores/context-menu.store";
 import { usePanelStore } from "@/stores/panel.store";
 import { useCanvasStore } from "@/stores/canvas.store";
+import { useSelectionStore } from "@/stores/selection.store";
 import { saveProject, loadProject } from "@/lib/storage";
 import { Room } from "@/types/plan";
 
@@ -33,6 +35,15 @@ export default function Home() {
       useTerrainStore.setState({
         terrain: saved.terrain,
       });
+      if (saved.sunSettings) {
+        useSunStore.setState({
+          enabled: saved.sunSettings.enabled,
+          date: saved.sunSettings.date,
+          time: saved.sunSettings.time,
+          location: saved.sunSettings.location,
+          floorHeight: saved.sunSettings.floorHeight,
+        });
+      }
     }
   }, []);
 
@@ -41,11 +52,19 @@ export default function Home() {
     const interval = setInterval(() => {
       const { floors, activeFloorId } = useFloorsStore.getState();
       const { terrain } = useTerrainStore.getState();
+      const sunSettings = useSunStore.getState();
       saveProject({
         name: "Mi Plano",
         terrain,
         floors,
         activeFloorId,
+        sunSettings: {
+          enabled: sunSettings.enabled,
+          date: sunSettings.date,
+          time: sunSettings.time,
+          location: sunSettings.location,
+          floorHeight: sunSettings.floorHeight,
+        },
       });
     }, 30000);
 
@@ -57,11 +76,19 @@ export default function Home() {
     const handleBeforeUnload = () => {
       const { floors, activeFloorId } = useFloorsStore.getState();
       const { terrain } = useTerrainStore.getState();
+      const sunSettings = useSunStore.getState();
       saveProject({
         name: "Mi Plano",
         terrain,
         floors,
         activeFloorId,
+        sunSettings: {
+          enabled: sunSettings.enabled,
+          date: sunSettings.date,
+          time: sunSettings.time,
+          location: sunSettings.location,
+          floorHeight: sunSettings.floorHeight,
+        },
       });
     };
 
@@ -80,6 +107,9 @@ export default function Home() {
             floors: restored.floors,
             activeFloorId: restored.activeFloorId,
           });
+          if (restored.terrain) {
+            useTerrainStore.setState({ terrain: restored.terrain });
+          }
         }
       }
       if ((e.ctrlKey || e.metaKey) && e.key === "z" && e.shiftKey) {
@@ -90,6 +120,17 @@ export default function Home() {
             floors: restored.floors,
             activeFloorId: restored.activeFloorId,
           });
+          if (restored.terrain) {
+            useTerrainStore.setState({ terrain: restored.terrain });
+          }
+        }
+      }
+      if (e.key === "Delete" || e.key === "Backspace") {
+        if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+        const { selectedId, clearSelection } = useSelectionStore.getState();
+        if (selectedId) {
+          useFloorsStore.getState().removeRoom(selectedId);
+          clearSelection();
         }
       }
     };
@@ -121,10 +162,10 @@ export default function Home() {
         {
           label: "Renombrar",
           action: () => {
-            const newName = prompt("Nuevo nombre:", room.label);
-            if (newName && newName.trim()) {
-              useFloorsStore.getState().renameRoom(room.id, newName.trim());
-            }
+            const { floors, activeFloorId } = useFloorsStore.getState();
+            const floor = floors.find((f) => f.id === activeFloorId);
+            const roomData = floor?.rooms.find((r) => r.id === room.id);
+            usePanelStore.getState().openPanel(room.id, roomData?.x ?? 100, roomData?.y ?? 100);
           },
         },
         {
@@ -149,15 +190,10 @@ export default function Home() {
         {
           label: "Editar dimensiones",
           action: () => {
-            const w = prompt("Ancho (cm):", String(room.width));
-            const h = prompt("Alto (cm):", String(room.height));
-            if (w && h) {
-              const width = parseInt(w);
-              const height = parseInt(h);
-              if (width > 0 && height > 0) {
-                useFloorsStore.getState().updateRoomDimensions(room.id, width, height);
-              }
-            }
+            const { floors, activeFloorId } = useFloorsStore.getState();
+            const floor = floors.find((f) => f.id === activeFloorId);
+            const roomData = floor?.rooms.find((r) => r.id === room.id);
+            usePanelStore.getState().openPanel(room.id, roomData?.x ?? 100, roomData?.y ?? 100);
           },
         },
         { label: "", divider: true },
@@ -165,9 +201,7 @@ export default function Home() {
           label: "Eliminar",
           danger: true,
           action: () => {
-            if (confirm(`¿Eliminar "${room.label}"?`)) {
-              useFloorsStore.getState().removeRoom(room.id);
-            }
+            useFloorsStore.getState().removeRoom(room.id);
           },
         },
       ];

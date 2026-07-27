@@ -52,7 +52,14 @@ function MeasurementLine({ x1, y1, x2, y2 }: { x1: number; y1: number; x2: numbe
 }
 
 export function MeasurementLayer() {
-  const { active, pointA, measurements } = useRulerStore();
+  const { active, pointA, pointerPos, measurements } = useRulerStore();
+
+  const previewDx = pointerPos && pointA ? pointerPos.x - pointA.x : 0;
+  const previewDy = pointerPos && pointA ? pointerPos.y - pointA.y : 0;
+  const previewDistanceCm = Math.round(Math.sqrt(previewDx * previewDx + previewDy * previewDy));
+  const previewDistanceM = (previewDistanceCm / 100).toFixed(2);
+  const previewMidX = pointA && pointerPos ? (pointA.x + pointerPos.x) / 2 : 0;
+  const previewMidY = pointA && pointerPos ? (pointA.y + pointerPos.y) / 2 : 0;
 
   return (
     <>
@@ -60,7 +67,30 @@ export function MeasurementLayer() {
         <MeasurementLine key={m.id} x1={m.x1} y1={m.y1} x2={m.x2} y2={m.y2} />
       ))}
 
-      {active && pointA && (
+      {active && pointA && pointerPos && (
+        <Group>
+          <Line
+            points={[pointA.x, pointA.y, pointerPos.x, pointerPos.y]}
+            stroke="#3b82f6"
+            strokeWidth={1.5}
+            dash={[8, 4]}
+          />
+          <Text
+            x={previewMidX}
+            y={previewMidY - 14}
+            text={`${previewDistanceM} m`}
+            fontSize={11}
+            fontFamily="monospace"
+            fill="#3b82f6"
+            fontStyle="bold"
+            width={80}
+            align="center"
+            offsetX={40}
+          />
+        </Group>
+      )}
+
+      {active && pointA && !pointerPos && (
         <Circle
           x={pointA.x}
           y={pointA.y}

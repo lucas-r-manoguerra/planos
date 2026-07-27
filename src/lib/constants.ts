@@ -4,7 +4,7 @@
  * Unidades: todas las medidas están en centímetros (cm)
  */
 
-import { RoomType } from "@/types/plan";
+import { RoomType, SunSettings } from "@/types/plan";
 
 // Dimensiones por defecto del terreno: 10m x 8m = 1000cm x 800cm
 export const DEFAULT_TERRAIN = {
@@ -51,3 +51,16 @@ export const KEYBOARD_SHORTCUTS = {
   zoomOut: ["Meta+-", "Control+-"],
   zoomReset: ["Meta+0", "Control+0"],
 } as const;
+
+// Configuración por defecto de la simulación solar
+export const DEFAULT_SUN_SETTINGS: SunSettings = {
+  enabled: false,
+  date: new Date().toISOString().split("T")[0],
+  time: 12,
+  location: {
+    latitude: -32.05,
+    longitude: -59.25,
+    timezone: "America/Argentina/Buenos_Aires",
+  },
+  floorHeight: 280, // 2.80 m en centímetros
+};

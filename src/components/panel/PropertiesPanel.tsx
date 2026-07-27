@@ -1,0 +1,204 @@
+/**
+ * Panel flotante de propiedades de habitación
+ *
+ * Se abre al seleccionar "Propiedades" desde el menú contextual.
+ * Se puede arrastrar por la pantalla y se cierra con X o click fuera.
+ */
+
+"use client";
+
+import { useRef, useEffect, useCallback } from "react";
+import { usePanelStore } from "@/stores/panel.store";
+import { useFloorsStore } from "@/stores/floors.store";
+import { X, GripHorizontal } from "lucide-react";
+
+export function PropertiesPanel() {
+  const { isOpen, roomId, x, y, closePanel, setPosition } = usePanelStore();
+  const { floors, activeFloorId, renameRoom, setRoomColor, updateRoomDimensions } = useFloorsStore();
+  const panelRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<{ startX: number; startY: number; panelX: number; panelY: number } | null>(null);
+
+  // Find the room
+  const activeFloor = floors.find((f) => f.id === activeFloorId);
+  const room = activeFloor?.rooms.find((r) => r.id === roomId);
+
+  // Close on click outside
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleMouseDown = (e: MouseEvent) => {
+      if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
+        closePanel();
+      }
+    };
+
+    // Delay to avoid closing immediately from the right-click that opened it
+    const timer = setTimeout(() => {
+      document.addEventListener("mousedown", handleMouseDown);
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("mousedown", handleMouseDown);
+    };
+  }, [isOpen, closePanel]);
+
+  // Close on Escape
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closePanel();
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, closePanel]);
+
+  // Drag handling
+  const handleDragStart = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      dragRef.current = { startX: e.clientX, startY: e.clientY, panelX: x, panelY: y };
+
+      const handleDragMove = (moveEvent: MouseEvent) => {
+        if (!dragRef.current) return;
+        const dx = moveEvent.clientX - dragRef.current.startX;
+        const dy = moveEvent.clientY - dragRef.current.startY;
+        setPosition(dragRef.current.panelX + dx, dragRef.current.panelY + dy);
+      };
+
+      const handleDragEnd = () => {
+        dragRef.current = null;
+        document.removeEventListener("mousemove", handleDragMove);
+        document.removeEventListener("mouseup", handleDragEnd);
+      };
+
+      document.addEventListener("mousemove", handleDragMove);
+      document.addEventListener("mouseup", handleDragEnd);
+    },
+    [x, y, setPosition]
+  );
+
+  if (!isOpen || !room) return null;
+
+  return (
+    <div
+      ref={panelRef}
+      className="fixed z-50 bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col"
+      style={{ left: x, top: y, width: 320 }}
+      role="dialog"
+      aria-label={`Propiedades de ${room.label}`}
+    >
+      {/* Header — draggable */}
+      <div
+        onMouseDown={handleDragStart}
+        className="flex items-center justify-between px-4 py-3 border-b border-gray-100 cursor-grab active:cursor-grabbing rounded-t-xl bg-gray-50"
+      >
+        <div className="flex items-center gap-2">
+          <GripHorizontal size={14} className="text-gray-400" aria-hidden="true" />
+          <span className="text-sm font-semibold text-gray-800">Propiedades</span>
+        </div>
+        <button
+          onClick={closePanel}
+          className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-200 rounded transition-colors"
+          aria-label="Cerrar panel de propiedades"
+        >
+          <X size={16} />
+        </button>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {/* Nombre */}
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-gray-500">Nombre</label>
+          <input
+            type="text"
+            value={room.label}
+            onChange={(e) => renameRoom(room.id, e.target.value)}
+            className="w-full text-sm text-gray-900 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        {/* Tipo */}
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-gray-500">Tipo</label>
+          <div className="text-sm text-gray-700 bg-gray-50 rounded-md px-3 py-1.5 border border-gray-200">
+            {room.type}
+          </div>
+        </div>
+
+        {/* Dimensiones */}
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-gray-500">Dimensiones (cm)</label>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="text-[10px] text-gray-400">Ancho</label>
+              <input
+                type="number"
+                value={room.width}
+                min={50}
+                onChange={(e) => {
+                  const w = parseInt(e.target.value) || 50;
+                  updateRoomDimensions(room.id, w, room.height);
+                }}
+                className="w-full text-sm text-gray-900 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="text-[10px] text-gray-400">Alto</label>
+              <input
+                type="number"
+                value={room.height}
+                min={50}
+                onChange={(e) => {
+                  const h = parseInt(e.target.value) || 50;
+                  updateRoomDimensions(room.id, room.width, h);
+                }}
+                className="w-full text-sm text-gray-900 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+          <div className="text-xs text-gray-400">
+            = {((room.width * room.height) / 10000).toFixed(1)} m²
+          </div>
+        </div>
+
+        {/* Posición */}
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-gray-500">Posición (cm)</label>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="text-[10px] text-gray-400">X</label>
+              <div className="text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-md px-2 py-1">
+                {Math.round(room.x)}
+              </div>
+            </div>
+            <div>
+              <label className="text-[10px] text-gray-400">Y</label>
+              <div className="text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-md px-2 py-1">
+                {Math.round(room.y)}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Color */}
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-gray-500">Color</label>
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              value={room.color || "#e8f4e8"}
+              onChange={(e) => setRoomColor(room.id, e.target.value)}
+              className="h-8 w-10 rounded border border-gray-300 cursor-pointer"
+              aria-label="Color de la habitación"
+            />
+            <span className="text-xs text-gray-500 font-mono">{room.color || "#e8f4e8"}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

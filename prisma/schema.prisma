@@ -1,0 +1,81 @@
+// Esquema Prisma para el proyecto Planos
+// Visualizador de planos de construcción para normativa argentina
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Proyecto de construcción - contiene todos los planos
+model Project {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  floors Floor[]
+  
+  @@map("projects")
+}
+
+// Planta del edificio (planta baja, primer piso, etc.)
+model Floor {
+  id        String  @id @default(uuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  level     Int     @default(0)  // Nivel de la planta (0 = planta baja)
+  order     Int     @default(0)  // Orden de visualización
+  
+  rooms Room[]
+  walls Wall[]
+  
+  @@map("floors")
+}
+
+// Habitación o ambiente del plano
+model Room {
+  id      String  @id @default(uuid())
+  floorId String
+  floor   Floor   @relation(fields: [floorId], references: [id], onDelete: Cascade)
+  label   String  // Nombre de la habitación (ej: "Dormitorio 1")
+  type    String  // Tipo de habitación (Dormitorio, Cocina, Baño, etc.)
+  x       Int     // Posición X en centímetros desde origen del terreno
+  y       Int     // Posición Y en centímetros desde origen del terreno
+  width   Int     // Ancho en centímetros
+  height  Int     // Alto en centímetros
+  
+  fixtures Fixture[]
+  
+  @@map("rooms")
+}
+
+// Pared o muro divisiorio
+model Wall {
+  id      String  @id @default(uuid())
+  floorId String
+  floor   Floor   @relation(fields: [floorId], references: [id], onDelete: Cascade)
+  startX  Int     // Punto inicial X en centímetros
+  startY  Int     // Punto inicial Y en centímetros
+  endX    Int     // Punto final X en centímetros
+  endY    Int     // Punto final Y en centímetros
+  
+  @@map("walls")
+}
+
+// Elemento fijo: puerta, ventana, mueble, etc.
+model Fixture {
+  id      String  @id @default(uuid())
+  roomId  String
+  room    Room    @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  type    String  // Tipo de fixture (puerta, ventana, mueble, etc.)
+  x       Int     // Posición X en centímetros
+  y       Int     // Posición Y en centímetros
+  width   Int     // Ancho en centímetros
+  height  Int     // Alto en centímetros
+  
+  @@map("fixtures")
+}

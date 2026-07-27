@@ -1,65 +1,273 @@
-import Image from "next/image";
+/**
+ * Página principal del editor de planos
+ * 
+ * Compone la interfaz completa: toolbar, sidebar con herramientas y plantas, canvas interactivo
+ */
+
+"use client";
+
+import { useEffect } from "react";
+import { Toolbar } from "@/components/toolbar/Toolbar";
+import { Sidebar } from "@/components/sidebar/Sidebar";
+import { PlanCanvas } from "@/components/canvas/PlanCanvas";
+import { useFloorsStore } from "@/stores/floors.store";
+import { useHistoryStore } from "@/stores/history.store";
+import { useTerrainStore } from "@/stores/rooms.store";
+import { useContextMenuStore } from "@/stores/context-menu.store";
+import { usePanelStore } from "@/stores/panel.store";
+import { useCanvasStore } from "@/stores/canvas.store";
+import { saveProject, loadProject } from "@/lib/storage";
+import { Room } from "@/types/plan";
 
 export default function Home() {
+  const show = useContextMenuStore((s) => s.show);
+
+  // Cargar proyecto al iniciar
+  useEffect(() => {
+    const saved = loadProject();
+    if (saved) {
+      useFloorsStore.setState({
+        floors: saved.floors,
+        activeFloorId: saved.activeFloorId,
+      });
+      useTerrainStore.setState({
+        terrain: saved.terrain,
+      });
+    }
+  }, []);
+
+  // Auto-guardar cada 30 segundos
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const { floors, activeFloorId } = useFloorsStore.getState();
+      const { terrain } = useTerrainStore.getState();
+      saveProject({
+        name: "Mi Plano",
+        terrain,
+        floors,
+        activeFloorId,
+      });
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Guardar antes de cerrar
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      const { floors, activeFloorId } = useFloorsStore.getState();
+      const { terrain } = useTerrainStore.getState();
+      saveProject({
+        name: "Mi Plano",
+        terrain,
+        floors,
+        activeFloorId,
+      });
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, []);
+
+  // Atajos de teclado
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "z" && !e.shiftKey) {
+        e.preventDefault();
+        const restored = useHistoryStore.getState().undo();
+        if (restored) {
+          useFloorsStore.setState({
+            floors: restored.floors,
+            activeFloorId: restored.activeFloorId,
+          });
+        }
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === "z" && e.shiftKey) {
+        e.preventDefault();
+        const restored = useHistoryStore.getState().redo();
+        if (restored) {
+          useFloorsStore.setState({
+            floors: restored.floors,
+            activeFloorId: restored.activeFloorId,
+          });
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  // Context menu handlers
+  useEffect(() => {
+    const handleRoomContext = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const { room, clientX, clientY } = customEvent.detail as {
+        room: Room;
+        clientX: number;
+        clientY: number;
+      };
+
+      const items = [
+        { label: `${room.label}`, disabled: true },
+        {
+          label: "Propiedades",
+          action: () => {
+            const panelStore = usePanelStore.getState();
+            panelStore.openPanel(room.id, clientX + 10, clientY + 10);
+          },
+        },
+        { label: "", divider: true },
+        {
+          label: "Renombrar",
+          action: () => {
+            const newName = prompt("Nuevo nombre:", room.label);
+            if (newName && newName.trim()) {
+              useFloorsStore.getState().renameRoom(room.id, newName.trim());
+            }
+          },
+        },
+        {
+          label: "Cambiar color",
+          action: () => {
+            const input = document.createElement("input");
+            input.type = "color";
+            input.value = room.color || "#e8f4e8";
+            input.addEventListener("change", (ev) => {
+              useFloorsStore
+                .getState()
+                .setRoomColor(room.id, (ev.target as HTMLInputElement).value);
+            });
+            input.click();
+          },
+        },
+        {
+          label: "Duplicar",
+          action: () => useFloorsStore.getState().duplicateRoom(room.id),
+        },
+        { label: "", divider: true },
+        {
+          label: "Editar dimensiones",
+          action: () => {
+            const w = prompt("Ancho (cm):", String(room.width));
+            const h = prompt("Alto (cm):", String(room.height));
+            if (w && h) {
+              const width = parseInt(w);
+              const height = parseInt(h);
+              if (width > 0 && height > 0) {
+                useFloorsStore.getState().updateRoomDimensions(room.id, width, height);
+              }
+            }
+          },
+        },
+        { label: "", divider: true },
+        {
+          label: "Eliminar",
+          danger: true,
+          action: () => {
+            if (confirm(`¿Eliminar "${room.label}"?`)) {
+              useFloorsStore.getState().removeRoom(room.id);
+            }
+          },
+        },
+      ];
+      show(clientX, clientY, items);
+    };
+
+    const handleTerrainContext = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const { clientX, clientY } = customEvent.detail;
+
+      const items = [
+        { label: "Terreno", disabled: true },
+        { label: "", divider: true },
+        {
+          label: "Cambiar color",
+          action: () => {
+            const input = document.createElement("input");
+            input.type = "color";
+            input.value = useTerrainStore.getState().terrain.color;
+            input.addEventListener("change", (ev) => {
+              useTerrainStore
+                .getState()
+                .setTerrainColor((ev.target as HTMLInputElement).value);
+            });
+            input.click();
+          },
+        },
+        {
+          label: "Agregar textura",
+          action: () => {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = "image/*";
+            input.addEventListener("change", (ev) => {
+              const file = (ev.target as HTMLInputElement).files?.[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                  useTerrainStore
+                    .getState()
+                    .setTerrainImage(event.target?.result as string);
+                };
+                reader.readAsDataURL(file);
+              }
+            });
+            input.click();
+          },
+        },
+        {
+          label: "Quitar textura",
+          action: () => useTerrainStore.getState().setTerrainImage(undefined),
+        },
+        {
+          label: "Definir frente",
+          action: () => {
+            const current = useTerrainStore.getState().terrain.front;
+            const options = ["top", "bottom", "left", "right"] as const;
+            const nextIndex = (options.indexOf(current) + 1) % options.length;
+            useTerrainStore.getState().setTerrainFront(options[nextIndex]);
+          },
+        },
+        { label: "", divider: true },
+        {
+          label: "Agregar habitacion",
+          action: () => document.getElementById("room-label")?.focus(),
+        },
+      ];
+      show(clientX, clientY, items);
+    };
+
+    const handleEmptyContext = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const { clientX, clientY } = customEvent.detail;
+      const items = [
+        { label: "Agregar habitacion", action: () => document.getElementById("room-label")?.focus() },
+        { label: "Centrar terreno", action: () => { useCanvasStore.getState().setPan(0, 0); useCanvasStore.getState().setZoom(1); } },
+        { label: "", divider: true },
+        { label: "Ver grilla", action: () => useCanvasStore.getState().toggleGrid() },
+      ];
+      show(clientX, clientY, items);
+    };
+
+    window.addEventListener("room-contextmenu", handleRoomContext);
+    window.addEventListener("terrain-contextmenu", handleTerrainContext);
+    window.addEventListener("canvas-empty-contextmenu", handleEmptyContext);
+
+    return () => {
+      window.removeEventListener("room-contextmenu", handleRoomContext);
+      window.removeEventListener("terrain-contextmenu", handleTerrainContext);
+      window.removeEventListener("canvas-empty-contextmenu", handleEmptyContext);
+    };
+  }, [show]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="flex flex-col h-screen">
+      <Toolbar />
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar />
+        <PlanCanvas />
+      </div>
     </div>
   );
 }

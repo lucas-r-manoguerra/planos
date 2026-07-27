@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: planos-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: planos
+      POSTGRES_PASSWORD: planos
+      POSTGRES_DB: planos
+    volumes:
+      - planos-pgdata:/var/lib/postgresql/data
+
+volumes:
+  planos-pgdata:

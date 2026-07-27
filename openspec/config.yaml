@@ -1,0 +1,7 @@
+version: "1.0"
+project: planos
+artifact_store: openspec
+execution_mode: auto
+delivery_strategy: auto_chain
+review_budget_lines: 800
+chain_strategy: feature-branch-chain

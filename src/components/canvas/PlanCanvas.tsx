@@ -16,9 +16,12 @@ import { useTerrainStore } from "@/stores/rooms.store";
 import { useRulerStore } from "@/stores/ruler.store";
 import { GridLayer } from "./GridLayer";
 import { TerrainLayer } from "./TerrainLayer";
+import { ShadowLayer } from "./ShadowLayer";
 import { RoomLayer } from "./RoomLayer";
-import { MeasurementLayer } from "./MeasurementLayer";
 import { WallLayer } from "./WallLayer";
+import { MeasurementLayer } from "./MeasurementLayer";
+import { SunArcLayer } from "./SunArcLayer";
+import { NorthArrowLayer } from "./NorthArrowLayer";
 import { CoordinateDisplay } from "./CoordinateDisplay";
 
 export function PlanCanvas() {
@@ -141,9 +144,12 @@ export function PlanCanvas() {
         <Layer>
           <GridLayer />
           <TerrainLayer />
+          <ShadowLayer />
           <RoomLayer />
           <WallLayer />
           <MeasurementLayer />
+          <SunArcLayer />
+          <NorthArrowLayer />
         </Layer>
       </Stage>
       <CoordinateDisplay x={cursorPos.x} y={cursorPos.y} />

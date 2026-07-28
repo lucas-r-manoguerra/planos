@@ -21,7 +21,7 @@ import { RoomLayer } from "./RoomLayer";
 import { WallLayer } from "./WallLayer";
 import { MeasurementLayer } from "./MeasurementLayer";
 import { SunArcLayer } from "./SunArcLayer";
-import { NorthArrowLayer } from "./NorthArrowLayer";
+import { CompassOverlay } from "./CompassOverlay";
 import { CoordinateDisplay } from "./CoordinateDisplay";
 
 export function PlanCanvas() {
@@ -125,7 +125,7 @@ export function PlanCanvas() {
   );
 
   return (
-    <div ref={containerRef} className="flex-1 bg-gray-100 overflow-hidden">
+    <div ref={containerRef} className="flex-1 bg-gray-100 overflow-hidden relative">
       <Stage
         ref={stageRef}
         width={size.width}
@@ -149,9 +149,9 @@ export function PlanCanvas() {
           <WallLayer />
           <MeasurementLayer />
           <SunArcLayer />
-          <NorthArrowLayer />
         </Layer>
       </Stage>
+      <CompassOverlay />
       <CoordinateDisplay x={cursorPos.x} y={cursorPos.y} />
     </div>
   );

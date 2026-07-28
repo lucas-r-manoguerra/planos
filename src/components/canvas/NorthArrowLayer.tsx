@@ -15,14 +15,12 @@ export function NorthArrowLayer() {
   const groupRef = useRef<Konva.Group>(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  if (!enabled) return null;
-
-  // Posicionar en la esquina inferior derecha del terreno
+  // Valores derivados (ANTES del early return)
   const cx = terrain.width + ROSE_PADDING + ROSE_RADIUS;
   const cy = terrain.height + ROSE_PADDING + ROSE_RADIUS;
-
   const angle = terrain.northAngle ?? 0;
 
+  // Hooks (ANTES del early return)
   const handleDragStart = useCallback(() => {
     setIsDragging(true);
   }, []);
@@ -34,21 +32,17 @@ export function NorthArrowLayer() {
       const pointer = stage.getPointerPosition();
       if (!pointer) return;
 
-      // Obtener posición del stage considerando zoom y pan
       const zoom = stage.scaleX();
       const panX = stage.x();
       const panY = stage.y();
-      
-      // Convertir posición del pointer a coordenadas del canvas
+
       const canvasX = (pointer.x - panX) / zoom;
       const canvasY = (pointer.y - panY) / zoom;
 
-      // Calcular ángulo desde el centro de la brújula al cursor
       const dx = canvasX - cx;
       const dy = canvasY - cy;
       const newAngle = (Math.atan2(dx, -dy) * 180) / Math.PI;
-      
-      // Normalizar a [0, 360)
+
       const normalized = ((newAngle % 360) + 360) % 360;
       setTerrainAngle(Math.round(normalized));
     },
@@ -59,12 +53,15 @@ export function NorthArrowLayer() {
     setIsDragging(false);
   }, []);
 
+  // Early return DESPUÉS de todos los hooks
+  if (!enabled) return null;
+
   // Direcciones cardinales fijas (rotadas por el ángulo)
   const cardinalDirections = [
-    { label: "N", color: "#e74c3c", bold: true, radius: ROSE_RADIUS + 12 },
-    { label: "E", color: "#666", bold: false, radius: ROSE_RADIUS + 12 },
-    { label: "S", color: "#666", bold: false, radius: ROSE_RADIUS + 12 },
-    { label: "O", color: "#666", bold: false, radius: ROSE_RADIUS + 12 },
+    { label: "N", color: "#e74c3c", bold: true },
+    { label: "E", color: "#666", bold: false },
+    { label: "S", color: "#666", bold: false },
+    { label: "O", color: "#666", bold: false },
   ];
 
   return (

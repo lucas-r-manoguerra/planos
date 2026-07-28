@@ -5,12 +5,13 @@
  */
 
 import { create } from "zustand";
-import { Floor, Terrain } from "@/types/plan";
+import { Floor, Fixture, Terrain } from "@/types/plan";
 
 interface HistoryEntry {
   floors: Floor[];
   activeFloorId: string;
   terrain: Terrain;
+  fixtures?: Fixture[];
 }
 
 interface HistoryStore {

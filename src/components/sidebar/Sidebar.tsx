@@ -14,11 +14,13 @@ import { TemplateList } from "./TemplateList";
 import { SurfaceInfo } from "./SurfaceInfo";
 import { RoomForm } from "./RoomForm";
 import { RoomList } from "./RoomList";
+import { FixtureCatalog } from "./FixtureCatalog";
 import { useState } from "react";
 import { Pencil, ChevronDown, ChevronRight } from "lucide-react";
 
 export function Sidebar() {
   const [templatesOpen, setTemplatesOpen] = useState(false);
+  const [fixturesOpen, setFixturesOpen] = useState(false);
 
   return (
     <aside
@@ -83,6 +85,30 @@ export function Sidebar() {
         {/* Sección: Agregar habitación */}
         <div className="px-4 py-3 border-b border-gray-100">
           <RoomForm />
+        </div>
+
+        {/* Sección: Catálogo de Muebles (colapsable) */}
+        <div className="border-b border-gray-100">
+          <button
+            onClick={() => setFixturesOpen(!fixturesOpen)}
+            className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-gray-50 transition-colors"
+            aria-expanded={fixturesOpen}
+            aria-controls="fixtures-section"
+          >
+            <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+              Muebles y Accesorios
+            </span>
+            {fixturesOpen ? (
+              <ChevronDown size={14} className="text-gray-400" />
+            ) : (
+              <ChevronRight size={14} className="text-gray-400" />
+            )}
+          </button>
+          {fixturesOpen && (
+            <div id="fixtures-section" className="px-4 pb-3">
+              <FixtureCatalog />
+            </div>
+          )}
         </div>
 
         {/* Sección: Lista de habitaciones */}

@@ -4,7 +4,7 @@
  * Guarda y carga el estado completo del plano en localStorage
  */
 
-import { Floor, SunSettings, Terrain } from "@/types/plan";
+import { Floor, Fixture, SunSettings, Terrain } from "@/types/plan";
 import { DEFAULT_SUN_SETTINGS } from "@/lib/constants";
 
 interface ProjectData {
@@ -14,6 +14,7 @@ interface ProjectData {
   floors: Floor[];
   activeFloorId: string;
   sunSettings: SunSettings;
+  fixtures?: Fixture[];
   savedAt: string;
 }
 

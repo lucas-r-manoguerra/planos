@@ -113,3 +113,68 @@ export interface RoomStore {
   setTerrainImage: (image: string | undefined) => void; // Actualizar imagen del terreno
   setTerrainFront: (front: "top" | "bottom" | "left" | "right") => void; // Actualizar frente
 }
+
+// ==================== FIXTURES (Muebles, Plantas, Puertas, Ventanas, Escaleras) ====================
+
+// Categorías de fixtures
+export type FixtureCategory = "furniture" | "plant" | "door" | "window" | "stair" | "bathroom" | "vehicle";
+
+// Subtipos de muebles
+export type FurnitureSubtype = 
+  | "mesa" | "mesa-comedor" | "silla" | "sofa" | "cama-1plaza" 
+  | "cama-2plaza" | "cama-sillon" | "mesada" | "placard" | "escritorio"
+  | "banco" | "heladera" | "estufa" | "lavarropas" | "cocina";
+
+// Subtipos de plantas
+export type PlantSubtype = "maceta-chica" | "maceta-grande" | "planta-media" | "planta-grande";
+
+// Subtipos de puertas
+export type DoorSubtype = "puerta-standard" | "puerta-americana" | "puerta-garage" | "puerta-corrediza";
+
+// Subtipos de ventanas
+export type WindowSubtype = "ventana-standard" | "ventana-corrediza" | "ventana-batiente" | "ventanal";
+
+// Subtipos de escaleras
+export type StairSubtype = "tramo-unico" | "dos-tramos";
+
+// Subtipos de baño
+export type BathroomSubtype = "ducha" | "banera" | "inodoro" | "lavamanos";
+
+// Subtipos de vehículos
+export type VehicleSubtype = "auto" | "camioneta";
+
+// Unión de todos los subtipos
+export type FixtureSubtype = FurnitureSubtype | PlantSubtype | DoorSubtype | WindowSubtype | StairSubtype | BathroomSubtype | VehicleSubtype;
+
+// Interfaz para un item del catálogo (plantilla)
+export interface FixtureCatalogItem {
+  id: FixtureSubtype;
+  label: string;
+  category: FixtureCategory;
+  width: number;   // cm
+  height: number;  // cm (profundidad en planta)
+  color: string;
+  icon: string;    // emoji
+  // Propiedades específicas por tipo
+  props?: Record<string, number | string | boolean>;
+}
+
+// Interfaz para un fixture colocado en el canvas
+export interface Fixture {
+  id: string;
+  catalogId: FixtureSubtype;
+  label: string;
+  category: FixtureCategory;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  rotation: number; // grados, 0 = orientación original
+  color: string;
+  // Propiedades específicas
+  props: Record<string, number | string | boolean>;
+  // Para puertas/ventanas: pared anclada
+  wallId?: string;      // id de la habitación a la que está anclada
+  wallSide?: "top" | "bottom" | "left" | "right"; // qué pared
+  wallOffset?: number;  // offset desde la esquina de la pared (cm)
+}

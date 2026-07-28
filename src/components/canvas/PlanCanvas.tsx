@@ -18,11 +18,14 @@ import { GridLayer } from "./GridLayer";
 import { TerrainLayer } from "./TerrainLayer";
 import { ShadowLayer } from "./ShadowLayer";
 import { RoomLayer } from "./RoomLayer";
+import { FixtureLayer } from "./FixtureLayer";
 import { WallLayer } from "./WallLayer";
 import { MeasurementLayer } from "./MeasurementLayer";
 import { SunArcLayer } from "./SunArcLayer";
 import { CompassOverlay } from "./CompassOverlay";
 import { CoordinateDisplay } from "./CoordinateDisplay";
+import { useFixtureStore } from "@/stores/fixtures.store";
+import { getCatalogItem } from "@/lib/fixtures-catalog";
 
 export function PlanCanvas() {
   const stageRef = useRef<Konva.Stage>(null);
@@ -33,6 +36,7 @@ export function PlanCanvas() {
   const { zoom, panX, panY, smoothZoom, setPan } = useCanvasStore();
   const { terrain } = useTerrainStore();
   const { active: rulerActive, pointA, setPointA, setPointerPos, addMeasurement, deactivate } = useRulerStore();
+  const { placingFixture, addFixture, setPlacingFixture } = useFixtureStore();
 
   useEffect(() => {
     const updateSize = () => {
@@ -48,6 +52,17 @@ export function PlanCanvas() {
     window.addEventListener("resize", updateSize);
     return () => window.removeEventListener("resize", updateSize);
   }, []);
+
+  // Cancelar modo colocación con Escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && placingFixture) {
+        setPlacingFixture(null);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [placingFixture, setPlacingFixture]);
 
   const handleWheel = useCallback(
     (e: { evt: { deltaY: number; preventDefault: () => void } }) => {
@@ -104,6 +119,34 @@ export function PlanCanvas() {
 
   const handleStageClick = useCallback(
     (e: Konva.KonvaEventObject<MouseEvent>) => {
+      // Si hay un fixture en modo colocación, colocarlo
+      if (placingFixture) {
+        const stage = e.target.getStage();
+        if (!stage) return;
+        const pointer = stage.getPointerPosition();
+        if (!pointer) return;
+
+        const canvasX = (pointer.x - panX) / zoom;
+        const canvasY = (pointer.y - panY) / zoom;
+
+        const catalogItem = getCatalogItem(placingFixture);
+        if (!catalogItem) return;
+
+        addFixture({
+          catalogId: placingFixture,
+          label: catalogItem.label,
+          category: catalogItem.category,
+          x: canvasX - catalogItem.width / 2,
+          y: canvasY - catalogItem.height / 2,
+          width: catalogItem.width,
+          height: catalogItem.height,
+          rotation: 0,
+          color: catalogItem.color,
+          props: catalogItem.props ? { ...catalogItem.props } : {},
+        });
+        return;
+      }
+
       if (!rulerActive) return;
 
       const stage = e.target.getStage();
@@ -121,7 +164,7 @@ export function PlanCanvas() {
         deactivate();
       }
     },
-    [rulerActive, pointA, panX, panY, zoom, setPointA, addMeasurement, deactivate],
+    [placingFixture, addFixture, rulerActive, pointA, panX, panY, zoom, setPointA, addMeasurement, deactivate],
   );
 
   return (
@@ -146,6 +189,7 @@ export function PlanCanvas() {
           <TerrainLayer />
           <ShadowLayer />
           <RoomLayer />
+          <FixtureLayer />
           <WallLayer />
           <MeasurementLayer />
           <SunArcLayer />

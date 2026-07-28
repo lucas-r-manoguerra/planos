@@ -18,6 +18,7 @@ import { useContextMenuStore } from "@/stores/context-menu.store";
 import { usePanelStore } from "@/stores/panel.store";
 import { useCanvasStore } from "@/stores/canvas.store";
 import { useSelectionStore } from "@/stores/selection.store";
+import { useFixtureStore } from "@/stores/fixtures.store";
 import { saveProject, loadProject } from "@/lib/storage";
 import { Room } from "@/types/plan";
 
@@ -44,6 +45,11 @@ export default function Home() {
           floorHeight: saved.sunSettings.floorHeight,
         });
       }
+      if (saved.fixtures) {
+        useFixtureStore.setState({
+          fixtures: saved.fixtures,
+        });
+      }
     }
   }, []);
 
@@ -53,11 +59,13 @@ export default function Home() {
       const { floors, activeFloorId } = useFloorsStore.getState();
       const { terrain } = useTerrainStore.getState();
       const sunSettings = useSunStore.getState();
+      const { fixtures } = useFixtureStore.getState();
       saveProject({
         name: "Mi Plano",
         terrain,
         floors,
         activeFloorId,
+        fixtures,
         sunSettings: {
           enabled: sunSettings.enabled,
           date: sunSettings.date,
@@ -77,11 +85,13 @@ export default function Home() {
       const { floors, activeFloorId } = useFloorsStore.getState();
       const { terrain } = useTerrainStore.getState();
       const sunSettings = useSunStore.getState();
+      const { fixtures } = useFixtureStore.getState();
       saveProject({
         name: "Mi Plano",
         terrain,
         floors,
         activeFloorId,
+        fixtures,
         sunSettings: {
           enabled: sunSettings.enabled,
           date: sunSettings.date,
@@ -110,6 +120,9 @@ export default function Home() {
           if (restored.terrain) {
             useTerrainStore.setState({ terrain: restored.terrain });
           }
+          if (restored.fixtures) {
+            useFixtureStore.setState({ fixtures: restored.fixtures });
+          }
         }
       }
       if ((e.ctrlKey || e.metaKey) && e.key === "z" && e.shiftKey) {
@@ -122,6 +135,9 @@ export default function Home() {
           });
           if (restored.terrain) {
             useTerrainStore.setState({ terrain: restored.terrain });
+          }
+          if (restored.fixtures) {
+            useFixtureStore.setState({ fixtures: restored.fixtures });
           }
         }
       }

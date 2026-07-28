@@ -32,7 +32,8 @@ export function getSunPosition(
   latitude: number,
   longitude: number,
   date: string,
-  time: number
+  time: number,
+  timezone?: string
 ): { azimuth: number; elevation: number } {
   const n = getDayOfYear(date);
 
@@ -48,8 +49,8 @@ export function getSunPosition(
     9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
 
   // Meridiano de la zona horaria (para UTC-3: -45°)
-  const tzOffset = getTimezoneOffset(date);
-  const tzMeridian = tzOffset * 15;
+  const tzOffset = getTimezoneOffset(date, timezone);
+  const tzMeridian = -tzOffset * 15;
 
   // Hora solar en horas decimales
   const solarTime = time + ET / 60 + (longitude - tzMeridian) / 15;
@@ -102,7 +103,8 @@ export function getSunPosition(
 export function getSunriseTime(
   latitude: number,
   longitude: number,
-  date: string
+  date: string,
+  timezone?: string
 ): number {
   const n = getDayOfYear(date);
   const declination =
@@ -123,8 +125,8 @@ export function getSunriseTime(
   const B = ((360 / 365) * (n - 81) * Math.PI) / 180;
   const ET = 9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
 
-  const tzOffset = getTimezoneOffset(date);
-  const tzMeridian = tzOffset * 15;
+  const tzOffset = getTimezoneOffset(date, timezone);
+  const tzMeridian = -tzOffset * 15;
 
   const solarNoon = 12 - ET / 60 - (longitude - tzMeridian) / 15;
 
@@ -141,7 +143,8 @@ export function getSunriseTime(
 export function getSunsetTime(
   latitude: number,
   longitude: number,
-  date: string
+  date: string,
+  timezone?: string
 ): number {
   const n = getDayOfYear(date);
   const declination =
@@ -160,8 +163,8 @@ export function getSunsetTime(
   const B = ((360 / 365) * (n - 81) * Math.PI) / 180;
   const ET = 9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
 
-  const tzOffset = getTimezoneOffset(date);
-  const tzMeridian = tzOffset * 15;
+  const tzOffset = getTimezoneOffset(date, timezone);
+  const tzMeridian = -tzOffset * 15;
 
   const solarNoon = 12 - ET / 60 - (longitude - tzMeridian) / 15;
 
@@ -171,16 +174,15 @@ export function getSunsetTime(
 /**
  * Obtiene el offset de la zona horaria en horas para una fecha dada
  * Calcula el offset real (con horario de verano si aplica)
- * @param date - Fecha en formato YYYY-MM-DD
+ * @param date     - Fecha en formato YYYY-MM-DD
+ * @param timezone - IANA timezone (ej: "America/Argentina/Buenos_Aires")
  * @returns Offset en horas desde UTC (ej: -3 para Argentina)
  */
-function getTimezoneOffset(date: string): number {
-  // Crear fechas en UTC y en la zona horaria local para detectar el offset
+function getTimezoneOffset(date: string, timezone?: string): number {
+  const tz = timezone || "America/Argentina/Buenos_Aires";
   const d = new Date(date + "T12:00:00Z");
   const utcStr = d.toLocaleString("en-US", { timeZone: "UTC" });
-  const localStr = d.toLocaleString("en-US", {
-    timeZone: "America/Argentina/Buenos_Aires",
-  });
+  const localStr = d.toLocaleString("en-US", { timeZone: tz });
 
   const utcDate = new Date(utcStr);
   const localDate = new Date(localStr);

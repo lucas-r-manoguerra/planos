@@ -47,16 +47,16 @@ export const useSunStore = create<SunStore>((set, get) => ({
 
   getSunPosition: () => {
     const { location, date, time } = get();
-    return getSunPosition(location.latitude, location.longitude, date, time);
+    return getSunPosition(location.latitude, location.longitude, date, time, location.timezone);
   },
 
   getSunriseTime: () => {
     const { location, date } = get();
-    return getSunriseTime(location.latitude, location.longitude, date);
+    return getSunriseTime(location.latitude, location.longitude, date, location.timezone);
   },
 
   getSunsetTime: () => {
     const { location, date } = get();
-    return getSunsetTime(location.latitude, location.longitude, date);
+    return getSunsetTime(location.latitude, location.longitude, date, location.timezone);
   },
 }));

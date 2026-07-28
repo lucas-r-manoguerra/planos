@@ -16,7 +16,7 @@ interface TerrainStore {
   setTerrainColor: (color: string) => void;
   setTerrainImage: (image: string | undefined) => void;
   setTerrainFront: (front: Terrain["front"]) => void;
-  setTerrainNorth: (northAt: Terrain["northAt"]) => void;
+  setTerrainAngle: (angle: number) => void;
 }
 
 export const useTerrainStore = create<TerrainStore>((set, get) => {
@@ -36,7 +36,7 @@ export const useTerrainStore = create<TerrainStore>((set, get) => {
       height: DEFAULT_TERRAIN.height,
       color: "#4ade80",
       front: "bottom",
-      northAt: "top",
+      northAngle: 0,
     },
     updateTerrain: (width, height) => {
       recordHistory();
@@ -54,9 +54,9 @@ export const useTerrainStore = create<TerrainStore>((set, get) => {
       recordHistory();
       set((state) => ({ terrain: { ...state.terrain, front } }));
     },
-    setTerrainNorth: (northAt) => {
+    setTerrainAngle: (angle) => {
       recordHistory();
-      set((state) => ({ terrain: { ...state.terrain, northAt } }));
+      set((state) => ({ terrain: { ...state.terrain, northAngle: angle } }));
     },
   };
 });

@@ -3,6 +3,7 @@
 import { Line, Text } from "react-konva";
 import { useSunStore } from "@/stores/sun.store";
 import { useFloorsStore } from "@/stores/floors.store";
+import { useTerrainStore } from "@/stores/rooms.store";
 import { computeShadowVector, computeShadowPolygon } from "@/lib/shadow";
 
 const SHADOW_COLOR = "rgba(0, 0, 0, 0.15)";
@@ -12,6 +13,7 @@ const MAX_SHADOW_LENGTH = 5000;
 export function ShadowLayer() {
   const { enabled, floorHeight, getSunPosition } = useSunStore();
   const { floors, activeFloorId } = useFloorsStore();
+  const { terrain } = useTerrainStore();
 
   if (!enabled) return null;
 
@@ -24,9 +26,18 @@ export function ShadowLayer() {
   const floorIndex = floors.findIndex((f) => f.id === activeFloorId);
   const cumulativeHeight = (floorIndex + 1) * floorHeight;
 
-  // Dirección de la sombra para debug
+  // Dirección de la sombra para debug (rotada según northAngle)
   const dirVector = computeShadowVector(azimuth, elevation, cumulativeHeight);
-  const dirAngle = (Math.atan2(dirVector.y, dirVector.x) * 180) / Math.PI;
+
+  // Rotar vector geográfico (Norte = -y, Este = +x) al canvas según northAngle
+  const northAngle = terrain.northAngle ?? 0;
+  const rad = (northAngle * Math.PI) / 180;
+  // Rotación: canvas_x = geo_x * cos(θ) + geo_y * sin(θ)
+  //           canvas_y = -geo_x * sin(θ) + geo_y * cos(θ)
+  const dirDx = dirVector.x * Math.cos(rad) + dirVector.y * Math.sin(rad);
+  const dirDy = -dirVector.x * Math.sin(rad) + dirVector.y * Math.cos(rad);
+
+  const dirAngle = (Math.atan2(dirDy, dirDx) * 180) / Math.PI;
   let dirLabel = "";
   if (dirAngle > -22.5 && dirAngle <= 22.5) dirLabel = "→ E";
   else if (dirAngle > 22.5 && dirAngle <= 67.5) dirLabel = "↘ SE";
@@ -45,6 +56,13 @@ export function ShadowLayer() {
           elevation,
           cumulativeHeight
         );
+
+        // Rotar vector geográfico (Norte = -y, Este = +x) al canvas según northAngle
+        const canvasDx = vector.x * Math.cos(rad) + vector.y * Math.sin(rad);
+        const canvasDy = -vector.x * Math.sin(rad) + vector.y * Math.cos(rad);
+
+        vector.x = canvasDx;
+        vector.y = canvasDy;
 
         const length = Math.sqrt(vector.x ** 2 + vector.y ** 2);
         if (length > MAX_SHADOW_LENGTH) {

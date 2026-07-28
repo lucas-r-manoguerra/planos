@@ -74,7 +74,7 @@ export interface Terrain {
   color: string;  // Color del terreno
   backgroundImage?: string; // URL de imagen de textura
   front: "top" | "bottom" | "left" | "right"; // Lado del frente (calle)
-  northAt: "top" | "bottom" | "left" | "right"; // Dirección del norte
+  northAngle: number; // grados desde Norte (0° = Norte arriba, sentido horario)
 }
 
 // Interfaz para una planta del edificio

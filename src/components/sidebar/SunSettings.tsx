@@ -33,7 +33,7 @@ export function SunSettings() {
     getSunsetTime: getSet,
   } = useSunStore();
 
-  const { terrain, setTerrainNorth } = useTerrainStore();
+  const { terrain } = useTerrainStore();
 
   const sunPos = enabled ? getSunPosition() : null;
   const sunrise = enabled ? getRise() : null;
@@ -90,24 +90,14 @@ export function SunSettings() {
 
           {enabled && (
             <>
-              {/* Orientación del norte */}
+              {/* Orientación del norte - mostrado como read-only, cambiado via drag en canvas */}
               <div className="space-y-1">
                 <Label>Orientación del Norte</Label>
-                <select
-                  value={terrain.northAt ?? "top"}
-                  onChange={(e) =>
-                    setTerrainNorth(
-                      e.target.value as "top" | "bottom" | "left" | "right"
-                    )
-                  }
-                  className="flex h-9 w-full rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-900 shadow-sm transition-colors"
-                  aria-label="Orientación del norte"
-                >
-                  <option value="top">↑ Arriba (Norte hacia arriba)</option>
-                  <option value="right">→ Derecha</option>
-                  <option value="bottom">↓ Abajo</option>
-                  <option value="left">← Izquierda</option>
-                </select>
+                <div className="flex items-center gap-2 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-md px-3 py-2">
+                  <span className="text-lg">🧭</span>
+                  <span>{terrain.northAngle ?? 0}°</span>
+                  <span className="text-[10px] text-gray-400 ml-auto">Arrastrá la brújula en el canvas</span>
+                </div>
               </div>
 
               {/* Fecha */}

@@ -40,10 +40,19 @@ export function loadProject(): ProjectData | null {
 
     const data = JSON.parse(raw) as ProjectData;
 
-    // Migración v1 → v2: agregar northAt al terreno y sunSettings
+    // Migración v1 → v2: northAt → northAngle y sunSettings
     if (data.version < 2) {
-      if (!data.terrain.northAt) {
-        data.terrain = { ...data.terrain, northAt: "top" };
+      // Tratar terreno como objeto crudo para migrar campos viejos
+      const rawTerrain = data.terrain as unknown as Record<string, unknown>;
+      if (rawTerrain.northAt && !('northAngle' in rawTerrain)) {
+        // Migrar northAt string a northAngle number
+        const map: Record<string, number> = { top: 0, right: 90, bottom: 180, left: 270 };
+        rawTerrain.northAngle = map[rawTerrain.northAt as string] ?? 0;
+        delete rawTerrain.northAt;
+        data.terrain = rawTerrain as unknown as Terrain;
+      } else if (!('northAngle' in rawTerrain)) {
+        rawTerrain.northAngle = 0;
+        data.terrain = rawTerrain as unknown as Terrain;
       }
       if (!data.sunSettings) {
         data.sunSettings = { ...DEFAULT_SUN_SETTINGS };

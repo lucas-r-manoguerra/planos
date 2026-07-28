@@ -1,71 +1,170 @@
 "use client";
 
-import { Group, Line, Text } from "react-konva";
+import { useRef, useState, useCallback } from "react";
+import { Group, Line, Text, Circle } from "react-konva";
 import { useSunStore } from "@/stores/sun.store";
 import { useTerrainStore } from "@/stores/rooms.store";
+import Konva from "konva";
 
-const ROSE_SIZE = 50;
-const ROSE_PADDING = 20;
+const ROSE_RADIUS = 45;
+const ROSE_PADDING = 25;
 
 export function NorthArrowLayer() {
   const { enabled } = useSunStore();
-  const { terrain } = useTerrainStore();
+  const { terrain, setTerrainAngle } = useTerrainStore();
+  const groupRef = useRef<Konva.Group>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   if (!enabled) return null;
 
-  // Posicionar en la esquina superior derecha, fuera del terreno
-  const cx = terrain.width + ROSE_PADDING + ROSE_SIZE;
-  const cy = ROSE_PADDING + ROSE_SIZE;
+  // Posicionar en la esquina inferior derecha del terreno
+  const cx = terrain.width + ROSE_PADDING + ROSE_RADIUS;
+  const cy = terrain.height + ROSE_PADDING + ROSE_RADIUS;
 
-  // Rotación según la dirección del norte
-  const rotationMap: Record<string, number> = {
-    top: 0,
-    right: 90,
-    bottom: 180,
-    left: 270,
-  };
-  const rotation = rotationMap[terrain.northAt ?? "top"];
+  const angle = terrain.northAngle ?? 0;
 
-  // Etiquetas según northAt: N siempre apunta en la dirección indicada
-  const directions = [
-    { label: "N", dx: 0, dy: -ROSE_SIZE - 8, color: "#e74c3c", bold: true },
-    { label: "S", dx: 0, dy: ROSE_SIZE + 8, color: "#666", bold: false },
-    { label: "E", dx: ROSE_SIZE + 8, dy: 0, color: "#666", bold: false },
-    { label: "O", dx: -ROSE_SIZE - 8, dy: 0, color: "#666", bold: false },
+  const handleDragStart = useCallback(() => {
+    setIsDragging(true);
+  }, []);
+
+  const handleDrag = useCallback(
+    (e: Konva.KonvaEventObject<DragEvent>) => {
+      const stage = e.target.getStage();
+      if (!stage) return;
+      const pointer = stage.getPointerPosition();
+      if (!pointer) return;
+
+      // Obtener posición del stage considerando zoom y pan
+      const zoom = stage.scaleX();
+      const panX = stage.x();
+      const panY = stage.y();
+      
+      // Convertir posición del pointer a coordenadas del canvas
+      const canvasX = (pointer.x - panX) / zoom;
+      const canvasY = (pointer.y - panY) / zoom;
+
+      // Calcular ángulo desde el centro de la brújula al cursor
+      const dx = canvasX - cx;
+      const dy = canvasY - cy;
+      const newAngle = (Math.atan2(dx, -dy) * 180) / Math.PI;
+      
+      // Normalizar a [0, 360)
+      const normalized = ((newAngle % 360) + 360) % 360;
+      setTerrainAngle(Math.round(normalized));
+    },
+    [cx, cy, setTerrainAngle]
+  );
+
+  const handleDragEnd = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  // Direcciones cardinales fijas (rotadas por el ángulo)
+  const cardinalDirections = [
+    { label: "N", color: "#e74c3c", bold: true, radius: ROSE_RADIUS + 12 },
+    { label: "E", color: "#666", bold: false, radius: ROSE_RADIUS + 12 },
+    { label: "S", color: "#666", bold: false, radius: ROSE_RADIUS + 12 },
+    { label: "O", color: "#666", bold: false, radius: ROSE_RADIUS + 12 },
   ];
 
   return (
-    <Group x={cx} y={cy} rotation={rotation}>
-      {/* Línea principal vertical (N-S) */}
-      <Line
-        points={[0, ROSE_SIZE, 0, -ROSE_SIZE]}
-        stroke="#999"
-        strokeWidth={1}
+    <Group
+      ref={groupRef}
+      x={cx}
+      y={cy}
+      draggable
+      onDragStart={handleDragStart}
+      onDragMove={handleDrag}
+      onDragEnd={handleDragEnd}
+    >
+      {/* Círculo de fondo */}
+      <Circle
+        radius={ROSE_RADIUS + 5}
+        fill={isDragging ? "rgba(231, 76, 60, 0.1)" : "rgba(255,255,255,0.8)"}
+        stroke={isDragging ? "#e74c3c" : "#ccc"}
+        strokeWidth={isDragging ? 2 : 1}
       />
-      {/* Línea principal horizontal (E-O) */}
-      <Line
-        points={[-ROSE_SIZE, 0, ROSE_SIZE, 0]}
-        stroke="#999"
-        strokeWidth={1}
-      />
+
+      {/* Líneas de dirección (rotadas por northAngle) */}
+      {cardinalDirections.map((d, i) => {
+        const dirAngle = ((angle + i * 90) * Math.PI) / 180;
+        const innerR = 8;
+        const outerR = d.bold ? ROSE_RADIUS : ROSE_RADIUS - 5;
+        return (
+          <Line
+            key={d.label}
+            points={[
+              Math.sin(dirAngle) * innerR,
+              -Math.cos(dirAngle) * innerR,
+              Math.sin(dirAngle) * outerR,
+              -Math.cos(dirAngle) * outerR,
+            ]}
+            stroke={d.color}
+            strokeWidth={d.bold ? 2.5 : 1.5}
+          />
+        );
+      })}
+
       {/* Punta de flecha norte */}
-      <Line
-        points={[0, -ROSE_SIZE, -5, -ROSE_SIZE + 8, 5, -ROSE_SIZE + 8]}
-        fill="#e74c3c"
-        closed
-      />
+      {(() => {
+        const nAngle = (angle * Math.PI) / 180;
+        const tipR = ROSE_RADIUS;
+        const baseR = ROSE_RADIUS - 12;
+        const spread = 6;
+        return (
+          <>
+            <Line
+              points={[
+                Math.sin(nAngle) * tipR,
+                -Math.cos(nAngle) * tipR,
+                Math.sin(nAngle - 0.15) * baseR - Math.cos(nAngle) * spread,
+                -Math.cos(nAngle - 0.15) * baseR - Math.sin(nAngle) * spread,
+              ]}
+              fill="#e74c3c"
+              closed
+            />
+            <Line
+              points={[
+                Math.sin(nAngle) * tipR,
+                -Math.cos(nAngle) * tipR,
+                Math.sin(nAngle + 0.15) * baseR + Math.cos(nAngle) * spread,
+                -Math.cos(nAngle + 0.15) * baseR + Math.sin(nAngle) * spread,
+              ]}
+              fill="#e74c3c"
+              closed
+            />
+          </>
+        );
+      })()}
+
       {/* Etiquetas de dirección */}
-      {directions.map((d) => (
-        <Text
-          key={d.label}
-          text={d.label}
-          x={d.dx - 5}
-          y={d.dy - 7}
-          fontSize={12}
-          fill={d.color}
-          fontStyle={d.bold ? "bold" : "normal"}
-        />
-      ))}
+      {cardinalDirections.map((d, i) => {
+        const dirAngle = ((angle + i * 90) * Math.PI) / 180;
+        const labelR = ROSE_RADIUS + 12;
+        const lx = Math.sin(dirAngle) * labelR;
+        const ly = -Math.cos(dirAngle) * labelR;
+        return (
+          <Text
+            key={d.label}
+            text={d.label}
+            x={lx - 5}
+            y={ly - 7}
+            fontSize={11}
+            fill={d.color}
+            fontStyle={d.bold ? "bold" : "normal"}
+          />
+        );
+      })}
+
+      {/* Ángulo actual (debajo de la brújula) */}
+      <Text
+        text={`${angle}°`}
+        x={-12}
+        y={ROSE_RADIUS + 16}
+        fontSize={10}
+        fill="#999"
+        fontFamily="monospace"
+      />
     </Group>
   );
 }

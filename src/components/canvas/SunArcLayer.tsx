@@ -34,14 +34,9 @@ export function SunArcLayer() {
   // Radio máximo del arco (que quepa dentro del terreno)
   const maxRadius = Math.min(terrain.width, terrain.height) * 0.4;
 
-  // Mapeo de dirección norte a ángulo en canvas
-  const northAngleMap: Record<string, number> = {
-    top: -90,
-    right: 0,
-    bottom: 90,
-    left: 180,
-  };
-  const northAngle = northAngleMap[terrain.northAt ?? "top"];
+  // northAngle: 0° = Norte arriba (canvas -y), sentido horario
+  // Canvas angle = northAngle - 90 (para que 0° geográfico = -90° canvas = arriba)
+  const canvasNorthAngle = (terrain.northAngle ?? 0) - 90;
 
   // Dibujar arco: muestrear posiciones solares a lo largo del día
   const arcPoints: number[] = [];
@@ -58,7 +53,7 @@ export function SunArcLayer() {
     if (pos.elevation <= 0) continue; // saltar debajo del horizonte
 
     // Proyectar azimuth como ángulo desde el centro del terreno
-    const canvasAngle = ((northAngle + pos.azimuth) * Math.PI) / 180;
+    const canvasAngle = ((canvasNorthAngle + pos.azimuth) * Math.PI) / 180;
 
     // Radio proporcional a la elevación: más cerca = sol más bajo
     const r = maxRadius * (pos.elevation / 90);
@@ -69,7 +64,7 @@ export function SunArcLayer() {
   }
 
   // Posición actual del sol
-  const currentAngle = ((northAngle + azimuth) * Math.PI) / 180;
+  const currentAngle = ((canvasNorthAngle + azimuth) * Math.PI) / 180;
   const currentR = maxRadius * (elevation / 90);
   const sunX = cx + currentR * Math.cos(currentAngle);
   const sunY = cy + currentR * Math.sin(currentAngle);

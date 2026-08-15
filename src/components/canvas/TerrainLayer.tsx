@@ -1,35 +1,35 @@
 "use client";
 
 import { Rect, Text, Image as KonvaImage, Line } from "react-konva";
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { cmToDisplay } from "@/lib/utils";
-import Konva from "konva";
 
 export function TerrainLayer() {
   const { terrain } = useTerrainStore();
-  const [image, setImage] = useState<Konva.Image | null>(null);
-  const imageRef = useRef<HTMLImageElement | null>(null);
+  const [image, setImage] = useState<HTMLImageElement | null>(null);
 
   useEffect(() => {
-    if (terrain.backgroundImage) {
-      const img = new window.Image();
-      img.onload = () => {
-        imageRef.current = img;
-        setImage(new Konva.Image({ image: img }));
-      };
-      img.src = terrain.backgroundImage;
-    } else {
-      setImage(null);
-      imageRef.current = null;
-    }
+    if (!terrain.backgroundImage) return;
+    let cancelled = false;
+    const img = new window.Image();
+    img.onload = () => {
+      if (!cancelled) setImage(img);
+    };
+    img.onerror = () => {
+      if (!cancelled) setImage(null);
+    };
+    img.src = terrain.backgroundImage;
+    return () => {
+      cancelled = true;
+    };
   }, [terrain.backgroundImage]);
 
   return (
     <>
-      {terrain.backgroundImage && imageRef.current && (
+      {terrain.backgroundImage && image && (
         <KonvaImage
-          image={imageRef.current}
+          image={image}
           x={0}
           y={0}
           width={terrain.width}

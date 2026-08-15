@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,10 +13,22 @@ export function TerrainSettings() {
   const [widthMeters, setWidthMeters] = useState(terrain.width / 100);
   const [heightMeters, setHeightMeters] = useState(terrain.height / 100);
 
-  useEffect(() => {
+  // Sincronizar los inputs cuando el terreno cambia externamente.
+  // Patrón oficial de React para ajustar estado durante el render
+  // (evita setState dentro de useEffect).
+  const [prevDimensions, setPrevDimensions] = useState({
+    width: terrain.width,
+    height: terrain.height,
+  });
+  if (
+    prevDimensions.width !== terrain.width ||
+    prevDimensions.height !== terrain.height
+  ) {
+    setPrevDimensions({ width: terrain.width, height: terrain.height });
     setWidthMeters(terrain.width / 100);
     setHeightMeters(terrain.height / 100);
-  }, [terrain.width, terrain.height]);
+  }
+
   const [terrainColor, setTerrainColorLocal] = useState(terrain.color);
 
   const handleWidthChange = (value: string) => {

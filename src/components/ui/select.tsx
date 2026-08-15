@@ -13,7 +13,9 @@ interface SelectItemProps {
   children: React.ReactNode;
 }
 
-function SelectItem(_props: SelectItemProps) {
+function SelectItem(props: SelectItemProps) {
+  // Componente marcador: sus props las extrae Select desde el children.
+  void props;
   return null;
 }
 

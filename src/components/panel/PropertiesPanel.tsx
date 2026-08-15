@@ -19,7 +19,7 @@ import { Fixture } from "@/types/plan";
 export function PropertiesPanel() {
   const { isOpen, roomId, fixtureId, x, y, closePanel, setPosition } = usePanelStore();
   const { floors, activeFloorId, renameRoom, setRoomColor, updateRoomDimensions, setRoomSnap, setRoomWallWidth, setRoomEnclosed } = useFloorsStore();
-  const { fixtures, updateFixture, removeFixture } = useFixtureStore();
+  const { fixtures, updateFixture } = useFixtureStore();
   const panelRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<{ startX: number; startY: number; panelX: number; panelY: number } | null>(null);
 
@@ -93,7 +93,7 @@ export function PropertiesPanel() {
     <div
       ref={panelRef}
       className="fixed z-50 bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col"
-      style={{ left: x, top: y, width: 320 }}
+      style={{ left: x, top: y, width: 320, maxHeight: "80vh" }}
       role="dialog"
       aria-label={`Propiedades de ${isFixture ? fixture!.label : room!.label}`}
     >
@@ -119,7 +119,7 @@ export function PropertiesPanel() {
       </div>
 
       {/* Contenido */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-4">
         {isFixture && fixture ? (
           <FixtureProperties fixture={fixture} updateFixture={updateFixture} />
         ) : room ? (
@@ -171,32 +171,34 @@ function FixtureProperties({
         </div>
       </div>
 
-      {/* Dimensiones */}
-      <div className="space-y-1">
-        <label className="text-xs font-medium text-gray-500">Dimensiones (cm)</label>
-        <div className="grid grid-cols-2 gap-2">
-          <div>
-            <label className="text-[10px] text-gray-400">Ancho</label>
-            <input
-              type="number"
-              value={fixture.width}
-              min={5}
-              onChange={(e) => updateFixture(fixture.id, { width: parseInt(e.target.value) || 5 })}
-              className="w-full text-sm text-gray-900 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="text-[10px] text-gray-400">Alto</label>
-            <input
-              type="number"
-              value={fixture.height}
-              min={5}
-              onChange={(e) => updateFixture(fixture.id, { height: parseInt(e.target.value) || 5 })}
-              className="w-full text-sm text-gray-900 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+      {/* Dimensiones — solo editable para fixtures que no son escalera */}
+      {fixture.category !== "stair" && (
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-gray-500">Dimensiones (cm)</label>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="text-[10px] text-gray-400">Ancho</label>
+              <input
+                type="number"
+                value={fixture.width}
+                min={5}
+                onChange={(e) => updateFixture(fixture.id, { width: parseInt(e.target.value) || 5 })}
+                className="w-full text-sm text-gray-900 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="text-[10px] text-gray-400">Alto</label>
+              <input
+                type="number"
+                value={fixture.height}
+                min={5}
+                onChange={(e) => updateFixture(fixture.id, { height: parseInt(e.target.value) || 5 })}
+                className="w-full text-sm text-gray-900 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Posición */}
       <div className="space-y-1">
@@ -289,7 +291,27 @@ function OpeningFixtureProperties({
     <div className="space-y-2">
       <label className="text-xs font-medium text-gray-500">Propiedades de apertura</label>
 
-      {/* Ángulo de apertura */}
+      {/* Abierta/Cerrada */}
+      <button
+        onClick={() => updateProp("isOpen", !(fixture.props.isOpen !== false))}
+        className={`w-full flex items-center justify-between px-3 py-2 rounded-md border transition-colors ${
+          fixture.props.isOpen !== false
+            ? "bg-blue-50 border-blue-200 text-blue-700"
+            : "bg-gray-50 border-gray-200 text-gray-500"
+        }`}
+        role="switch"
+        aria-checked={fixture.props.isOpen !== false}
+      >
+        <span className="text-sm">{fixture.props.isOpen !== false ? "Abierta" : "Cerrada"}</span>
+        <div className={`w-9 h-5 rounded-full transition-colors relative ${fixture.props.isOpen !== false ? "bg-blue-500" : "bg-gray-300"}`}>
+          <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${fixture.props.isOpen !== false ? "translate-x-4" : "translate-x-0.5"}`} />
+        </div>
+      </button>
+
+      {/* Controles de ángulo/lado — solo si está abierta */}
+      {fixture.props.isOpen !== false && (
+        <>
+          {/* Ángulo de apertura */}
       <div className="space-y-1">
         <label className="text-[10px] text-gray-400">Ángulo de apertura</label>
         <select
@@ -315,6 +337,8 @@ function OpeningFixtureProperties({
           <option value="left">Izquierda</option>
         </select>
       </div>
+        </>
+      )}
 
       {/* Corrediza */}
       {fixture.props.sliding !== undefined && (
@@ -353,11 +377,36 @@ function StairProperties({
   const floorHeight = (fixture.props.floorHeight as number) ?? 280;
   const flights = (fixture.props.flights as number) ?? 1;
   const landingWidth = (fixture.props.landingWidth as number) ?? 90;
+  const separation = (fixture.props.separation as number) ?? 10;
 
-  const calc = calculateStairs(floorHeight, stepHeight, stepWidth, flights);
+  const calc = calculateStairs(floorHeight, stepHeight, stepWidth, flights, stairWidth, separation, landingWidth);
 
   const updateProp = (key: string, value: number | boolean) => {
-    updateFixture(fixture.id, { props: { ...fixture.props, [key]: value } });
+    const newProps = { ...fixture.props, [key]: value };
+
+    // Recalcular dimensiones del fixture
+    const newStepHeight = (newProps.stepHeight as number) ?? stepHeight;
+    const newStepWidth = (newProps.stepWidth as number) ?? stepWidth;
+    const newStairWidth = (newProps.stairWidth as number) ?? stairWidth;
+    const newFlights = (newProps.flights as number) ?? flights;
+    const newFloorHeight = (newProps.floorHeight as number) ?? floorHeight;
+    const newLandingWidth = (newProps.landingWidth as number) ?? landingWidth;
+    const newSeparation = (newProps.separation as number) ?? separation;
+
+    const totalSteps = Math.ceil(newFloorHeight / newStepHeight);
+    const stepsPerFlight = newFlights === 1 ? totalSteps : Math.ceil(totalSteps / 2);
+    const totalRun = stepsPerFlight * newStepWidth;
+
+    // Ancho = ancho de tramo × 2 + separación (tramos paralelos lado a lado)
+    const calculatedWidth = newFlights === 2 ? newStairWidth * 2 + newSeparation : newStairWidth;
+    // Alto = desarrollo horizontal total + descanso
+    const calculatedHeight = totalRun + newLandingWidth;
+
+    updateFixture(fixture.id, {
+      width: calculatedWidth,
+      height: calculatedHeight,
+      props: newProps,
+    });
   };
 
   return (
@@ -403,6 +452,28 @@ function StairProperties({
         />
       </div>
 
+      {/* Dimensiones calculadas */}
+      <div className="space-y-1">
+        <label className="text-[10px] text-gray-400">Dimensiones calculadas</label>
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className="text-[10px] text-gray-400">Ancho</label>
+            <div className="text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-md px-2 py-1 font-mono">
+              {calc.calculatedWidth} cm
+            </div>
+          </div>
+          <div>
+            <label className="text-[10px] text-gray-400">Largo</label>
+            <div className="text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-md px-2 py-1 font-mono">
+              {calc.calculatedHeight} cm
+            </div>
+          </div>
+        </div>
+        <div className="text-[10px] text-gray-400">
+          = {((calc.calculatedWidth * calc.calculatedHeight) / 10000).toFixed(1)} m²
+        </div>
+      </div>
+
       {/* Altura de escalón */}
       <div className="space-y-1">
         <label className="text-[10px] text-gray-400">Altura de escalón (cm)</label>
@@ -429,18 +500,34 @@ function StairProperties({
         />
       </div>
 
-      {/* Descanso (solo 2 tramos) */}
+      {/* Descanso */}
+      <div className="space-y-1">
+        <label className="text-[10px] text-gray-400">Ancho descanso (cm)</label>
+        <input
+          type="number"
+          value={landingWidth}
+          min={60}
+          max={150}
+          onChange={(e) => updateProp("landingWidth", parseInt(e.target.value) || 90)}
+          className="w-full text-sm text-gray-900 border border-gray-300 rounded-md px-2 py-1"
+        />
+      </div>
+
+      {/* Separación entre tramos (solo 2 tramos) */}
       {flights === 2 && (
         <div className="space-y-1">
-          <label className="text-[10px] text-gray-400">Ancho descanso (cm)</label>
+          <label className="text-[10px] text-gray-400">Separación entre tramos (cm)</label>
           <input
             type="number"
-            value={landingWidth}
-            min={60}
-            max={150}
-            onChange={(e) => updateProp("landingWidth", parseInt(e.target.value) || 90)}
+            value={separation}
+            min={0}
+            max={50}
+            onChange={(e) => updateProp("separation", parseInt(e.target.value) || 0)}
             className="w-full text-sm text-gray-900 border border-gray-300 rounded-md px-2 py-1"
           />
+          <div className="text-[10px] text-gray-400">
+            Hueco entre final del primer tramo e inicio del segundo
+          </div>
         </div>
       )}
 

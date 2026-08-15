@@ -14,21 +14,6 @@ export interface FloorTemplate {
   rooms: Omit<Room, "id" | "x" | "y">[];
 }
 
-// Helper: convert percentage position to cm based on terrain size
-function posToCm(
-  px: number,
-  py: number,
-  roomWidth: number,
-  roomHeight: number,
-  terrainWidth: number,
-  terrainHeight: number
-): { x: number; y: number } {
-  return {
-    x: Math.round(px * terrainWidth - roomWidth / 2),
-    y: Math.round(py * terrainHeight - roomHeight / 2),
-  };
-}
-
 export const FLOOR_TEMPLATES: FloorTemplate[] = [
   {
     id: "casa-2dorm",

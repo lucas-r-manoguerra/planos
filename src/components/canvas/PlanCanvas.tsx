@@ -10,9 +10,8 @@
 
 import { useRef, useEffect, useState, useCallback } from "react";
 import Konva from "konva";
-import { Stage, Layer } from "react-konva";
+import { Stage, Layer, Line } from "react-konva";
 import { useCanvasStore } from "@/stores/canvas.store";
-import { useTerrainStore } from "@/stores/rooms.store";
 import { useRulerStore } from "@/stores/ruler.store";
 import { GridLayer } from "./GridLayer";
 import { TerrainLayer } from "./TerrainLayer";
@@ -25,16 +24,25 @@ import { SunArcLayer } from "./SunArcLayer";
 import { CompassOverlay } from "./CompassOverlay";
 import { CoordinateDisplay } from "./CoordinateDisplay";
 import { useFixtureStore } from "@/stores/fixtures.store";
-import { getCatalogItem } from "@/lib/fixtures-catalog";
+import { useFloorsStore } from "@/stores/floors.store";
+import { getCatalogItem, calculateStairs } from "@/lib/fixtures-catalog";
+import { findNearestWall } from "@/lib/utils";
 
 export function PlanCanvas() {
   const stageRef = useRef<Konva.Stage>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ width: 800, height: 600 });
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  const [wallPreview, setWallPreview] = useState<{
+    roomId: string;
+    side: "top" | "bottom" | "left" | "right";
+    x: number;
+    y: number;
+    offset: number;
+    wallLength: number;
+  } | null>(null);
 
   const { zoom, panX, panY, smoothZoom, setPan } = useCanvasStore();
-  const { terrain } = useTerrainStore();
   const { active: rulerActive, pointA, setPointA, setPointerPos, addMeasurement, deactivate } = useRulerStore();
   const { placingFixture, addFixture, setPlacingFixture } = useFixtureStore();
 
@@ -58,6 +66,7 @@ export function PlanCanvas() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && placingFixture) {
         setPlacingFixture(null);
+        setWallPreview(null);
       }
     };
     document.addEventListener("keydown", handleKeyDown);
@@ -94,9 +103,23 @@ export function PlanCanvas() {
         if (rulerActive) {
           setPointerPos(x, y);
         }
+
+        // Detectar pared cercana al colocar puertas/ventanas
+        if (placingFixture) {
+          const catalogItem = getCatalogItem(placingFixture);
+          if (catalogItem && (catalogItem.category === "door" || catalogItem.category === "window")) {
+            const rooms = useFloorsStore.getState().getActiveRooms();
+            const preview = findNearestWall(x, y, rooms);
+            setWallPreview(preview);
+          } else {
+            setWallPreview(null);
+          }
+        } else {
+          setWallPreview(null);
+        }
       }
     },
-    [panX, panY, zoom, rulerActive, setPointerPos],
+    [panX, panY, zoom, rulerActive, setPointerPos, placingFixture],
   );
 
   const handleContextMenu = useCallback(
@@ -132,14 +155,72 @@ export function PlanCanvas() {
         const catalogItem = getCatalogItem(placingFixture);
         if (!catalogItem) return;
 
+        // Puertas y ventanas solo se colocan en paredes
+        if (catalogItem.category === "door" || catalogItem.category === "window") {
+          if (!wallPreview) return;
+
+          const isHorizontal = wallPreview.side === "top" || wallPreview.side === "bottom";
+          const fixtureWidth = catalogItem.width;
+          const fixtureHeight = catalogItem.height;
+
+          let fx: number;
+          let fy: number;
+          let rotation = 0;
+
+          if (isHorizontal) {
+            fx = wallPreview.x - fixtureWidth / 2;
+            fy = wallPreview.y - fixtureHeight / 2;
+            rotation = 0;
+          } else {
+            fx = wallPreview.x - fixtureHeight / 2;
+            fy = wallPreview.y - fixtureWidth / 2;
+            rotation = 90;
+          }
+
+          addFixture({
+            catalogId: placingFixture,
+            label: catalogItem.label,
+            category: catalogItem.category,
+            x: fx,
+            y: fy,
+            width: fixtureWidth,
+            height: fixtureHeight,
+            rotation,
+            color: catalogItem.color,
+            props: catalogItem.props ? { ...catalogItem.props } : {},
+            wallId: wallPreview.roomId,
+            wallSide: wallPreview.side,
+            wallOffset: wallPreview.offset,
+          });
+          setWallPreview(null);
+          return;
+        }
+
+        // Resto de fixtures (muebles, plantas, etc.) — colocación libre
+        let width = catalogItem.width;
+        let height = catalogItem.height;
+        if (catalogItem.category === "stair" && catalogItem.props) {
+          const p = catalogItem.props;
+          const calc = calculateStairs(
+            (p.floorHeight as number) ?? 280,
+            (p.stepHeight as number) ?? 18,
+            (p.stepWidth as number) ?? 28,
+            (p.flights as number) ?? 1,
+            (p.stairWidth as number) ?? 90,
+            (p.separation as number) ?? 10,
+          );
+          width = calc.calculatedWidth;
+          height = calc.calculatedHeight;
+        }
+
         addFixture({
           catalogId: placingFixture,
           label: catalogItem.label,
           category: catalogItem.category,
-          x: canvasX - catalogItem.width / 2,
-          y: canvasY - catalogItem.height / 2,
-          width: catalogItem.width,
-          height: catalogItem.height,
+          x: canvasX - width / 2,
+          y: canvasY - height / 2,
+          width,
+          height,
           rotation: 0,
           color: catalogItem.color,
           props: catalogItem.props ? { ...catalogItem.props } : {},
@@ -164,7 +245,7 @@ export function PlanCanvas() {
         deactivate();
       }
     },
-    [placingFixture, addFixture, rulerActive, pointA, panX, panY, zoom, setPointA, addMeasurement, deactivate],
+    [placingFixture, addFixture, rulerActive, pointA, panX, panY, zoom, setPointA, addMeasurement, deactivate, wallPreview],
   );
 
   return (
@@ -193,9 +274,48 @@ export function PlanCanvas() {
           <WallLayer />
           <MeasurementLayer />
           <SunArcLayer />
+
+          {/* Línea de pared resaltada en modo colocación puerta/ventana */}
+          {wallPreview && (() => {
+            const rooms = useFloorsStore.getState().getActiveRooms();
+            const room = rooms.find(r => r.id === wallPreview.roomId);
+            if (!room) return null;
+
+            let x1: number, y1: number, x2: number, y2: number;
+            switch (wallPreview.side) {
+              case "top":
+                x1 = room.x; y1 = room.y; x2 = room.x + room.width; y2 = room.y;
+                break;
+              case "bottom":
+                x1 = room.x; y1 = room.y + room.height; x2 = room.x + room.width; y2 = room.y + room.height;
+                break;
+              case "left":
+                x1 = room.x; y1 = room.y; x2 = room.x; y2 = room.y + room.height;
+                break;
+              case "right":
+                x1 = room.x + room.width; y1 = room.y; x2 = room.x + room.width; y2 = room.y + room.height;
+                break;
+            }
+
+            return (
+              <Line
+                points={[x1, y1, x2, y2]}
+                stroke="#3b82f6"
+                strokeWidth={3}
+                dash={[6, 4]}
+                pointerEvents="none"
+              />
+            );
+          })()}
         </Layer>
       </Stage>
       <CompassOverlay />
+      {/* Indicador de pared detectada en modo colocación puerta/ventana */}
+      {wallPreview && (
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs px-3 py-1 rounded-full shadow-lg pointer-events-none">
+          Pared detectada — clic para colocar
+        </div>
+      )}
       <CoordinateDisplay x={cursorPos.x} y={cursorPos.y} />
     </div>
   );

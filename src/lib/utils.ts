@@ -83,8 +83,8 @@ export function clampPosition(
   const extendedMaxX = terrain.width - room.width + snapDistance;
   const extendedMaxY = terrain.height - room.height + snapDistance;
 
-  let rawX = Math.max(extendedMin, Math.min(x, extendedMaxX));
-  let rawY = Math.max(extendedMin, Math.min(y, extendedMaxY));
+  const rawX = Math.max(extendedMin, Math.min(x, extendedMaxX));
+  const rawY = Math.max(extendedMin, Math.min(y, extendedMaxY));
 
   let snapX = rawX;
   let snapY = rawY;
@@ -235,6 +235,110 @@ export function applyWallMergeSnap(
   }
 
   return { x: snapX, y: snapY };
+}
+
+// Detectar pared más cercana a un punto
+export function findNearestWall(
+  px: number,
+  py: number,
+  rooms: Array<{ id: string; x: number; y: number; width: number; height: number }>,
+  threshold: number = 15
+): {
+  roomId: string;
+  side: "top" | "bottom" | "left" | "right";
+  x: number;
+  y: number;
+  offset: number;
+  wallLength: number;
+} | null {
+  let best: {
+    roomId: string;
+    side: "top" | "bottom" | "left" | "right";
+    x: number;
+    y: number;
+    offset: number;
+    wallLength: number;
+    dist: number;
+  } | null = null;
+
+  for (const room of rooms) {
+    const walls: Array<{
+      side: "top" | "bottom" | "left" | "right";
+      x1: number; y1: number;
+      x2: number; y2: number;
+    }> = [
+      { side: "top",    x1: room.x, y1: room.y, x2: room.x + room.width, y2: room.y },
+      { side: "bottom", x1: room.x, y1: room.y + room.height, x2: room.x + room.width, y2: room.y + room.height },
+      { side: "left",   x1: room.x, y1: room.y, x2: room.x, y2: room.y + room.height },
+      { side: "right",  x1: room.x + room.width, y1: room.y, x2: room.x + room.width, y2: room.y + room.height },
+    ];
+
+    for (const wall of walls) {
+      const isHorizontal = wall.side === "top" || wall.side === "bottom";
+
+      let dist: number;
+      let snapX: number;
+      let snapY: number;
+      let offset: number;
+
+      if (isHorizontal) {
+        const minX = Math.min(wall.x1, wall.x2);
+        const maxX = Math.max(wall.x1, wall.x2);
+        if (px >= minX && px <= maxX) {
+          dist = Math.abs(py - wall.y1);
+          snapX = px;
+          snapY = wall.y1;
+          offset = px - minX;
+        } else {
+          const dx = px < minX ? minX - px : px - maxX;
+          const dy = py - wall.y1;
+          dist = Math.sqrt(dx * dx + dy * dy);
+          snapX = px < minX ? minX : maxX;
+          snapY = wall.y1;
+          offset = snapX - minX;
+        }
+      } else {
+        const minY = Math.min(wall.y1, wall.y2);
+        const maxY = Math.max(wall.y1, wall.y2);
+        if (py >= minY && py <= maxY) {
+          dist = Math.abs(px - wall.x1);
+          snapX = wall.x1;
+          snapY = py;
+          offset = py - minY;
+        } else {
+          const dy = py < minY ? minY - py : py - maxY;
+          const dx = px - wall.x1;
+          dist = Math.sqrt(dx * dx + dy * dy);
+          snapX = wall.x1;
+          snapY = py < minY ? minY : maxY;
+          offset = snapY - minY;
+        }
+      }
+
+      if (dist <= threshold && (!best || dist < best.dist)) {
+        const wallLength = isHorizontal ? Math.abs(wall.x2 - wall.x1) : Math.abs(wall.y2 - wall.y1);
+        best = {
+          roomId: room.id,
+          side: wall.side,
+          x: snapX,
+          y: snapY,
+          offset,
+          wallLength,
+          dist,
+        };
+      }
+    }
+  }
+
+  if (!best) return null;
+  return {
+    roomId: best.roomId,
+    side: best.side,
+    x: best.x,
+    y: best.y,
+    offset: best.offset,
+    wallLength: best.wallLength,
+  };
 }
 
 // Función debounce para optimizar eventos frecuentes

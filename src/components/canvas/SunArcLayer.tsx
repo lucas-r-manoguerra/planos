@@ -19,8 +19,7 @@ const MARKER_RADIUS = 8;
 const ARC_SAMPLES = 48; // muestras para dibujar el arco
 
 export function SunArcLayer() {
-  const { enabled, date, time, location, getSunPosition: getPos } =
-    useSunStore();
+  const { enabled, date, location, getSunPosition: getPos } = useSunStore();
   const { terrain } = useTerrainStore();
 
   if (!enabled) return null;

@@ -6,7 +6,7 @@
  */
 
 import { create } from "zustand";
-import { LocationSettings, SunSettings } from "@/types/plan";
+import { LocationSettings } from "@/types/plan";
 import { DEFAULT_SUN_SETTINGS } from "@/lib/constants";
 import { getSunPosition, getSunriseTime, getSunsetTime } from "@/lib/solar";
 

@@ -8,7 +8,6 @@
 
 "use client";
 
-import { useRef } from "react";
 import { Group, Rect, Text } from "react-konva";
 import Konva from "konva";
 import { useFloorsStore } from "@/stores/floors.store";

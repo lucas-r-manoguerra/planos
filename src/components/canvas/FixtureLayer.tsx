@@ -9,7 +9,9 @@
 
 import { memo } from "react";
 import { Group, Rect, Text, Line } from "react-konva";
+import { useShallow } from "zustand/react/shallow";
 import { useFixtureStore } from "@/stores/fixtures.store";
+import { useFloorsStore } from "@/stores/floors.store";
 import { useSelectionStore } from "@/stores/selection.store";
 import { useContextMenuStore } from "@/stores/context-menu.store";
 import { usePanelStore } from "@/stores/panel.store";
@@ -450,11 +452,14 @@ const FixtureRect = memo(function FixtureRect({ fixture }: { fixture: Fixture })
 });
 
 export const FixtureLayer = memo(function FixtureLayer() {
-  const fixtures = useFixtureStore((s) => s.fixtures);
+  const activeFloorId = useFloorsStore((s) => s.activeFloorId);
+  const visibleFixtures = useFixtureStore(
+    useShallow((s) => s.getFixturesForFloor(activeFloorId))
+  );
 
   return (
     <Group>
-      {fixtures.map((fixture) => (
+      {visibleFixtures.map((fixture) => (
         <FixtureRect key={fixture.id} fixture={fixture} />
       ))}
     </Group>

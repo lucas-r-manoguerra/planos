@@ -171,6 +171,7 @@ export interface Fixture {
   height: number;
   rotation: number; // grados, 0 = orientación original
   color: string;
+  floorId?: string; // Id de la planta a la que pertenece (legacy: undefined → primera planta)
   // Propiedades específicas
   props: Record<string, number | string | boolean>;
   // Para puertas/ventanas: pared anclada

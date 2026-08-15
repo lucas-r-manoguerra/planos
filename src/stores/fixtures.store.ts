@@ -22,6 +22,7 @@ interface FixtureStore {
   rotateFixture: (id: string, rotation: number) => void;
   setPlacingFixture: (subtype: FixtureSubtype | null) => void;
   clearFixtures: () => void;
+  getFixturesForFloor: (floorId: string) => Fixture[];
 }
 
 export const useFixtureStore = create<FixtureStore>((set, get) => {
@@ -44,9 +45,11 @@ export const useFixtureStore = create<FixtureStore>((set, get) => {
     addFixture: (fixtureData) => {
       recordHistory();
       const id = generateId();
+      const floorId = useFloorsStore.getState().activeFloorId;
       const newFixture: Fixture = {
         ...fixtureData,
         id,
+        floorId,
       };
       set((state) => ({
         fixtures: [...state.fixtures, newFixture],
@@ -94,6 +97,13 @@ export const useFixtureStore = create<FixtureStore>((set, get) => {
     clearFixtures: () => {
       recordHistory();
       set({ fixtures: [] });
+    },
+
+    getFixturesForFloor: (floorId) => {
+      const { fixtures } = get();
+      const firstFloorId = useFloorsStore.getState().floors[0]?.id;
+      // Legacy: fixtures sin floorId pertenecen a la primera planta
+      return fixtures.filter((f) => (f.floorId ?? firstFloorId) === floorId);
     },
   };
 });

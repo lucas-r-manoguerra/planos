@@ -66,12 +66,14 @@ export const FLOOR_TEMPLATES: FloorTemplate[] = [
   },
 ];
 
-// Helper to position rooms in a grid layout within the terrain
-export function applyTemplate(
+// Helper to position rooms in a grid layout within the terrain.
+// Pure: no ids, no store access — shared by the template preview
+// (spec template-confirm-1) and by applyTemplate.
+export function layoutTemplateRooms(
   template: FloorTemplate,
   terrainWidth: number,
   terrainHeight: number
-): Room[] {
+): Omit<Room, "id">[] {
   const rooms = template.rooms;
   const count = rooms.length;
 
@@ -96,9 +98,19 @@ export function applyTemplate(
 
     return {
       ...room,
-      id: crypto.randomUUID(),
       x: clampedX,
       y: clampedY,
     };
   });
+}
+
+// Applies a template, assigning fresh ids to each room.
+export function applyTemplate(
+  template: FloorTemplate,
+  terrainWidth: number,
+  terrainHeight: number
+): Room[] {
+  return layoutTemplateRooms(template, terrainWidth, terrainHeight).map(
+    (room) => ({ ...room, id: crypto.randomUUID() })
+  );
 }

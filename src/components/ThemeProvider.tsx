@@ -1,15 +1,17 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useSyncExternalStore } from "react";
+import { createContext, useCallback, useContext, useSyncExternalStore } from "react";
+import {
+  saveThemePreference,
+  type ThemePreference,
+} from "@/lib/storage";
 
-type Theme = "light" | "dark";
+type Theme = ThemePreference;
 
 interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
 }
-
-const THEME_KEY = "theme";
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: "light",
@@ -24,10 +26,13 @@ export function useTheme() {
  * Aplica un tema mutando el DOM (clase .dark en <html>) y lo persiste.
  * El DOM es la fuente de verdad: notificar vía un evento custom permite
  * que useSyncExternalStore observe el cambio sin setState dentro de efectos.
+ *
+ * La clase inicial ya la aplicó el script anti-FOUC en layout.tsx
+ * (solo lee la preferencia guardada — no detecta el tema del sistema).
  */
 function applyTheme(next: Theme) {
   document.documentElement.classList.toggle("dark", next === "dark");
-  localStorage.setItem(THEME_KEY, next);
+  saveThemePreference(next);
   window.dispatchEvent(new Event("planos-theme"));
 }
 
@@ -50,20 +55,6 @@ function getServerSnapshot(): Theme {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-
-  // Aplicar el tema inicial (guardado o preferencia del sistema) al montar.
-  // Solo escribe DOM + localStorage: el re-render lo dispara el evento de
-  // applyTheme, no setState dentro de un efecto.
-  useEffect(() => {
-    const stored = localStorage.getItem(THEME_KEY);
-    const initial: Theme =
-      stored === "dark" || stored === "light"
-        ? stored
-        : window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light";
-    applyTheme(initial);
-  }, []);
 
   const toggleTheme = useCallback(() => {
     applyTheme(theme === "light" ? "dark" : "light");

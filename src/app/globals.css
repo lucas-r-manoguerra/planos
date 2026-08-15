@@ -1,21 +1,67 @@
 @import "tailwindcss";
 
+/* Variante dark de Tailwind: activa `dark:` utilities cuando <html> tiene .dark */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ========== Light Theme (default) ========== */
 :root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
-  --sidebar-bg: #fafafa;
-  --border-color: #e5e7eb;
+  --background: #FAF9F6;
+  --foreground: #2D2D2D;
+  --sidebar-bg: #F5F3EF;
+  --border-color: #E0DDD6;
+  --docs-heading: #1A1A1A;
+  --docs-link: #3B65A3;
+  --docs-link-hover: #2A4A7A;
+  --docs-code-bg: #F0EDE8;
+  --docs-table-header: #E5E0D8;
+  --docs-table-hover: #FAF8F5;
+  --docs-table-border: #D4D0C8;
+  --docs-blockquote-border: #B8A99A;
+  --docs-blockquote-bg: #F5F3EF;
+  --card-bg: #FFFFFF;
+  --input-bg: #FFFFFF;
+  --muted-text: #555555;
+  --accent: #3B65A3;
+  --accent-hover: #2A4A7A;
+  --scrollbar-thumb: #C4BEB5;
+  --scrollbar-hover: #A09A91;
+}
+
+/* ========== Dark Theme ========== */
+.dark {
+  --background: #1A1B1E;
+  --foreground: #E0E0E0;
+  --sidebar-bg: #25262B;
+  --border-color: #373A40;
+  --docs-heading: #E8E8E8;
+  --docs-link: #7BA4DB;
+  --docs-link-hover: #A3C4F0;
+  --docs-code-bg: #2C2E33;
+  --docs-table-header: #36383D;
+  --docs-table-hover: #2C2E33;
+  --docs-table-border: rgba(55, 58, 64, 0.4);
+  --docs-blockquote-border: #5C5347;
+  --docs-blockquote-bg: #25262B;
+  --card-bg: #25262B;
+  --input-bg: #2C2E33;
+  --muted-text: #909296;
+  --accent: #7BA4DB;
+  --accent-hover: #A3C4F0;
+  --scrollbar-thumb: #373A40;
+  --scrollbar-hover: #4A4D52;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Focus ring global — accesibilidad */
 *:focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -33,11 +79,11 @@ button, a, [role="button"], input, select {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: var(--scrollbar-thumb);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: var(--scrollbar-hover);
 }
 
 /* Screen reader only */
@@ -51,4 +97,82 @@ button, a, [role="button"], input, select {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* ========== Documentation Typography ========== */
+
+.docs-container {
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+  word-spacing: 0.02em;
+  color: var(--foreground);
+}
+
+.docs-container h1,
+.docs-container h2,
+.docs-container h3,
+.docs-container h4 {
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--docs-heading);
+}
+
+.docs-container p {
+  margin-bottom: 1em;
+}
+
+.docs-container a {
+  color: var(--docs-link);
+  text-decoration: underline;
+  text-decoration-color: rgba(123, 164, 219, 0.3);
+  text-underline-offset: 2px;
+}
+
+.dark .docs-container a {
+  text-decoration-color: rgba(123, 164, 219, 0.4);
+}
+
+.docs-container a:hover {
+  text-decoration-color: var(--docs-link);
+  color: var(--docs-link-hover);
+}
+
+.docs-container blockquote {
+  border-left-color: var(--docs-blockquote-border);
+  background: var(--docs-blockquote-bg);
+}
+
+.docs-container code {
+  background: var(--docs-code-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.875em;
+}
+
+.docs-container pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+.docs-container table th {
+  background: var(--docs-table-header);
+}
+
+.docs-container table tr:hover {
+  background: var(--docs-table-hover);
+}
+
+.docs-container hr {
+  border-color: var(--border-color);
+  margin: 2.5em 0;
+}
+
+.docs-container img {
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dark .docs-container img {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }

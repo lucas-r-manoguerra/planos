@@ -129,7 +129,7 @@ export type FurnitureSubtype =
 export type PlantSubtype = "maceta-chica" | "maceta-grande" | "planta-media" | "planta-grande";
 
 // Subtipos de puertas
-export type DoorSubtype = "puerta-standard" | "puerta-americana" | "puerta-garage" | "puerta-corrediza";
+export type DoorSubtype = "puerta-standard" | "puerta-americana" | "puerta-garage" | "puerta-corrediza" | "puerta-balcon";
 
 // Subtipos de ventanas
 export type WindowSubtype = "ventana-standard" | "ventana-corrediza" | "ventana-batiente" | "ventanal";

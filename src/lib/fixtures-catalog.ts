@@ -241,7 +241,7 @@ export const FIXTURE_CATALOG: FixtureCatalogItem[] = [
     height: 10,
     color: "#8b4513",
     icon: "🚪",
-    props: { openingAngle: 90, openingSide: "right" },
+    props: { isOpen: true, openingAngle: 90, openingSide: "right" },
   },
   {
     id: "puerta-americana",
@@ -251,7 +251,7 @@ export const FIXTURE_CATALOG: FixtureCatalogItem[] = [
     height: 10,
     color: "#a0522d",
     icon: "🚪",
-    props: { openingAngle: 90, openingSide: "right" },
+    props: { isOpen: true, openingAngle: 90, openingSide: "right" },
   },
   {
     id: "puerta-garage",
@@ -261,7 +261,7 @@ export const FIXTURE_CATALOG: FixtureCatalogItem[] = [
     height: 10,
     color: "#696969",
     icon: "🚗",
-    props: { openingAngle: 90, openingSide: "right" },
+    props: { isOpen: true, openingAngle: 90, openingSide: "right" },
   },
   {
     id: "puerta-corrediza",
@@ -271,7 +271,17 @@ export const FIXTURE_CATALOG: FixtureCatalogItem[] = [
     height: 10,
     color: "#deb887",
     icon: "🚪",
-    props: { sliding: true },
+    props: { isOpen: true, sliding: true },
+  },
+  {
+    id: "puerta-balcon",
+    label: "Puerta Balcón",
+    category: "door",
+    width: 150,
+    height: 10,
+    color: "#a0522d",
+    icon: "🚪",
+    props: { isOpen: true, openingAngle: 90, openingSide: "right" },
   },
 
   // ==================== VENTANAS ====================
@@ -283,7 +293,7 @@ export const FIXTURE_CATALOG: FixtureCatalogItem[] = [
     height: 10,
     color: "#87ceeb",
     icon: "🪟",
-    props: { openingAngle: 90, openingSide: "right" },
+    props: { isOpen: true, openingAngle: 90, openingSide: "right" },
   },
   {
     id: "ventana-corrediza",
@@ -293,7 +303,7 @@ export const FIXTURE_CATALOG: FixtureCatalogItem[] = [
     height: 10,
     color: "#b0e0e6",
     icon: "🪟",
-    props: { sliding: true },
+    props: { isOpen: true, sliding: true },
   },
   {
     id: "ventana-batiente",
@@ -303,7 +313,7 @@ export const FIXTURE_CATALOG: FixtureCatalogItem[] = [
     height: 10,
     color: "#add8e6",
     icon: "🪟",
-    props: { openingAngle: 90, openingSide: "right" },
+    props: { isOpen: true, openingAngle: 90, openingSide: "right" },
   },
   {
     id: "ventanal",
@@ -313,7 +323,7 @@ export const FIXTURE_CATALOG: FixtureCatalogItem[] = [
     height: 10,
     color: "#b0e0e6",
     icon: "🪟",
-    props: { openingAngle: 90, openingSide: "right" },
+    props: { isOpen: true, openingAngle: 90, openingSide: "right" },
   },
 
   // ==================== ESCALERAS ====================
@@ -322,23 +332,24 @@ export const FIXTURE_CATALOG: FixtureCatalogItem[] = [
     label: "Escalera Tramo Único",
     category: "stair",
     width: 90,
-    height: 250,
+    height: 538,
     color: "#d2b48c",
     icon: "🪜",
     props: {
-      stepHeight: 18,    // cm
-      stepWidth: 28,     // cm (huella)
-      stairWidth: 90,    // cm
-      floorHeight: 280,  // cm (altura entre pisos)
+      stepHeight: 18,
+      stepWidth: 28,
+      stairWidth: 90,
+      floorHeight: 280,
       flights: 1,
+      landingWidth: 90,
     },
   },
   {
     id: "dos-tramos",
     label: "Escalera Dos Tramos",
     category: "stair",
-    width: 180,
-    height: 250,
+    width: 190,
+    height: 314,
     color: "#c4a882",
     icon: "🪜",
     props: {
@@ -347,6 +358,7 @@ export const FIXTURE_CATALOG: FixtureCatalogItem[] = [
       stairWidth: 90,
       floorHeight: 280,
       flights: 2,
+      separation: 10,
       landingWidth: 90,
     },
   },
@@ -364,17 +376,23 @@ export function getCatalogByCategory(category: FixtureCategory): FixtureCatalogI
 
 // Calcular escalones según norma IRAM
 // Fórmula: 2h + w = 60–64 cm
+// Geometría: tramos paralelos lado a lado
 export function calculateStairs(
   floorHeight: number,
   stepHeight: number,
   stepWidth: number,
-  flights: number
+  flights: number,
+  stairWidth: number = 90,
+  separation: number = 10,
+  landingWidth: number = 90,
 ): {
   stepsPerFlight: number;
   totalSteps: number;
   formulaResult: number;
   isCompliant: boolean;
   totalRun: number;
+  calculatedWidth: number;
+  calculatedHeight: number;
   recommendation: string;
 } {
   const formulaResult = 2 * stepHeight + stepWidth;
@@ -383,6 +401,10 @@ export function calculateStairs(
   const totalSteps = Math.ceil(floorHeight / stepHeight);
   const stepsPerFlight = flights === 1 ? totalSteps : Math.ceil(totalSteps / 2);
   const totalRun = stepsPerFlight * stepWidth;
+
+  const calculatedWidth = flights === 2 ? stairWidth * 2 + separation : stairWidth;
+  // Alto = desarrollo horizontal total + descanso
+  const calculatedHeight = totalRun + landingWidth;
 
   let recommendation = "";
   if (!isCompliant) {
@@ -401,6 +423,8 @@ export function calculateStairs(
     formulaResult,
     isCompliant,
     totalRun,
+    calculatedWidth,
+    calculatedHeight,
     recommendation,
   };
 }

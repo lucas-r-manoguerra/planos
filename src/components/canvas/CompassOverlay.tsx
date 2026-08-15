@@ -3,6 +3,7 @@
 import { useCallback, useRef } from "react";
 import { useSunStore } from "@/stores/sun.store";
 import { useTerrainStore } from "@/stores/rooms.store";
+import { useHistoryStore } from "@/stores/history.store";
 import { useCanvasColors } from "./canvas-colors";
 
 const SIZE = 120;
@@ -21,6 +22,7 @@ export function CompassOverlay() {
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     isDragging.current = true;
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    useHistoryStore.getState().beginGesture();
   }, []);
 
   const handlePointerMove = useCallback(
@@ -41,6 +43,7 @@ export function CompassOverlay() {
 
   const handlePointerUp = useCallback(() => {
     isDragging.current = false;
+    useHistoryStore.getState().endGesture();
   }, []);
 
   if (!enabled) return null;

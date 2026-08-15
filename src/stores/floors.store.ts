@@ -11,6 +11,7 @@ import { generateId, snapToGrid, clampPosition, applyWallMergeSnap } from "@/lib
 import { SNAP_THRESHOLD } from "@/lib/constants";
 import { useHistoryStore } from "@/stores/history.store";
 import { useTerrainStore } from "@/stores/rooms.store";
+import { useFixtureStore } from "@/stores/fixtures.store";
 
 // Collision detection helpers
 function roomsOverlap(
@@ -110,6 +111,7 @@ export const useFloorsStore = create<FloorStore>((set, get) => {
       floors: current.floors,
       activeFloorId: current.activeFloorId,
       terrain,
+      fixtures: useFixtureStore.getState().fixtures,
     });
   };
 

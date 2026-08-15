@@ -10,8 +10,8 @@ import { useCanvasStore } from "@/stores/canvas.store";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { useSelectionStore } from "@/stores/selection.store";
 import { useHistoryStore } from "@/stores/history.store";
-import { useFloorsStore } from "@/stores/floors.store";
 import { useRulerStore } from "@/stores/ruler.store";
+import { applyHistoryEntry } from "@/hooks/useEditorShortcuts";
 import { ZOOM_MIN, ZOOM_MAX } from "@/lib/constants";
 import {
   ZoomIn,
@@ -48,16 +48,12 @@ export function Toolbar() {
 
   const handleUndo = () => {
     const restored = undo();
-    if (restored) {
-      useFloorsStore.setState({ floors: restored.floors, activeFloorId: restored.activeFloorId });
-    }
+    if (restored) applyHistoryEntry(restored);
   };
 
   const handleRedo = () => {
     const restored = redo();
-    if (restored) {
-      useFloorsStore.setState({ floors: restored.floors, activeFloorId: restored.activeFloorId });
-    }
+    if (restored) applyHistoryEntry(restored);
   };
 
   const handleExportPNG = () => {

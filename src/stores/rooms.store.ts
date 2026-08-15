@@ -9,6 +9,7 @@ import { Terrain } from "@/types/plan";
 import { DEFAULT_TERRAIN } from "@/lib/constants";
 import { useHistoryStore } from "@/stores/history.store";
 import { useFloorsStore } from "@/stores/floors.store";
+import { useFixtureStore } from "@/stores/fixtures.store";
 
 interface TerrainStore {
   terrain: Terrain;
@@ -27,6 +28,7 @@ export const useTerrainStore = create<TerrainStore>((set, get) => {
       floors,
       activeFloorId,
       terrain: current.terrain,
+      fixtures: useFixtureStore.getState().fixtures,
     });
   };
 

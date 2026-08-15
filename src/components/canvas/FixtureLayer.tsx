@@ -15,6 +15,7 @@ import { useFloorsStore } from "@/stores/floors.store";
 import { useSelectionStore } from "@/stores/selection.store";
 import { useContextMenuStore } from "@/stores/context-menu.store";
 import { usePanelStore } from "@/stores/panel.store";
+import { useHistoryStore } from "@/stores/history.store";
 import Konva from "konva";
 import { Fixture } from "@/types/plan";
 import { useCanvasColors } from "./canvas-colors";
@@ -46,6 +47,7 @@ const FixtureRect = memo(function FixtureRect({ fixture }: { fixture: Fixture })
     e.cancelBubble = true;
     draggedFixtureIdRef.current = fixture.id;
     select(fixture.id);
+    useHistoryStore.getState().beginGesture();
   };
 
   const handleDragMove = (e: Konva.KonvaEventObject<DragEvent>) => {
@@ -58,6 +60,7 @@ const FixtureRect = memo(function FixtureRect({ fixture }: { fixture: Fixture })
     const newX = e.target.x();
     const newY = e.target.y();
     moveFixture(fixture.id, newX, newY);
+    useHistoryStore.getState().endGesture();
   };
 
   const handleClick = (e: Konva.KonvaEventObject<MouseEvent>) => {

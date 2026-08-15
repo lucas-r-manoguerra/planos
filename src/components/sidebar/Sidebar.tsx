@@ -25,14 +25,14 @@ export function Sidebar() {
 
   return (
     <aside
-      className="w-72 border-r border-gray-200 bg-[#fafafa] flex flex-col overflow-hidden"
+      className="w-72 border-r border-gray-200 dark:border-gray-700 bg-[#fafafa] dark:bg-gray-900 flex flex-col overflow-hidden dark:text-gray-200"
       aria-label="Panel de herramientas"
     >
       {/* Header */}
-      <div className="px-4 py-3 border-b border-gray-200 bg-white">
+      <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
         <div className="flex items-center gap-2">
           <Pencil size={16} className="text-blue-600" aria-hidden="true" />
-          <h1 className="text-base font-semibold text-gray-900">Planos</h1>
+          <h1 className="text-base font-semibold text-gray-900 dark:text-gray-100">Planos</h1>
         </div>
         <p className="text-xs text-gray-500 mt-0.5">Editor de planos de construcción</p>
       </div>

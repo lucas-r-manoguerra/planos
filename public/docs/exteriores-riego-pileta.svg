@@ -1,0 +1,257 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <rect width="800" height="600" fill="#FAF9F6" rx="8"/>
+  
+  <!-- ====== TOP SECTION: RIEGO ====== -->
+  <rect x="10" y="5" width="780" height="295" fill="#F7F9FC" stroke="#D0D5DD" stroke-width="1" rx="6"/>
+  <text x="400" y="28" text-anchor="middle" font-family="system-ui" font-size="14" font-weight="bold" fill="#1A1A1A">Riego Automatizado — Esquema General</text>
+  
+  <!-- Ground line -->
+  <line x1="30" y1="280" x2="770" y2="280" stroke="#8B7355" stroke-width="2"/>
+  <text x="770" y="278" text-anchor="end" font-family="system-ui" font-size="8" fill="#8B7355">Terreno</text>
+  
+  <!-- === Water Source === -->
+  <rect x="40" y="100" width="60" height="50" fill="#7BA4DB" stroke="#4A90D9" stroke-width="2" rx="4"/>
+  <rect x="40" y="95" width="60" height="12" fill="#4A90D9" stroke="#2D6EB0" stroke-width="1.5" rx="3"/>
+  <text x="70" y="115" text-anchor="middle" font-family="system-ui" font-size="9" font-weight="bold" fill="#FFF">Agua</text>
+  <text x="70" y="135" text-anchor="middle" font-family="system-ui" font-size="7" fill="#FFF">(Red / Pozo)</text>
+  <!-- Water level indicator -->
+  <line x1="45" y1="120" x2="95" y2="120" stroke="#FFF" stroke-width="1" stroke-dasharray="3 2" opacity="0.6"/>
+  
+  <!-- Label -->
+  <text x="70" y="168" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D6EB0">Fuente de agua</text>
+  <line x1="70" y1="162" x2="70" y2="150" stroke="#2D6EB0" stroke-width="1"/>
+  
+  <!-- === Underground Main Pipe (Cañería enterrada) === -->
+  <rect x="100" y="210" width="600" height="10" fill="#C9A96E" stroke="#8B7355" stroke-width="1.5" rx="3"/>
+  <!-- Trench markers -->
+  <line x1="100" y1="205" x2="100" y2="225" stroke="#8B7355" stroke-width="1" stroke-dasharray="4 2"/>
+  <line x1="300" y1="205" x2="300" y2="225" stroke="#8B7355" stroke-width="1" stroke-dasharray="4 2"/>
+  <line x1="500" y1="205" x2="500" y2="225" stroke="#8B7355" stroke-width="1" stroke-dasharray="4 2"/>
+  <line x1="700" y1="205" x2="700" y2="225" stroke="#8B7355" stroke-width="1" stroke-dasharray="4 2"/>
+  
+  <text x="400" y="240" text-anchor="middle" font-family="system-ui" font-size="10" fill="#8B7355">Cañería enterrada (polietileno)</text>
+  
+  <!-- Connection from water source to main pipe -->
+  <line x1="70" y1="150" x2="70" y2="210" stroke="#4A90D9" stroke-width="2"/>
+  <rect x="63" y="180" width="14" height="8" fill="#4A90D9" rx="2"/>
+  
+  <!-- === Controller (Programador) === -->
+  <rect x="650" y="40" width="100" height="65" fill="#E8E8E8" stroke="#555" stroke-width="2" rx="6"/>
+  <rect x="650" y="40" width="100" height="18" fill="#555" rx="6"/>
+  <text x="700" y="53" text-anchor="middle" font-family="system-ui" font-size="9" font-weight="bold" fill="#FFF">Programador</text>
+  <!-- Screen -->
+  <rect x="660" y="62" width="80" height="20" fill="#C8E6C9" stroke="#388E3C" stroke-width="1" rx="2"/>
+  <text x="700" y="76" text-anchor="middle" font-family="system-ui" font-size="7" fill="#1B5E20">Z1 06:00 15min</text>
+  <!-- Buttons -->
+  <circle cx="672" cy="90" r="3" fill="#999"/>
+  <circle cx="685" cy="90" r="3" fill="#999"/>
+  <circle cx="698" cy="90" r="3" fill="#999"/>
+  <rect x="710" y="87" width="18" height="8" fill="#4CAF50" rx="2"/>
+  <text x="719" y="93" text-anchor="middle" font-family="system-ui" font-size="6" fill="#FFF">ON</text>
+  
+  <line x1="700" y1="105" x2="700" y2="210" stroke="#555" stroke-width="2"/>
+  
+  <!-- === Rain Sensor === -->
+  <rect x="530" y="50" width="55" height="40" fill="#B3E5FC" stroke="#0288D1" stroke-width="1.5" rx="4"/>
+  <rect x="530" y="50" width="55" height="12" fill="#0288D1" rx="4"/>
+  <text x="557" y="59" text-anchor="middle" font-family="system-ui" font-size="7" font-weight="bold" fill="#FFF">Sensor</text>
+  <!-- Rain drops -->
+  <line x1="542" y1="70" x2="542" y2="76" stroke="#0288D1" stroke-width="1.5"/>
+  <line x1="550" y1="68" x2="550" y2="78" stroke="#0288D1" stroke-width="1.5"/>
+  <line x1="558" y1="72" x2="558" y2="80" stroke="#0288D1" stroke-width="1.5"/>
+  <line x1="568" y1="70" x2="568" y2="76" stroke="#0288D1" stroke-width="1.5"/>
+  <!-- Connection to controller -->
+  <line x1="585" y1="70" x2="650" y2="70" stroke="#0288D1" stroke-width="1.5" stroke-dasharray="4 2"/>
+  
+  <text x="557" y="102" text-anchor="middle" font-family="system-ui" font-size="9" fill="#0288D1">Sensor de lluvia</text>
+  <line x1="557" y1="96" x2="557" y2="90" stroke="#0288D1" stroke-width="1"/>
+  
+  <!-- === ZONE 1: Pop-up sprinklers (Aspersores emergentes) === -->
+  <line x1="150" y1="215" x2="150" y2="180" stroke="#5CB87A" stroke-width="2"/>
+  <line x1="150" y1="180" x2="320" y2="180" stroke="#5CB87A" stroke-width="2"/>
+  
+  <!-- Sprinklers -->
+  <g transform="translate(180,180)">
+    <rect x="-3" y="-15" width="6" height="15" fill="#5CB87A" stroke="#388E3C" stroke-width="1" rx="2"/>
+    <path d="M-3 -15 Q-12 -25 -8 -30" stroke="#4A90D9" stroke-width="1.5" fill="none"/>
+    <path d="M3 -15 Q12 -25 8 -30" stroke="#4A90D9" stroke-width="1.5" fill="none"/>
+    <path d="M0 -15 Q0 -28 0 -32" stroke="#4A90D9" stroke-width="1.5" fill="none"/>
+    <circle cx="-6" cy="-28" r="2" fill="#4A90D9" opacity="0.6"/>
+    <circle cx="6" cy="-28" r="2" fill="#4A90D9" opacity="0.6"/>
+  </g>
+  
+  <g transform="translate(270,180)">
+    <rect x="-3" y="-15" width="6" height="15" fill="#5CB87A" stroke="#388E3C" stroke-width="1" rx="2"/>
+    <path d="M-3 -15 Q-12 -25 -8 -30" stroke="#4A90D9" stroke-width="1.5" fill="none"/>
+    <path d="M3 -15 Q12 -25 8 -30" stroke="#4A90D9" stroke-width="1.5" fill="none"/>
+    <path d="M0 -15 Q0 -28 0 -32" stroke="#4A90D9" stroke-width="1.5" fill="none"/>
+  </g>
+  
+  <!-- Solenoid valve zone 1 -->
+  <rect x="135" y="207" width="12" height="18" fill="#FFB74D" stroke="#F57C00" stroke-width="1.5" rx="3"/>
+  
+  <text x="225" y="170" text-anchor="middle" font-family="system-ui" font-size="9" fill="#388E3C">Aspersor emergente</text>
+  <text x="225" y="200" text-anchor="middle" font-family="system-ui" font-size="8" fill="#F57C00">Válvula solenoide</text>
+  <line x1="141" y1="200" x2="141" y2="225" stroke="#F57C00" stroke-width="1"/>
+  
+  <!-- Sprinkler zone label -->
+  <text x="225" y="155" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#5CB87A">Zona 1 — Aspersión</text>
+  
+  <!-- === ZONE 2: Drip lines (Riego por goteo) === -->
+  <line x1="350" y1="215" x2="350" y2="250" stroke="#5CB87A" stroke-width="2"/>
+  <line x1="350" y1="250" x2="520" y2="250" stroke="#5CB87A" stroke-width="2"/>
+  
+  <!-- Solenoid valve zone 2 -->
+  <rect x="343" y="207" width="14" height="18" fill="#FFB74D" stroke="#F57C00" stroke-width="1.5" rx="3"/>
+  
+  <!-- Drip emitters -->
+  <line x1="380" y1="250" x2="380" y2="260" stroke="#4A90D9" stroke-width="1.5"/>
+  <circle cx="380" cy="263" r="2.5" fill="#4A90D9"/>
+  <line x1="420" y1="250" x2="420" y2="262" stroke="#4A90D9" stroke-width="1.5"/>
+  <circle cx="420" cy="265" r="2.5" fill="#4A90D9"/>
+  <line x1="460" y1="250" x2="460" y2="258" stroke="#4A90D9" stroke-width="1.5"/>
+  <circle cx="460" cy="261" r="2.5" fill="#4A90D9"/>
+  <line x1="500" y1="250" x2="500" y2="262" stroke="#4A90D9" stroke-width="1.5"/>
+  <circle cx="500" cy="265" r="2.5" fill="#4A90D9"/>
+  
+  <text x="440" y="248" text-anchor="middle" font-family="system-ui" font-size="8" fill="#F57C00">Válvula solenoide</text>
+  <text x="440" y="280" text-anchor="middle" font-family="system-ui" font-size="10" fill="#388E3C">Riego por goteo</text>
+  
+  <text x="440" y="290" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#5CB87A">Zona 2 — Goteo</text>
+  
+  <!-- === ZONE 3: Micro-aspersion === -->
+  <line x1="550" y1="215" x2="550" y2="255" stroke="#5CB87A" stroke-width="2"/>
+  <line x1="550" y1="255" x2="700" y2="255" stroke="#5CB87A" stroke-width="2"/>
+  
+  <!-- Solenoid valve zone 3 -->
+  <rect x="543" y="207" width="14" height="18" fill="#FFB74D" stroke="#F57C00" stroke-width="1.5" rx="3"/>
+  
+  <!-- Micro sprinklers -->
+  <circle cx="600" cy="255" r="4" fill="#5CB87A" stroke="#388E3C" stroke-width="1"/>
+  <path d="M594 250 Q590 242 595 238" stroke="#4A90D9" stroke-width="1" fill="none"/>
+  <path d="M606 250 Q610 242 605 238" stroke="#4A90D9" stroke-width="1" fill="none"/>
+  <path d="M600 248 L600 240" stroke="#4A90D9" stroke-width="1" fill="none"/>
+  
+  <circle cx="650" cy="255" r="4" fill="#5CB87A" stroke="#388E3C" stroke-width="1"/>
+  <path d="M644 250 Q640 242 645 238" stroke="#4A90D9" stroke-width="1" fill="none"/>
+  <path d="M656 250 Q660 242 655 238" stroke="#4A90D9" stroke-width="1" fill="none"/>
+  
+  <circle cx="700" cy="255" r="4" fill="#5CB87A" stroke="#388E3C" stroke-width="1"/>
+  <path d="M694 250 Q690 242 695 238" stroke="#4A90D9" stroke-width="1" fill="none"/>
+  <path d="M706 250 Q710 242 705 238" stroke="#4A90D9" stroke-width="1" fill="none"/>
+  
+  <text x="650" y="276" text-anchor="middle" font-family="system-ui" font-size="10" fill="#388E3C">Microaspersión</text>
+  <text x="650" y="288" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#5CB87A">Zona 3 — Micro</text>
+  
+  <!-- ====== DIVIDER ====== -->
+  <line x1="20" y1="308" x2="780" y2="308" stroke="#D0D5DD" stroke-width="2" stroke-dasharray="8 4"/>
+  
+  <!-- ====== BOTTOM SECTION: PISCINA ====== -->
+  <rect x="10" y="315" width="780" height="280" fill="#F0F4F8" stroke="#D0D5DD" stroke-width="1" rx="6"/>
+  <text x="400" y="338" text-anchor="middle" font-family="system-ui" font-size="14" font-weight="bold" fill="#1A1A1A">Pileta — Corte Transversal con Sistema de Filtrado</text>
+  
+  <!-- === Pool cross-section === -->
+  <path d="M120 420 L140 540 L660 540 L680 420 Z" fill="#B3D9F7" stroke="#4A90D9" stroke-width="2"/>
+  <!-- Water surface -->
+  <path d="M120 420 L680 420" stroke="#4A90D9" stroke-width="2.5"/>
+  <!-- Deeper water tint -->
+  <path d="M140 540 L660 540 L680 420 L120 420 Z" fill="url(#waterGrad)" opacity="0.3"/>
+  
+  <defs>
+    <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7BA4DB" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#1A5276" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Water surface wave -->
+  <path d="M130 422 Q160 418 190 422 Q220 426 250 422 Q280 418 310 422 Q340 426 370 422 Q400 418 430 422 Q460 426 490 422 Q520 418 550 422 Q580 426 610 422 Q640 418 670 422" stroke="#FFF" stroke-width="1" fill="none" opacity="0.6"/>
+  
+  <!-- Tiles pattern on walls -->
+  <rect x="122" y="425" width="556" height="110" fill="none" stroke="#A8D0F0" stroke-width="0.5" stroke-dasharray="4 4" opacity="0.5"/>
+  
+  <!-- === Skimmer === -->
+  <rect x="95" y="415" width="30" height="25" fill="#E0E0E0" stroke="#666" stroke-width="1.5" rx="3"/>
+  <rect x="95" y="413" width="30" height="6" fill="#666" rx="2"/>
+  <text x="110" y="430" text-anchor="middle" font-family="system-ui" font-size="6" fill="#333">SK</text>
+  <!-- Opening to pool -->
+  <rect x="120" y="420" width="8" height="12" fill="#4A90D9" stroke="#666" stroke-width="1" rx="1"/>
+  
+  <text x="75" y="445" text-anchor="middle" font-family="system-ui" font-size="10" fill="#333">Skimmer</text>
+  <line x1="95" y1="440" x2="80" y2="442" stroke="#333" stroke-width="1"/>
+  
+  <!-- === Return Inlet (Retorno) === -->
+  <circle cx="660" cy="470" r="6" fill="#FFF" stroke="#4A90D9" stroke-width="1.5"/>
+  <path d="M656 468 L656 472 L660 470 Z" fill="#4A90D9"/>
+  
+  <text x="675" y="473" text-anchor="start" font-family="system-ui" font-size="10" fill="#333">Retorno</text>
+  <line x1="666" y1="470" x2="672" y2="472" stroke="#333" stroke-width="1"/>
+  
+  <!-- === Main Drain (Desagüe de fondo) === -->
+  <rect x="390" y="532" width="30" height="8" fill="#888" stroke="#555" stroke-width="1.5" rx="2"/>
+  <line x1="395" y1="536" x2="415" y2="536" stroke="#555" stroke-width="1.5"/>
+  
+  <text x="405" y="555" text-anchor="middle" font-family="system-ui" font-size="10" fill="#333">Desagüe de fondo</text>
+  <line x1="405" y1="548" x2="405" y2="540" stroke="#333" stroke-width="1"/>
+  
+  <!-- === Filter System === -->
+  <!-- Pump (Bomba) -->
+  <circle cx="120" cy="510" r="22" fill="#E0E0E0" stroke="#666" stroke-width="2"/>
+  <circle cx="120" cy="510" r="12" fill="#F5F5F5" stroke="#999" stroke-width="1"/>
+  <text x="120" y="508" text-anchor="middle" font-family="system-ui" font-size="7" fill="#333">BOMBA</text>
+  <path d="M110 505 Q115 500 120 510 Q125 520 130 515" stroke="#4A90D9" stroke-width="1.5" fill="none"/>
+  
+  <text x="120" y="542" text-anchor="middle" font-family="system-ui" font-size="10" fill="#333">Bomba</text>
+  
+  <!-- Filter (Filtro de arena) -->
+  <ellipse cx="220" cy="480" rx="30" ry="40" fill="#E8E0D0" stroke="#8B7355" stroke-width="2"/>
+  <ellipse cx="220" cy="455" rx="26" ry="8" fill="#D4C9A8" stroke="#8B7355" stroke-width="1.5"/>
+  <ellipse cx="220" cy="505" rx="26" ry="6" fill="#D4C9A8" stroke="#8B7355" stroke-width="1.5"/>
+  <rect x="220" y="470" width="15" height="20" fill="#FFF" stroke="#8B7355" stroke-width="1" rx="2"/>
+  <text x="220" y="488" text-anchor="middle" font-family="system-ui" font-size="6" fill="#555">FILTRO</text>
+  <text x="220" y="495" text-anchor="middle" font-family="system-ui" font-size="5" fill="#555">ARENA</text>
+  
+  <text x="220" y="530" text-anchor="middle" font-family="system-ui" font-size="10" fill="#333">Filtro de arena</text>
+  
+  <!-- Heater (Calefacción opcional) -->
+  <rect x="250" y="465" width="40" height="30" fill="#FFE0B2" stroke="#F57C00" stroke-width="2" rx="4"/>
+  <rect x="250" y="463" width="40" height="8" fill="#F57C00" rx="3"/>
+  <text x="270" y="470" text-anchor="middle" font-family="system-ui" font-size="6" font-weight="bold" fill="#FFF">CALOR</text>
+  <!-- Flame -->
+  <path d="M260 485 Q265 478 270 485 Q265 482 260 485" fill="#FF5722"/>
+  <path d="M275 485 Q280 480 285 485 Q280 483 275 485" fill="#FF5722"/>
+  
+  <text x="270" y="508" text-anchor="middle" font-family="system-ui" font-size="9" fill="#F57C00">Calefacción</text>
+  <text x="270" y="518" text-anchor="middle" font-family="system-ui" font-size="8" fill="#999">(opcional)</text>
+  
+  <!-- === Connecting pipes === -->
+  <!-- Skimmer to pump -->
+  <path d="M110 440 L110 510 L98 510" stroke="#4A90D9" stroke-width="2" fill="none"/>
+  <!-- Pump to filter -->
+  <line x1="142" y1="510" x2="190" y2="480" stroke="#4A90D9" stroke-width="2"/>
+  <!-- Filter to heater -->
+  <line x1="250" y1="480" x2="250" y2="480" stroke="#4A90D9" stroke-width="2"/>
+  <!-- Filter to return -->
+  <path d="M250 480 Q280 440 400 440 L400 470 L654 470" stroke="#4A90D9" stroke-width="2" fill="none"/>
+  <!-- Drain to pump -->
+  <path d="M405 536 L405 550 L120 550 L120 532" stroke="#4A90D9" stroke-width="2" fill="none"/>
+  
+  <!-- Water flow arrows -->
+  <polygon points="120,505 128,502 128,508" fill="#4A90D9"/>
+  <polygon points="200,478 206,483 200,488" fill="#4A90D9"/>
+  <polygon points="600,468 594,472 594,464" fill="#4A90D9"/>
+  
+  <!-- === In-ground pool label === -->
+  <text x="400" y="410" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#4A90D9">Pileta de hormigón / fibra de vidrio</text>
+  
+  <!-- Ground on both sides -->
+  <rect x="20" y="395" width="100" height="130" fill="#C9A96E" opacity="0.3" stroke="#8B7355" stroke-width="1" stroke-dasharray="4 2"/>
+  <rect x="680" y="395" width="100" height="130" fill="#C9A96E" opacity="0.3" stroke="#8B7355" stroke-width="1" stroke-dasharray="4 2"/>
+  
+  <!-- Ground line label -->
+  <line x1="20" y1="395" x2="780" y2="395" stroke="#8B7355" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="740" y="392" font-family="system-ui" font-size="8" fill="#8B7355">Nivel del terreno</text>
+  
+  <!-- === Pipe legend === -->
+  <text x="420" y="565" text-anchor="start" font-family="system-ui" font-size="8" fill="#999">Líneas azules: circulación de agua</text>
+</svg>

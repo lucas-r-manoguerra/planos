@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="#FAF9F6" rx="8"/>
+  <text x="400" y="28" text-anchor="middle" font-family="system-ui" font-size="15" font-weight="bold" fill="#1A1A1A">Equipo de Protección Personal (EPP)</text>
+
+  <!-- Grid: 4 cols x 2 rows -->
+  <!-- Col 1 -->
+  <rect x="25" y="45" width="180" height="200" fill="#FFFFFF" stroke="#E0DDD6" rx="6"/>
+  <g transform="translate(115, 130)">
+    <circle cx="0" cy="0" r="36" fill="#FDF2D4"/>
+    <!-- Casco -->
+    <path d="M-28,10 Q-30,-20 -15,-30 Q0,-38 15,-30 Q30,-20 28,10 Z" fill="#FFD700" stroke="#D4A800" stroke-width="1.5"/>
+    <rect x="-26" y="8" width="52" height="6" rx="2" fill="#D4A800"/>
+    <rect x="-20" y="14" width="40" height="4" rx="1" fill="#B8960F"/>
+    <line x1="-20" y1="-5" x2="-10" y2="-2" stroke="#C8A000" stroke-width="1"/>
+    <line x1="20" y1="-5" x2="10" y2="-2" stroke="#C8A000" stroke-width="1"/>
+  </g>
+  <text x="115" y="185" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">Casco de Seguridad</text>
+  <text x="115" y="198" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">IRAM 3620 — color según rol</text>
+
+  <!-- Col 2 -->
+  <rect x="215" y="45" width="180" height="200" fill="#FFFFFF" stroke="#E0DDD6" rx="6"/>
+  <g transform="translate(305, 130)">
+    <circle cx="0" cy="0" r="36" fill="#E0F3F7"/>
+    <!-- Antiparras -->
+    <rect x="-30" y="-12" width="60" height="24" rx="8" fill="#A8D8E8" stroke="#2D2D2D" stroke-width="1.5"/>
+    <rect x="-30" y="-12" width="28" height="24" rx="6" fill="#B8E4F0" stroke="#2D2D2D" stroke-width="1"/>
+    <rect x="2" y="-12" width="28" height="24" rx="6" fill="#B8E4F0" stroke="#2D2D2D" stroke-width="1"/>
+    <line x1="-30" y1="0" x2="-38" y2="8" stroke="#2D2D2D" stroke-width="2"/>
+    <line x1="30" y1="0" x2="38" y2="8" stroke="#2D2D2D" stroke-width="2"/>
+    <line x1="-38" y1="8" x2="-42" y2="6" stroke="#2D2D2D" stroke-width="1.5"/>
+    <line x1="38" y1="8" x2="42" y2="6" stroke="#2D2D2D" stroke-width="1.5"/>
+  </g>
+  <text x="305" y="185" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">Antiparras</text>
+  <text x="305" y="198" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">Impacto y salpicaduras</text>
+
+  <!-- Col 3 -->
+  <rect x="405" y="45" width="180" height="200" fill="#FFFFFF" stroke="#E0DDD6" rx="6"/>
+  <g transform="translate(495, 130)">
+    <circle cx="0" cy="0" r="36" fill="#E8E8E8"/>
+    <!-- Orejeras -->
+    <path d="M-2,-34 L-2,34" stroke="#2D2D2D" stroke-width="2.5"/>
+    <ellipse cx="-22" cy="-2" rx="16" ry="24" fill="#2D2D2D"/>
+    <ellipse cx="-22" cy="-2" rx="12" ry="18" fill="#4A4A4A"/>
+    <ellipse cx="22" cy="-2" rx="16" ry="24" fill="#2D2D2D"/>
+    <ellipse cx="22" cy="-2" rx="12" ry="18" fill="#4A4A4A"/>
+    <path d="M-6,-22 Q0,-24 6,-22" stroke="#666" stroke-width="1.5" fill="none"/>
+  </g>
+  <text x="495" y="185" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">Orejeras</text>
+  <text x="495" y="198" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">Protección auditiva</text>
+
+  <!-- Col 4 -->
+  <rect x="595" y="45" width="180" height="200" fill="#FFFFFF" stroke="#E0DDD6" rx="6"/>
+  <g transform="translate(685, 130)">
+    <circle cx="0" cy="0" r="36" fill="#F5F5F5"/>
+    <!-- Barbijo/máscara -->
+    <rect x="-24" y="-28" width="48" height="12" rx="4" fill="#D0D0D0"/>
+    <path d="M-24,-16 Q-24,4 -18,14 Q-10,22 0,22 Q10,22 18,14 Q24,4 24,-16 Z" fill="#FFFFFF" stroke="#CCC" stroke-width="1.5"/>
+    <rect x="-10" y="-2" width="20" height="16" rx="4" fill="#E8E8E8" stroke="#BBB" stroke-width="1"/>
+    <circle cx="0" cy="8" r="4" fill="#D8D8D8"/>
+    <rect x="-18" y="-4" width="36" height="2" rx="1" fill="#E0E0E0"/>
+  </g>
+  <text x="685" y="185" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">Mascarilla / Barbijo</text>
+  <text x="685" y="198" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">Filtro antipartículas</text>
+
+  <!-- Row 2 -->
+
+  <!-- Col 1 -->
+  <rect x="25" y="260" width="180" height="200" fill="#FFFFFF" stroke="#E0DDD6" rx="6"/>
+  <g transform="translate(115, 345)">
+    <circle cx="0" cy="0" r="36" fill="#F0E8D0"/>
+    <!-- Guantes de cuero -->
+    <rect x="-18" y="-30" width="36" height="40" rx="8" fill="#8B6914" stroke="#6B4F10" stroke-width="1.5"/>
+    <rect x="-22" y="8" width="44" height="14" rx="4" fill="#A07818" stroke="#6B4F10" stroke-width="1"/>
+    <rect x="-18" y="-22" width="8" height="30" rx="4" fill="#7A5C12"/>
+    <rect x="10" y="-22" width="8" height="30" rx="4" fill="#7A5C12"/>
+    <rect x="-6" y="-26" width="12" height="34" rx="4" fill="#8B6914"/>
+    <line x1="-10" y1="14" x2="10" y2="14" stroke="#6B4F10" stroke-width="1"/>
+    <line x1="-10" y1="18" x2="10" y2="18" stroke="#6B4F10" stroke-width="1"/>
+  </g>
+  <text x="115" y="400" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">Guantes de Cuero</text>
+  <text x="115" y="413" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">Trabajo general y carga</text>
+
+  <!-- Col 2 -->
+  <rect x="215" y="260" width="180" height="200" fill="#FFFFFF" stroke="#E0DDD6" rx="6"/>
+  <g transform="translate(305, 345)">
+    <circle cx="0" cy="0" r="36" fill="#F0E0D0"/>
+    <!-- Botín de seguridad -->
+    <rect x="-24" y="-22" width="48" height="26" rx="6" fill="#8B4513" stroke="#5C2D0A" stroke-width="1.5"/>
+    <path d="M-24,4 L-30,20 Q-30,24 -20,24 L28,24 Q34,24 34,18 L34,4 Z" fill="#8B4513" stroke="#5C2D0A" stroke-width="1.5"/>
+    <path d="M-26,8 L-30,18" stroke="#5C2D0A" stroke-width="1.5"/>
+    <rect x="-18" y="-18" width="36" height="10" rx="3" fill="#A0A0A0" stroke="#666" stroke-width="1.5"/>
+    <line x1="-14" y1="-18" x2="-14" y2="-8" stroke="#888" stroke-width="1"/>
+    <line x1="-6" y1="-18" x2="-6" y2="-8" stroke="#888" stroke-width="1"/>
+    <line x1="2" y1="-18" x2="2" y2="-8" stroke="#888" stroke-width="1"/>
+    <line x1="10" y1="-18" x2="10" y2="-8" stroke="#888" stroke-width="1"/>
+    <line x1="-20" y1="8" x2="-26" y2="16" stroke="#5C2D0A" stroke-width="1"/>
+  </g>
+  <text x="305" y="400" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">Botín de Seguridad</text>
+  <text x="305" y="413" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">IRAM 4151 — puntera de acero</text>
+
+  <!-- Col 3 -->
+  <rect x="405" y="260" width="180" height="200" fill="#FFFFFF" stroke="#E0DDD6" rx="6"/>
+  <g transform="translate(495, 345)">
+    <circle cx="0" cy="0" r="36" fill="#FDE8E4"/>
+    <!-- Arnés de seguridad -->
+    <path d="M-8,-32 L-8,-10 L-24,0 L-24,18 L-8,12 L-8,24 L8,24 L8,12 L24,18 L24,0 L8,-10 L8,-32 Z" fill="#FF6347" stroke="#CC4030" stroke-width="1.5"/>
+    <circle cx="-8" cy="-34" r="5" fill="none" stroke="#FFD700" stroke-width="2"/>
+    <circle cx="8" cy="-34" r="5" fill="none" stroke="#FFD700" stroke-width="2"/>
+    <circle cx="-24" cy="20" r="5" fill="none" stroke="#FFD700" stroke-width="2"/>
+    <circle cx="24" cy="20" r="5" fill="none" stroke="#FFD700" stroke-width="2"/>
+    <rect x="-10" y="-2" width="20" height="6" rx="2" fill="#E04830"/>
+    <line x1="-8" y1="-10" x2="-8" y2="-24" stroke="#CC4030" stroke-width="1.5"/>
+    <line x1="8" y1="-10" x2="8" y2="-24" stroke="#CC4030" stroke-width="1.5"/>
+    <line x1="-16" y1="4" x2="-18" y2="12" stroke="#CC4030" stroke-width="1"/>
+    <line x1="16" y1="4" x2="18" y2="12" stroke="#CC4030" stroke-width="1"/>
+  </g>
+  <text x="495" y="400" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">Arnés de Seguridad</text>
+  <text x="495" y="413" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">IRAM 3680 — cuerpo entero</text>
+
+  <!-- Col 4 -->
+  <rect x="595" y="260" width="180" height="200" fill="#FFFFFF" stroke="#E0DDD6" rx="6"/>
+  <g transform="translate(685, 345)">
+    <circle cx="0" cy="0" r="36" fill="#FFEDD4"/>
+    <!-- Chaleco reflectivo -->
+    <path d="M-20,-30 L-10,6 L-14,24 L14,24 L10,6 L20,-30 Z" fill="#FF8C00" stroke="#E07000" stroke-width="1.5"/>
+    <rect x="-14" y="-18" width="28" height="6" rx="1" fill="#C0C0C0" opacity="0.9"/>
+    <rect x="-10" y="-6" width="20" height="6" rx="1" fill="#C0C0C0" opacity="0.9"/>
+    <rect x="-12" y="8" width="24" height="6" rx="1" fill="#C0C0C0" opacity="0.9"/>
+    <line x1="-20" y1="-24" x2="-20" y2="-30" stroke="#E07000" stroke-width="1"/>
+    <line x1="20" y1="-24" x2="20" y2="-30" stroke="#E07000" stroke-width="1"/>
+    <circle cx="-14" cy="26" r="2" fill="#E07000"/>
+    <circle cx="14" cy="26" r="2" fill="#E07000"/>
+  </g>
+  <text x="685" y="400" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">Chaleco Reflectivo</text>
+  <text x="685" y="413" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">Alta visibilidad</text>
+
+  <text x="400" y="485" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">Elementos obligatorios según Resolución SRT y normas IRAM</text>
+</svg>

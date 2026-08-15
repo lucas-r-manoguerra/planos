@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 220" fill="none">
+  <rect width="450" height="220" fill="#FAF9F6" rx="8"/>
+  <text x="225" y="22" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="#1A1A1A">Circuito de Agua en Vivienda</text>
+  <rect x="30" y="90" width="40" height="40" fill="#3B65A3" stroke="#2D2D2D" rx="4"/>
+  <text x="50" y="115" text-anchor="middle" font-family="system-ui" font-size="8" fill="white">Medidor</text>
+  <line x1="70" y1="110" x2="130" y2="110" stroke="#3B65A3" stroke-width="3"/>
+  <text x="100" y="100" text-anchor="middle" font-family="system-ui" font-size="9" fill="#3B65A3">Fria</text>
+  <rect x="130" y="80" width="60" height="60" fill="#E74C3C" stroke="#2D2D2D" rx="4"/>
+  <text x="160" y="105" text-anchor="middle" font-family="system-ui" font-size="8" fill="white">Calefon</text>
+  <text x="160" y="118" text-anchor="middle" font-family="system-ui" font-size="8" fill="white">o Caldera</text>
+  <line x1="190" y1="110" x2="380" y2="110" stroke="#E74C3C" stroke-width="3"/>
+  <text x="285" y="100" text-anchor="middle" font-family="system-ui" font-size="9" fill="#E74C3C">Caliente</text>
+  <rect x="210" y="130" width="30" height="25" fill="#ECEFF1" stroke="#2D2D2D" rx="2"/>
+  <text x="225" y="147" text-anchor="middle" font-family="system-ui" font-size="7" fill="#2D2D2D">PILETA</text>
+  <rect x="260" y="130" width="30" height="25" fill="#ECEFF1" stroke="#2D2D2D" rx="2"/>
+  <text x="275" y="147" text-anchor="middle" font-family="system-ui" font-size="7" fill="#2D2D2D">BAÑO</text>
+  <rect x="310" y="130" width="30" height="25" fill="#ECEFF1" stroke="#2D2D2D" rx="2"/>
+  <text x="325" y="147" text-anchor="middle" font-family="system-ui" font-size="7" fill="#2D2D2D">COCINA</text>
+  <rect x="360" y="130" width="30" height="25" fill="#ECEFF1" stroke="#2D2D2D" rx="2"/>
+  <text x="375" y="147" text-anchor="middle" font-family="system-ui" font-size="7" fill="#2D2D2D">DUCHA</text>
+  <line x1="225" y1="110" x2="225" y2="130" stroke="#2D2D2D" stroke-width="1"/>
+  <line x1="275" y1="110" x2="275" y2="130" stroke="#2D2D2D" stroke-width="1"/>
+  <line x1="325" y1="110" x2="325" y2="130" stroke="#2D2D2D" stroke-width="1"/>
+  <line x1="375" y1="110" x2="375" y2="130" stroke="#2D2D2D" stroke-width="1"/>
+  <line x1="225" y1="155" x2="225" y2="180" stroke="#6B6B6B" stroke-width="2" stroke-dasharray="4,3"/>
+  <line x1="275" y1="155" x2="275" y2="180" stroke="#6B6B6B" stroke-width="2" stroke-dasharray="4,3"/>
+  <line x1="325" y1="155" x2="325" y2="180" stroke="#6B6B6B" stroke-width="2" stroke-dasharray="4,3"/>
+  <line x1="375" y1="155" x2="375" y2="180" stroke="#6B6B6B" stroke-width="2" stroke-dasharray="4,3"/>
+  <line x1="225" y1="180" x2="375" y2="180" stroke="#6B6B6B" stroke-width="2" stroke-dasharray="4,3"/>
+  <text x="300" y="198" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">Desague</text>
+  <rect x="30" y="170" width="150" height="40" fill="white" stroke="#E0DDD6" rx="4"/>
+  <line x1="40" y1="182" x2="60" y2="182" stroke="#3B65A3" stroke-width="3"/>
+  <text x="65" y="186" font-family="system-ui" font-size="9" fill="#2D2D2D">Agua fria</text>
+  <line x1="40" y1="200" x2="60" y2="200" stroke="#E74C3C" stroke-width="3"/>
+  <text x="65" y="204" font-family="system-ui" font-size="9" fill="#2D2D2D">Agua caliente</text>
+</svg>

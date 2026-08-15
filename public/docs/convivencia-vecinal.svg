@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="#FAF9F6" rx="8"/>
+  <text x="400" y="30" text-anchor="middle" font-family="system-ui" font-size="15" font-weight="bold" fill="#1A1A1A">Buena Convivencia en Obra</text>
+  <text x="400" y="48" text-anchor="middle" font-family="system-ui" font-size="11" fill="#6B6B6B">Medidas para minimizar el impacto en la comunidad</text>
+
+  <!-- Sun / Work hours annotation (top left) -->
+  <circle cx="85" cy="90" r="25" fill="#FFD700" stroke="#DAA520" stroke-width="1.5"/>
+  <line x1="85" y1="58" x2="85" y2="50" stroke="#DAA520" stroke-width="2"/>
+  <line x1="85" y1="122" x2="85" y2="130" stroke="#DAA520" stroke-width="2"/>
+  <line x1="53" y1="90" x2="45" y2="90" stroke="#DAA520" stroke-width="2"/>
+  <line x1="117" y1="90" x2="125" y2="90" stroke="#DAA520" stroke-width="2"/>
+  <line x1="62" y1="67" x2="57" y2="62" stroke="#DAA520" stroke-width="2"/>
+  <line x1="108" y1="113" x2="113" y2="118" stroke="#DAA520" stroke-width="2"/>
+  <line x1="108" y1="67" x2="113" y2="62" stroke="#DAA520" stroke-width="2"/>
+  <line x1="62" y1="113" x2="57" y2="118" stroke="#DAA520" stroke-width="2"/>
+  <text x="85" y="93" text-anchor="middle" font-family="system-ui" font-size="9" font-weight="bold" fill="#8B6914">Horario</text>
+  <rect x="135" y="75" width="130" height="32" fill="#FFF8E0" stroke="#DAA520" stroke-width="1.5" rx="6"/>
+  <text x="200" y="95" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#8B6914">7:00 – 19:00 hs</text>
+
+  <!-- HOUSE - Center -->
+  <!-- Ground -->
+  <rect x="250" y="370" width="300" height="20" fill="#B8A99A" stroke="#2D2D2D" stroke-width="1" rx="1"/>
+
+  <!-- House body -->
+  <rect x="285" y="220" width="230" height="150" fill="#E8D5B7" stroke="#2D2D2D" stroke-width="2" rx="2"/>
+
+  <!-- Roof -->
+  <polygon points="270,220 400,140 530,220" fill="#C75B39" stroke="#2D2D2D" stroke-width="2"/>
+
+  <!-- Door -->
+  <rect x="365" y="280" width="40" height="90" fill="#8B6B4A" stroke="#2D2D2D" stroke-width="1.5" rx="2"/>
+  <circle cx="395" cy="330" r="3" fill="#FFD700"/>
+
+  <!-- Windows -->
+  <rect x="300" y="250" width="45" height="45" fill="#A8D8F0" stroke="#2D2D2D" stroke-width="1.5" rx="2"/>
+  <line x1="322" y1="250" x2="322" y2="295" stroke="#2D2D2D" stroke-width="1"/>
+  <line x1="300" y1="272" x2="345" y2="272" stroke="#2D2D2D" stroke-width="1"/>
+
+  <rect x="455" y="250" width="45" height="45" fill="#A8D8F0" stroke="#2D2D2D" stroke-width="1.5" rx="2"/>
+  <line x1="477" y1="250" x2="477" y2="295" stroke="#2D2D2D" stroke-width="1"/>
+  <line x1="455" y1="272" x2="500" y2="272" stroke="#2D2D2D" stroke-width="1"/>
+
+  <!-- Chimney -->
+  <rect x="460" y="155" width="25" height="65" fill="#C75B39" stroke="#2D2D2D" stroke-width="1.5"/>
+  <!-- Smoke -->
+  <circle cx="472" cy="140" r="8" fill="#D0D0D0" opacity="0.6"/>
+  <circle cx="478" cy="125" r="6" fill="#D0D0D0" opacity="0.4"/>
+  <circle cx="485" cy="112" r="5" fill="#D0D0D0" opacity="0.3"/>
+
+  <!-- Scaffolding (left side) -->
+  <line x1="270" y1="170" x2="270" y2="370" stroke="#D4883A" stroke-width="3"/>
+  <line x1="285" y1="170" x2="285" y2="370" stroke="#D4883A" stroke-width="3"/>
+  <line x1="270" y1="200" x2="285" y2="200" stroke="#D4883A" stroke-width="2.5"/>
+  <line x1="270" y1="250" x2="285" y2="250" stroke="#D4883A" stroke-width="2.5"/>
+  <line x1="270" y1="300" x2="285" y2="300" stroke="#D4883A" stroke-width="2.5"/>
+  <line x1="270" y1="350" x2="285" y2="350" stroke="#D4883A" stroke-width="2.5"/>
+  <line x1="262" y1="170" x2="293" y2="170" stroke="#D4883A" stroke-width="2"/>
+
+  <!-- Scaffolding (right side) -->
+  <line x1="515" y1="170" x2="515" y2="370" stroke="#D4883A" stroke-width="3"/>
+  <line x1="530" y1="170" x2="530" y2="370" stroke="#D4883A" stroke-width="3"/>
+  <line x1="515" y1="200" x2="530" y2="200" stroke="#D4883A" stroke-width="2.5"/>
+  <line x1="515" y1="250" x2="530" y2="250" stroke="#D4883A" stroke-width="2.5"/>
+  <line x1="515" y1="300" x2="530" y2="300" stroke="#D4883A" stroke-width="2.5"/>
+  <line x1="515" y1="350" x2="530" y2="350" stroke="#D4883A" stroke-width="2.5"/>
+  <line x1="507" y1="170" x2="538" y2="170" stroke="#D4883A" stroke-width="2"/>
+
+  <!-- === ANNOTATIONS === -->
+
+  <!-- 1. Dust barrier (left) -->
+  <path d="M245 240 L245 190" stroke="#3B65A3" stroke-width="1" stroke-dasharray="3,3"/>
+  <rect x="140" y="180" width="100" height="28" fill="#E8F0FA" stroke="#3B65A3" stroke-width="1" rx="6"/>
+  <text x="190" y="198" text-anchor="middle" font-family="system-ui" font-size="10" fill="#1B3A5C">Contención de polvo</text>
+
+  <!-- 2. Perimeter fence (right) -->
+  <path d="M545 260 L555 260" stroke="#3B65A3" stroke-width="1"/>
+  <line x1="555" y1="260" x2="570" y2="220" stroke="#3B65A3" stroke-width="1" stroke-dasharray="3,3"/>
+  <rect x="570" y="205" width="120" height="28" fill="#E8F0FA" stroke="#3B65A3" stroke-width="1" rx="6"/>
+  <text x="630" y="223" text-anchor="middle" font-family="system-ui" font-size="10" fill="#1B3A5C">Cercado perimetral</text>
+
+  <!-- 3. Truck exit (bottom right) -->
+  <path d="M530 390 L560 400" stroke="#3B65A3" stroke-width="1"/>
+  <line x1="560" y1="400" x2="580" y2="370" stroke="#3B65A3" stroke-width="1" stroke-dasharray="3,3"/>
+  <rect x="580" y="360" width="140" height="28" fill="#E8F0FA" stroke="#3B65A3" stroke-width="1" rx="6"/>
+  <text x="650" y="378" text-anchor="middle" font-family="system-ui" font-size="10" fill="#1B3A5C">Salida de camiones</text>
+  <!-- Small truck icon -->
+  <rect x="620" y="388" width="20" height="12" fill="#6B6B6B" rx="2"/>
+  <circle cx="626" cy="402" r="3" fill="#2D2D2D"/>
+  <circle cx="634" cy="402" r="3" fill="#2D2D2D"/>
+
+  <!-- 4. No Sundays / Holidays (bottom left) -->
+  <path d="M260 390 L200 400" stroke="#3B65A3" stroke-width="1"/>
+  <line x1="200" y1="400" x2="180" y2="370" stroke="#3B65A3" stroke-width="1" stroke-dasharray="3,3"/>
+  <rect x="60" y="355" width="130" height="32" fill="#FFF0F0" stroke="#C0392B" stroke-width="1" rx="6"/>
+  <text x="125" y="374" text-anchor="middle" font-family="system-ui" font-size="10" fill="#C0392B">No domingos ni feriados</text>
+
+  <!-- Bottom annotation strip -->
+  <rect x="50" y="435" width="700" height="40" fill="#F5F3EF" stroke="#E0DDD6" stroke-width="1" rx="6"/>
+  <text x="400" y="453" text-anchor="middle" font-family="system-ui" font-size="10" fill="#5A5A5A">Mantener comunicación con vecinos · Respetar horarios · Señalizar claramente la obra</text>
+  <text x="400" y="468" text-anchor="middle" font-family="system-ui" font-size="9" fill="#8A8A8A">Ordenanza Municipal · Art. 6° — Obligaciones del constructor frente a la comunidad</text>
+</svg>

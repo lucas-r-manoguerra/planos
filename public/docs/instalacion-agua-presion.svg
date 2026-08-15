@@ -1,0 +1,534 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="900" viewBox="0 0 800 900">
+<defs>
+  <!-- patterns -->
+  <pattern id="earth" width="12" height="12" patternUnits="userSpaceOnUse">
+    <path d="M0 6L6 0M0 12L12 0M6 12L12 6" stroke="#7A6548" stroke-width="0.5" opacity="0.3"/>
+  </pattern>
+  <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+    <line x1="0" y1="0" x2="0" y2="8" stroke="#B0B0B8" stroke-width="0.6"/>
+  </pattern>
+  <pattern id="concrete" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+    <line x1="0" y1="0" x2="0" y2="6" stroke="#888" stroke-width="0.4" opacity="0.5"/>
+  </pattern>
+  <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#7AB8F5" stop-opacity="0.7"/>
+    <stop offset="100%" stop-color="#4A90D9" stop-opacity="0.3"/>
+  </linearGradient>
+  <linearGradient id="cistern-water" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#7AB8F5" stop-opacity="0.5"/>
+    <stop offset="100%" stop-color="#4A90D9" stop-opacity="0.25"/>
+  </linearGradient>
+  
+  <!-- markers -->
+  <marker id="arr-bl" markerWidth="9" markerHeight="6" refX="9" refY="3" orient="auto">
+    <path d="M0 0L9 3L0 6Z" fill="#4A90D9"/>
+  </marker>
+  <marker id="arr-rd" markerWidth="9" markerHeight="6" refX="9" refY="3" orient="auto">
+    <path d="M0 0L9 3L0 6Z" fill="#D9714A"/>
+  </marker>
+  <marker id="arr-dk" markerWidth="9" markerHeight="6" refX="9" refY="3" orient="auto">
+    <path d="M0 0L9 3L0 6Z" fill="#2D2D2D"/>
+  </marker>
+</defs>
+
+<!-- BACKGROUND -->
+<rect width="800" height="900" fill="#FAF9F6"/>
+
+<!-- ============================================= -->
+<!-- EARTH & GROUND -->
+<!-- ============================================= -->
+<rect x="0" y="602" width="800" height="298" fill="#8B7355"/>
+<rect x="0" y="602" width="800" height="298" fill="url(#earth)"/>
+<!-- ground surface line -->
+<line x1="0" y1="602" x2="800" y2="602" stroke="#5C4A32" stroke-width="2"/>
+
+<!-- grass texture on ground surface -->
+<path d="M10 602 Q15 594 20 602 M30 602 Q35 596 40 602 M55 602 Q58 595 62 602 M80 602 Q83 594 87 602" stroke="#5A7A3A" stroke-width="1.5" fill="none"/>
+<path d="M250 602 Q253 596 256 602 M270 602 Q275 593 280 602 M300 602 Q304 595 308 602" stroke="#5A7A3A" stroke-width="1.5" fill="none"/>
+<path d="M550 602 Q553 596 557 602 M570 602 Q574 594 578 602" stroke="#5A7A3A" stroke-width="1.5" fill="none"/>
+
+<!-- ============================================= -->
+<!-- BUILDING STRUCTURE -->
+<!-- ============================================= -->
+
+<!-- Roof slab -->
+<rect x="238" y="98" width="524" height="16" fill="#D4D4DC" stroke="#999" stroke-width="1.5"/>
+<rect x="238" y="98" width="524" height="16" fill="url(#concrete)"/>
+
+<!-- Piso 2 floor slab -->
+<rect x="238" y="348" width="524" height="16" fill="#D4D4DC" stroke="#999" stroke-width="1.5"/>
+<rect x="238" y="348" width="524" height="16" fill="url(#concrete)"/>
+
+<!-- Piso 1 / Ground floor slab -->
+<rect x="238" y="586" width="524" height="16" fill="#D4D4DC" stroke="#999" stroke-width="1.5"/>
+<rect x="238" y="586" width="524" height="16" fill="url(#concrete)"/>
+
+<!-- Exterior walls -->
+<rect x="238" y="114" width="18" height="484" fill="#D4D4DC" stroke="#999" stroke-width="1.5"/>
+<rect x="238" y="114" width="18" height="484" fill="url(#hatch)"/>
+
+<rect x="744" y="114" width="18" height="484" fill="#D4D4DC" stroke="#999" stroke-width="1.5"/>
+<rect x="744" y="114" width="18" height="484" fill="url(#hatch)"/>
+
+<!-- Interior pipe chase wall (partial, between floors) -->
+<rect x="290" y="114" width="10" height="234" fill="#E0E0E6" stroke="#BBB" stroke-width="1"/>
+<rect x="290" y="114" width="10" height="234" fill="url(#hatch)"/>
+<rect x="290" y="364" width="10" height="222" fill="#E0E0E6" stroke="#BBB" stroke-width="1"/>
+<rect x="290" y="364" width="10" height="222" fill="url(#hatch)"/>
+
+<!-- Sidewalk -->
+<rect x="0" y="602" width="238" height="8" fill="#C0B8A8" stroke="#A09888" stroke-width="0.5"/>
+
+<!-- Floor labels -->
+<text x="752" y="136" font-family="system-ui" font-size="12" font-weight="700" fill="#2D2D2D">PISO 2</text>
+<text x="752" y="386" font-family="system-ui" font-size="12" font-weight="700" fill="#2D2D2D">PISO 1</text>
+<text x="752" y="620" font-family="system-ui" font-size="12" font-weight="700" fill="#2D2D2D">SUELO</text>
+
+<!-- ============================================= -->
+<!-- CISTERNA (underground tank) -->
+<!-- ============================================= -->
+
+<!-- Water inside cisterna -->
+<rect x="52" y="690" width="155" height="165" rx="6" fill="url(#cistern-water)"/>
+<!-- Water surface wave -->
+<path d="M52 690 Q70 686 90 690 Q110 694 130 690 Q150 686 170 690 Q190 694 207 690" stroke="#4A90D9" stroke-width="1.2" fill="none" opacity="0.6"/>
+
+<!-- Cisterna wall -->
+<rect x="48" y="650" width="163" height="210" rx="8" fill="none" stroke="#9E9E9E" stroke-width="3"/>
+<rect x="48" y="650" width="163" height="210" rx="8" fill="url(#concrete)" opacity="0.3"/>
+<!-- Cisterna lid -->
+<rect x="48" y="646" width="163" height="10" rx="3" fill="#B0B0B8" stroke="#9E9E9E" stroke-width="1.5"/>
+<!-- Cisterna access cover -->
+<rect x="100" y="646" width="40" height="10" rx="2" fill="#888" stroke="#777" stroke-width="1"/>
+
+<text x="130" y="760" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="600" fill="#FFF">Nivel de agua</text>
+<line x1="75" y1="690" x2="130" y2="690" stroke="#FFF" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.5"/>
+
+<!-- ============================================= -->
+<!-- STREET ENTRY: Red pública → Medidor → Llave de paso -->
+<!-- ============================================= -->
+
+<!-- Red pública pipe entering from left -->
+<line x1="0" y1="545" x2="45" y2="545" stroke="#4A90D9" stroke-width="5" stroke-linecap="round"/>
+<!-- flow arrow -->
+<line x1="20" y1="545" x2="5" y2="545" stroke="#FFF" stroke-width="1.5" marker-end="url(#arr-bl)"/>
+
+<!-- Medidor box -->
+<rect x="45" y="528" width="56" height="34" rx="4" fill="#FFF" stroke="#2D2D2D" stroke-width="1.5"/>
+<!-- meter dial -->
+<circle cx="73" cy="545" r="10" fill="none" stroke="#2D2D2D" stroke-width="1"/>
+<circle cx="73" cy="545" r="1.5" fill="#2D2D2D"/>
+<line x1="73" y1="545" x2="78" y2="539" stroke="#2D2D2D" stroke-width="1.2"/>
+<line x1="73" y1="545" x2="68" y2="548" stroke="#E74C3C" stroke-width="0.8"/>
+<text x="73" y="520" text-anchor="middle" font-family="system-ui" font-size="8" font-weight="600" fill="#2D2D2D">Medidor</text>
+
+<!-- meter inlet pipe -->
+<line x1="45" y1="545" x2="56" y2="545" stroke="#4A90D9" stroke-width="5"/>
+<!-- meter outlet pipe -->
+<line x1="101" y1="545" x2="122" y2="545" stroke="#4A90D9" stroke-width="5"/>
+
+<!-- Llave de paso general (gate valve) -->
+<rect x="122" y="532" width="14" height="26" rx="2" fill="#E74C3C" stroke="#2D2D2D" stroke-width="1.5"/>
+<circle cx="129" cy="545" r="4" fill="none" stroke="#FFF" stroke-width="1"/>
+<!-- valve handle -->
+<line x1="129" y1="528" x2="129" y2="520" stroke="#2D2D2D" stroke-width="2"/>
+<rect x="122" y="516" width="14" height="4" rx="1" fill="#2D2D2D"/>
+<text x="129" y="504" text-anchor="middle" font-family="system-ui" font-size="8" font-weight="600" fill="#2D2D2D">Llave de paso</text>
+
+<!-- Pipe from valve going DOWN to cisterna -->
+<line x1="129" y1="558" x2="129" y2="646" stroke="#4A90D9" stroke-width="5"/>
+<!-- elbow at bottom to enter cisterna -->
+<line x1="129" y1="646" x2="155" y2="646" stroke="#4A90D9" stroke-width="5"/>
+<line x1="155" y1="646" x2="155" y2="690" stroke="#4A90D9" stroke-width="5"/>
+<!-- flow arrow down -->
+<line x1="129" y1="590" x2="129" y2="578" stroke="#FFF" stroke-width="1.5" marker-end="url(#arr-bl)"/>
+
+<!-- ============================================= -->
+<!-- BOMBA (pump) -->
+<!-- ============================================= -->
+
+<!-- Suction pipe from cisterna -->
+<line x1="175" y1="690" x2="175" y2="642" stroke="#4A90D9" stroke-width="5"/>
+<line x1="128" y1="642" x2="175" y2="642" stroke="#4A90D9" stroke-width="5"/>
+
+<!-- Pump body -->
+<circle cx="128" cy="637" r="18" fill="#E74C3C" stroke="#2D2D2D" stroke-width="2"/>
+<path d="M120 630 L136 644 M120 644 L136 630" stroke="#FFF" stroke-width="1.5" opacity="0.7"/>
+<text x="128" y="614" text-anchor="middle" font-family="system-ui" font-size="9" font-weight="700" fill="#E74C3C">Bomba</text>
+<text x="128" y="668" text-anchor="middle" font-family="system-ui" font-size="7" fill="#2D2D2D">1/2 HP</text>
+
+<!-- Pump base -->
+<rect x="108" y="655" width="40" height="5" rx="1" fill="#999"/>
+
+<!-- Válvula de retención (check valve on rising main) -->
+<line x1="128" y1="619" x2="128" y2="562" stroke="#4A90D9" stroke-width="5"/>
+<rect x="118" y="580" width="20" height="14" rx="2" fill="#FFF" stroke="#2D2D2D" stroke-width="1.5"/>
+<path d="M122 586 L132 593 L122 600" fill="none" stroke="#2D2D2D" stroke-width="1.5"/>
+<line x1="134" y1="583" x2="134" y2="596" stroke="#2D2D2D" stroke-width="1.2"/>
+<text x="128" y="575" text-anchor="middle" font-family="system-ui" font-size="7" fill="#2D2D2D">VR</text>
+
+<!-- Discharge / Rising main continues up -->
+<line x1="128" y1="562" x2="128" y2="20" stroke="#4A90D9" stroke-width="5"/>
+
+<!-- flow arrow up -->
+<line x1="128" y1="450" x2="128" y2="438" stroke="#FFF" stroke-width="1.5" marker-end="url(#arr-bl)"/>
+<line x1="128" y1="250" x2="128" y2="238" stroke="#FFF" stroke-width="1.5" marker-end="url(#arr-bl)"/>
+
+<!-- Rising main enters tank -->
+<line x1="128" y1="20" x2="128" y2="85" stroke="#4A90D9" stroke-width="5"/>
+<!-- Elbow into tank -->
+<line x1="128" y1="85" x2="155" y2="85" stroke="#4A90D9" stroke-width="5"/>
+<!-- Vertical inlet inside tank -->
+<line x1="155" y1="85" x2="155" y2="35" stroke="#4A90D9" stroke-width="4"/>
+
+<!-- ============================================= -->
+<!-- TANQUE ELEVADO (roof tank) -->
+<!-- ============================================= -->
+
+<!-- Concrete base -->
+<rect x="58" y="90" width="200" height="10" rx="2" fill="#9E9E9E" stroke="#888" stroke-width="1.5"/>
+
+<!-- Tank outer wall (cylinder shown as rectangle - side view) -->
+<rect x="60" y="18" width="100" height="72" rx="4" fill="none" stroke="#9E9E9E" stroke-width="3"/>
+<!-- Tank inner fill - cutaway right half -->
+<rect x="100" y="18" width="60" height="72" rx="4" fill="#E8E4DC" stroke="#BBB" stroke-width="1"/>
+
+<!-- Water inside tank (visible in cutaway) -->
+<rect x="100" y="38" width="60" height="52" rx="0" fill="url(#water)"/>
+<!-- water surface -->
+<line x1="100" y1="38" x2="160" y2="38" stroke="#4A90D9" stroke-width="1.5"/>
+<path d="M100 38 Q110 35 120 38 Q130 41 140 38 Q150 35 160 38" stroke="#4A90D9" stroke-width="1" fill="none" opacity="0.5"/>
+
+<!-- Tank section line (cut line) -->
+<line x1="100" y1="18" x2="100" y2="90" stroke="#BBB" stroke-width="1" stroke-dasharray="4,3"/>
+
+<!-- BOYA / FLOTADOR (float valve) -->
+<!-- Float arm -->
+<line x1="145" y1="26" x2="145" y2="40" stroke="#2D2D2D" stroke-width="1.5"/>
+<line x1="145" y1="40" x2="135" y2="37" stroke="#2D2D2D" stroke-width="1.5"/>
+<!-- Float ball -->
+<circle cx="135" cy="37" r="5" fill="#3498DB" stroke="#2D2D2D" stroke-width="1"/>
+<!-- Valve body at inlet -->
+<rect x="142" y="24" width="8" height="6" rx="1" fill="#2D2D2D"/>
+
+<text x="130" y="13" text-anchor="middle" font-family="system-ui" font-size="9" font-weight="600" fill="#2D2D2D">Boya / Flotante</text>
+
+<!-- REBALSE (overflow) -->
+<rect x="152" y="26" width="8" height="6" fill="none" stroke="#E74C3C" stroke-width="1.5"/>
+<line x1="160" y1="29" x2="190" y2="29" stroke="#E74C3C" stroke-width="2.5"/>
+<!-- overflow goes down -->
+<line x1="190" y1="29" x2="190" y2="602" stroke="#E74C3C" stroke-width="2.5" stroke-dasharray="6,3"/>
+<line x1="190" y1="602" x2="220" y2="602" stroke="#E74C3C" stroke-width="2.5" stroke-dasharray="6,3"/>
+<text x="205" y="310" font-family="system-ui" font-size="8" fill="#E74C3C" transform="rotate(-90,205,310)">Rebalse / Demasiadero</text>
+
+<!-- ============================================= -->
+<!-- BAJADA PRINCIPAL (main down pipe from tank) -->
+<!-- ============================================= -->
+
+<!-- Tank outlet -->
+<rect x="108" y="86" width="14" height="6" rx="1" fill="#999"/>
+<line x1="115" y1="90" x2="115" y2="105" stroke="#4A90D9" stroke-width="5"/>
+
+<!-- Horizontal connection to bajada chase -->
+<line x1="115" y1="105" x2="270" y2="105" stroke="#4A90D9" stroke-width="5"/>
+<!-- flow arrow -->
+<line x1="200" y1="105" x2="215" y2="105" stroke="#FFF" stroke-width="1.5" marker-end="url(#arr-bl)"/>
+
+<!-- Bajada vertical (inside pipe chase) -->
+<line x1="270" y1="105" x2="270" y2="598" stroke="#4A90D9" stroke-width="5"/>
+<!-- flow arrow down -->
+<line x1="270" y1="350" x2="270" y2="338" stroke="#FFF" stroke-width="1.5" marker-end="url(#arr-bl)"/>
+
+<!-- Bottom of bajada -->
+<line x1="270" y1="598" x2="270" y2="610" stroke="#4A90D9" stroke-width="5"/>
+
+<!-- Bajada label -->
+<text x="280" y="210" font-family="system-ui" font-size="9" font-weight="600" fill="#4A90D9">Bajada</text>
+<text x="280" y="222" font-family="system-ui" font-size="9" font-weight="600" fill="#4A90D9">principal</text>
+
+<!-- ============================================= -->
+<!-- DISTRIBUCIÓN PISO 2 -->
+<!-- ============================================= -->
+
+<!-- Branch from bajada at Piso 2 -->
+<line x1="270" y1="200" x2="530" y2="200" stroke="#4A90D9" stroke-width="3.5"/>
+<circle cx="270" cy="200" r="3" fill="#4A90D9"/>
+
+<!-- To ducha (shower) -->
+<line x1="530" y1="200" x2="550" y2="200" stroke="#4A90D9" stroke-width="3.5"/>
+<line x1="550" y1="200" x2="550" y2="310" stroke="#4A90D9" stroke-width="3"/>
+
+<!-- To inodoro (toilet) -->
+<line x1="530" y1="200" x2="630" y2="200" stroke="#4A90D9" stroke-width="3.5"/>
+<line x1="630" y1="200" x2="630" y2="305" stroke="#4A90D9" stroke-width="3"/>
+
+<!-- ============================================= -->
+<!-- DISTRIBUCIÓN PISO 1 -->
+<!-- ============================================= -->
+
+<!-- Branch from bajada at Piso 1 -->
+<circle cx="270" cy="460" r="3" fill="#4A90D9"/>
+
+<!-- To kitchen (mesada) - left side -->
+<line x1="270" y1="460" x2="355" y2="460" stroke="#4A90D9" stroke-width="3.5"/>
+<line x1="355" y1="460" x2="355" y2="540" stroke="#4A90D9" stroke-width="3"/>
+
+<!-- To bathroom (inodoro + lavatorio) - right side -->
+<line x1="270" y1="460" x2="520" y2="460" stroke="#4A90D9" stroke-width="3.5"/>
+
+<line x1="520" y1="460" x2="610" y2="460" stroke="#4A90D9" stroke-width="3"/>
+<line x1="610" y1="460" x2="610" y2="560" stroke="#4A90D9" stroke-width="3"/>
+
+<line x1="520" y1="460" x2="680" y2="460" stroke="#4A90D9" stroke-width="3"/>
+<line x1="680" y1="460" x2="680" y2="540" stroke="#4A90D9" stroke-width="3"/>
+
+<!-- Distribution label -->
+<text x="312" y="453" font-family="system-ui" font-size="8" fill="#4A90D9">Distribución a artefactos</text>
+
+<!-- ============================================= -->
+<!-- CALEFÓN / TERMOTANQUE (water heater) -->
+<!-- ============================================= -->
+
+<rect x="380" y="428" width="60" height="110" rx="8" fill="#FFF3E0" stroke="#D9714A" stroke-width="2"/>
+<!-- Top/bottom caps -->
+<rect x="384" y="436" width="52" height="8" rx="2" fill="#E0D0C0"/>
+<rect x="384" y="524" width="52" height="8" rx="2" fill="#E0D0C0"/>
+<!-- Flame icon -->
+<ellipse cx="410" cy="450" rx="10" ry="6" fill="#E74C3C" opacity="0.6"/>
+<path d="M410 444 Q413 448 410 452 Q407 448 410 444" fill="#FFD700" opacity="0.8"/>
+<!-- Flue -->
+<rect x="406" y="425" width="8" height="11" fill="#999" stroke="#777" stroke-width="0.8"/>
+<rect x="430" y="520" width="8" height="12" fill="#999" stroke="#777" stroke-width="0.8"/>
+<polygon points="406,425 414,425 412,420 408,420" fill="#999"/>
+
+<text x="410" y="552" text-anchor="middle" font-family="system-ui" font-size="8" font-weight="600" fill="#D9714A">Calefón /</text>
+<text x="410" y="563" text-anchor="middle" font-family="system-ui" font-size="8" font-weight="600" fill="#D9714A">Termotanque</text>
+
+<!-- Cold water inlet to calefón -->
+<line x1="388" y1="445" x2="388" y2="460" stroke="#4A90D9" stroke-width="2.5"/>
+<line x1="340" y1="460" x2="388" y2="460" stroke="#4A90D9" stroke-width="2.5"/>
+<circle cx="340" cy="460" r="1.5" fill="#4A90D9"/>
+<text x="355" y="476" font-family="system-ui" font-size="6" fill="#4A90D9">Entrada agua fría</text>
+
+<!-- Hot water outlet from calefón -->
+<line x1="432" y1="445" x2="432" y2="480" stroke="#D9714A" stroke-width="2.5"/>
+<line x1="432" y1="480" x2="550" y2="480" stroke="#D9714A" stroke-width="2.5"/>
+
+<!-- Hot water to Piso 2 ducha -->
+<line x1="550" y1="480" x2="550" y2="200" stroke="#D9714A" stroke-width="2.5"/>
+<line x1="550" y1="200" x2="560" y2="200" stroke="#D9714A" stroke-width="2.5"/>
+
+<!-- Hot water to Piso 1 lavatorio -->
+<line x1="550" y1="480" x2="690" y2="480" stroke="#D9714A" stroke-width="2.5"/>
+
+<!-- ============================================= -->
+<!-- FIXTURES - PISO 2 -->
+<!-- ============================================= -->
+
+<!-- DUCHA (shower) - Piso 2 -->
+<!-- Shower arm from wall -->
+<line x1="555" y1="310" x2="555" y2="175" stroke="#999" stroke-width="2"/>
+<!-- Shower head -->
+<ellipse cx="555" cy="172" rx="10" ry="5" fill="#E0E0E6" stroke="#999" stroke-width="1.5"/>
+<!-- Water spray -->
+<path d="M548 175 Q550 185 552 190 M555 175 Q555 188 555 192 M562 175 Q560 185 558 190" stroke="#4A90D9" stroke-width="1" fill="none" opacity="0.5"/>
+<!-- Mixing valve -->
+<circle cx="555" cy="300" r="5" fill="#CCC" stroke="#999" stroke-width="1"/>
+<rect x="551" y="305" width="8" height="8" rx="1" fill="#E0E0E6" stroke="#999" stroke-width="1"/>
+
+<text x="555" y="160" text-anchor="middle" font-family="system-ui" font-size="9" font-weight="600" fill="#2D2D2D">Ducha</text>
+
+<!-- INODORO (toilet) - Piso 2 -->
+<!-- Bowl -->
+<path d="M615 340 Q610 320 615 310 L645 310 Q650 320 645 340 Z" fill="#FFF" stroke="#2D2D2D" stroke-width="1.5"/>
+<!-- Bowl water -->
+<ellipse cx="630" cy="330" rx="10" ry="4" fill="#4A90D9" opacity="0.3"/>
+<!-- Tank -->
+<rect x="617" y="286" width="26" height="24" rx="3" fill="#FFF" stroke="#2D2D2D" stroke-width="1.5"/>
+<!-- Flush button -->
+<rect x="626" y="284" width="8" height="4" rx="1.5" fill="#CCC" stroke="#999" stroke-width="0.8"/>
+<!-- Flush pipe -->
+<rect x="628" y="310" width="4" height="12" fill="#E0E0E6" stroke="#999" stroke-width="0.8"/>
+
+<text x="630" y="360" text-anchor="middle" font-family="system-ui" font-size="8" font-weight="600" fill="#2D2D2D">Inodoro</text>
+
+<!-- ============================================= -->
+<!-- FIXTURES - PISO 1 -->
+<!-- ============================================= -->
+
+<!-- MESADA (kitchen counter) -->
+<rect x="310" y="530" width="80" height="12" rx="1" fill="#E0E0E6" stroke="#999" stroke-width="1.5"/>
+<!-- Sink bowl -->
+<path d="M320 542 Q320 560 330 560 L370 560 Q380 560 380 542 Z" fill="#FFF" stroke="#2D2D2D" stroke-width="1.5"/>
+<!-- Sink water -->
+<ellipse cx="350" cy="553" rx="24" ry="5" fill="#4A90D9" opacity="0.2"/>
+<!-- Faucet -->
+<path d="M348 530 L348 520 Q348 516 352 516 L356 516" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round"/>
+<rect x="345" y="528" width="6" height="6" rx="1" fill="#CCC" stroke="#999" stroke-width="0.8"/>
+<!-- Counter legs -->
+<rect x="315" y="542" width="6" height="50" fill="#D4D4DC" stroke="#BBB" stroke-width="0.8"/>
+<rect x="379" y="542" width="6" height="50" fill="#D4D4DC" stroke="#BBB" stroke-width="0.8"/>
+
+<text x="350" y="612" text-anchor="middle" font-family="system-ui" font-size="9" font-weight="600" fill="#2D2D2D">Mesada cocina</text>
+
+<!-- INODORO (toilet) - Piso 1 -->
+<path d="M598 560 Q593 535 598 525 L622 525 Q627 535 622 560 Z" fill="#FFF" stroke="#2D2D2D" stroke-width="1.5"/>
+<ellipse cx="610" cy="548" rx="8" ry="3" fill="#4A90D9" opacity="0.3"/>
+<rect x="600" y="500" width="20" height="25" rx="3" fill="#FFF" stroke="#2D2D2D" stroke-width="1.5"/>
+<rect x="607" y="498" width="6" height="3" rx="1.5" fill="#CCC"/>
+<rect x="608" y="525" width="4" height="10" fill="#E0E0E6" stroke="#999" stroke-width="0.8"/>
+
+<text x="610" y="580" text-anchor="middle" font-family="system-ui" font-size="8" font-weight="600" fill="#2D2D2D">Inodoro</text>
+
+<!-- LAVATORIO (bathroom sink) - Piso 1 -->
+<!-- Basin -->
+<path d="M665 545 Q660 558 670 558 L695 558 Q705 558 700 545 Z" fill="#FFF" stroke="#2D2D2D" stroke-width="1.5"/>
+<ellipse cx="683" cy="554" rx="12" ry="3" fill="#4A90D9" opacity="0.2"/>
+<!-- Faucet -->
+<path d="M679 545 L679 538 Q679 534 683 534 L687 534" fill="none" stroke="#999" stroke-width="1.8" stroke-linecap="round"/>
+<rect x="677" y="543" width="4" height="4" rx="0.5" fill="#CCC"/>
+<!-- Cold water supply pipe to faucet -->
+<line x1="680" y1="540" x2="680" y2="525" stroke="#4A90D9" stroke-width="1.5"/>
+<!-- drain pipe -->
+<line x1="683" y1="558" x2="683" y2="586" stroke="#6B6B6B" stroke-width="2" stroke-dasharray="3,3"/>
+
+<text x="683" y="576" text-anchor="middle" font-family="system-ui" font-size="8" font-weight="600" fill="#2D2D2D">Lavatorio</text>
+
+<!-- ============================================= -->
+<!-- HOT WATER TO PISO 1 LAVATORIO -->
+<!-- ============================================= -->
+<line x1="690" y1="480" x2="690" y2="525" stroke="#D9714A" stroke-width="2"/>
+<line x1="684" y1="525" x2="690" y2="525" stroke="#D9714A" stroke-width="2"/>
+<text x="700" y="495" font-family="system-ui" font-size="7" fill="#D9714A">Agua caliente</text>
+
+<!-- Hot water to Ducha Piso 2 -->
+<line x1="560" y1="200" x2="560" y2="300" stroke="#D9714A" stroke-width="2"/>
+<circle cx="560" cy="300" r="4" fill="#D9714A" opacity="0.6"/>
+
+<!-- ============================================= -->
+<!-- PIPE SIZE CALLOUTS -->
+<!-- ============================================= -->
+
+<!-- Bajada size -->
+<rect x="260" y="238" width="85" height="16" rx="3" fill="#FFF" stroke="#4A90D9" stroke-width="1"/>
+<text x="302" y="250" text-anchor="middle" font-family="system-ui" font-size="8" fill="#4A90D9">Bajada ø32mm</text>
+
+<!-- Distribution size -->
+<rect x="295" y="414" width="95" height="16" rx="3" fill="#FFF" stroke="#4A90D9" stroke-width="1"/>
+<text x="342" y="426" text-anchor="middle" font-family="system-ui" font-size="8" fill="#4A90D9">Distrib. ø25mm</text>
+
+<!-- Fixture connection size -->
+<rect x="355" y="316" width="95" height="16" rx="3" fill="#FFF" stroke="#4A90D9" stroke-width="1"/>
+<text x="402" y="328" text-anchor="middle" font-family="system-ui" font-size="8" fill="#4A90D9">Artefactos ø13mm</text>
+
+<!-- Rising main size -->
+<rect x="94" y="404" width="85" height="16" rx="3" fill="#FFF" stroke="#4A90D9" stroke-width="1"/>
+<text x="136" y="416" text-anchor="middle" font-family="system-ui" font-size="8" fill="#4A90D9">Impulsión ø25mm</text>
+
+<!-- ============================================= -->
+<!-- PRESSURE ANNOTATIONS (left side) -->
+<!-- ============================================= -->
+
+<!-- Vertical reference line from tank water level -->
+<line x1="28" y1="38" x2="28" y2="602" stroke="#2D2D2D" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.4"/>
+
+<!-- 0m mark - tank water level -->
+<line x1="20" y1="38" x2="36" y2="38" stroke="#2D2D2D" stroke-width="1.5"/>
+<text x="44" y="42" font-family="system-ui" font-size="8" font-weight="600" fill="#2D2D2D">0 m (Nivel tanque)</text>
+
+<!-- 3m → 0.3 kg/cm² (Piso 2 level) -->
+<line x1="20" y1="200" x2="36" y2="200" stroke="#4A90D9" stroke-width="1.5"/>
+<!-- Arrow pointing down from tank level to piso 2 -->
+<line x1="10" y1="38" x2="10" y2="200" stroke="#4A90D9" stroke-width="2" marker-end="url(#arr-bl)"/>
+<line x1="10" y1="38" x2="10" y2="38" stroke="#4A90D9" stroke-width="2"/>
+<!-- start tick on arrow -->
+<line x1="6" y1="38" x2="14" y2="38" stroke="#4A90D9" stroke-width="1.5"/>
+
+<text x="10" y="125" text-anchor="middle" font-family="system-ui" font-size="9" font-weight="700" fill="#4A90D9" transform="rotate(-90,10,125)">Presión por gravedad</text>
+
+<!-- Height label -->
+<rect x="14" y="195" width="105" height="18" rx="3" fill="#FFF" stroke="#4A90D9" stroke-width="1"/>
+<text x="66" y="208" text-anchor="middle" font-family="system-ui" font-size="9" font-weight="700" fill="#4A90D9">3m → 0.3 kg/cm²</text>
+
+<!-- 6m → 0.6 kg/cm² (Piso 1 level) -->
+<line x1="20" y1="460" x2="36" y2="460" stroke="#4A90D9" stroke-width="1.5"/>
+<line x1="18" y1="38" x2="18" y2="460" stroke="#4A90D9" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>
+
+<rect x="14" y="455" width="105" height="18" rx="3" fill="#FFF" stroke="#4A90D9" stroke-width="1"/>
+<text x="66" y="468" text-anchor="middle" font-family="system-ui" font-size="9" font-weight="700" fill="#4A90D9">6m → 0.6 kg/cm²</text>
+
+<!-- 9m → 0.9 kg/cm² (ground level) -->
+<line x1="20" y1="602" x2="36" y2="602" stroke="#4A90D9" stroke-width="1.5"/>
+<line x1="18" y1="38" x2="18" y2="602" stroke="#4A90D9" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>
+
+<rect x="14" y="597" width="105" height="18" rx="3" fill="#FFF" stroke="#4A90D9" stroke-width="1"/>
+<text x="66" y="610" text-anchor="middle" font-family="system-ui" font-size="9" font-weight="700" fill="#4A90D9">9m → 0.9 kg/cm²</text>
+
+<!-- Altura manométrica label -->
+<text x="16" y="330" text-anchor="middle" font-family="system-ui" font-size="8" fill="#2D2D2D" transform="rotate(-90,16,330)">Altura manométrica</text>
+
+<!-- ============================================= -->
+<!-- LABELS WITH LEADER LINES -->
+<!-- ============================================= -->
+
+<!-- Red pública -->
+<line x1="20" y1="555" x2="20" y2="570" stroke="#2D2D2D" stroke-width="0.8"/>
+<line x1="20" y1="570" x2="55" y2="570" stroke="#2D2D2D" stroke-width="0.8"/>
+<circle cx="20" cy="555" r="2" fill="#2D2D2D"/>
+<text x="55" y="574" font-family="system-ui" font-size="10" font-weight="600" fill="#2D2D2D">Red pública</text>
+
+<!-- Medidor -->
+<circle cx="73" cy="545" r="2" fill="#2D2D2D"/>
+<line x1="73" y1="545" x2="73" y2="490" stroke="#2D2D2D" stroke-width="0.8"/>
+<line x1="73" y1="490" x2="55" y2="490" stroke="#2D2D2D" stroke-width="0.8"/>
+<text x="55" y="486" font-family="system-ui" font-size="10" font-weight="600" fill="#2D2D2D">Medidor</text>
+
+<!-- Cisterna -->
+<circle cx="130" cy="720" r="2" fill="#2D2D2D"/>
+<line x1="130" y1="720" x2="235" y2="720" stroke="#2D2D2D" stroke-width="0.8"/>
+<text x="235" y="724" font-family="system-ui" font-size="10" font-weight="600" fill="#2D2D2D">Cisterna</text>
+
+<!-- Cisterna annotation -->
+<text x="235" y="738" font-family="system-ui" font-size="7" fill="#666">Hormigón armado / Plástico</text>
+
+<!-- Válvula de retención -->
+<circle cx="128" cy="587" r="2" fill="#2D2D2D"/>
+<line x1="128" y1="587" x2="210" y2="587" stroke="#2D2D2D" stroke-width="0.8"/>
+<text x="210" y="591" font-family="system-ui" font-size="9" font-weight="600" fill="#2D2D2D">Válvula de retención</text>
+
+<!-- Tanque elevado -->
+<circle cx="110" cy="40" r="2" fill="#2D2D2D"/>
+<line x1="110" y1="40" x2="230" y2="40" stroke="#2D2D2D" stroke-width="0.8"/>
+<text x="230" y="36" font-family="system-ui" font-size="10" font-weight="600" fill="#2D2D2D">Tanque elevado</text>
+<text x="230" y="50" font-family="system-ui" font-size="7" fill="#666">Cilíndrico / Polietileno</text>
+
+
+<!-- ============================================= -->
+<!-- ADDITIONAL ANNOTATIONS -->
+<!-- ============================================= -->
+
+<!-- Ground / Earth label -->
+<text x="260" y="880" font-family="system-ui" font-size="9" font-weight="600" fill="#FFF" opacity="0.7">Terreno natural</text>
+
+<!-- Water flow legend -->
+<rect x="560" y="640" width="220" height="90" rx="4" fill="#FFF" stroke="#CCC" stroke-width="1"/>
+<text x="670" y="658" text-anchor="middle" font-family="system-ui" font-size="10" font-weight="700" fill="#2D2D2D">Referencias</text>
+<line x1="575" y1="673" x2="610" y2="673" stroke="#4A90D9" stroke-width="3"/>
+<text x="620" y="677" font-family="system-ui" font-size="9" fill="#2D2D2D">Agua fría</text>
+<line x1="575" y1="693" x2="610" y2="693" stroke="#D9714A" stroke-width="3"/>
+<text x="620" y="697" font-family="system-ui" font-size="9" fill="#2D2D2D">Agua caliente</text>
+<line x1="575" y1="713" x2="610" y2="713" stroke="#E74C3C" stroke-width="2.5" stroke-dasharray="6,3"/>
+<text x="620" y="717" font-family="system-ui" font-size="9" fill="#2D2D2D">Rebalse / Desagüe</text>
+
+<!-- ============================================= -->
+<!-- TITLE -->
+<!-- ============================================= -->
+<rect x="0" y="870" width="450" height="30" fill="#2D2D2D" rx="0"/>
+<text x="225" y="890" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#FFF">SISTEMA DE AGUA POR GRAVEDAD — CORTE ESQUEMÁTICO</text>
+
+<!-- Norte / Scale indicator -->
+<line x1="760" y1="880" x2="780" y2="880" stroke="#2D2D2D" stroke-width="1.5"/>
+<line x1="762" y1="878" x2="762" y2="882" stroke="#2D2D2D" stroke-width="1.5"/>
+<line x1="778" y1="878" x2="778" y2="882" stroke="#2D2D2D" stroke-width="1.5"/>
+<text x="770" y="872" text-anchor="middle" font-family="system-ui" font-size="7" fill="#2D2D2D">1:50</text>
+</svg>

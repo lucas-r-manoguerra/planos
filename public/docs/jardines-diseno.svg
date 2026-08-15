@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="#FAF9F6" rx="8"/>
+  <text x="400" y="30" text-anchor="middle" font-family="system-ui" font-size="15" font-weight="bold" fill="#1A1A1A">Diseño de Jardín — Distribución</text>
+
+  <!-- === Garden plot === -->
+  <rect x="50" y="55" width="700" height="410" fill="#E8F5E9" stroke="#4CAF50" stroke-width="2" rx="8"/>
+
+  <!-- === Perimeter fence === -->
+  <rect x="55" y="60" width="690" height="400" fill="none" stroke="#8B6914" stroke-width="3" rx="6" stroke-dasharray="8 4"/>
+  <text x="400" y="50" text-anchor="middle" font-family="system-ui" font-size="10" fill="#8B6914">Cercado Perimetral</text>
+
+  <!-- === Lawn (césped) center === -->
+  <rect x="190" y="160" width="420" height="210" fill="#66BB6A" stroke="#388E3C" stroke-width="1.5" rx="6"/>
+  <text x="400" y="275" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="#1B5E20">Césped</text>
+  <!-- Grass texture lines -->
+  <line x1="210" y1="180" x2="230" y2="180" stroke="#4CAF50" stroke-width="1" opacity="0.5"/>
+  <line x1="310" y1="200" x2="340" y2="200" stroke="#4CAF50" stroke-width="1" opacity="0.5"/>
+  <line x1="450" y1="190" x2="480" y2="190" stroke="#4CAF50" stroke-width="1" opacity="0.5"/>
+  <line x1="520" y1="220" x2="550" y2="220" stroke="#4CAF50" stroke-width="1" opacity="0.5"/>
+  <line x1="250" y1="320" x2="280" y2="320" stroke="#4CAF50" stroke-width="1" opacity="0.5"/>
+  <line x1="380" y1="340" x2="410" y2="340" stroke="#4CAF50" stroke-width="1" opacity="0.5"/>
+  <line x1="500" y1="300" x2="530" y2="300" stroke="#4CAF50" stroke-width="1" opacity="0.5"/>
+  <line x1="220" y1="260" x2="240" y2="260" stroke="#4CAF50" stroke-width="1" opacity="0.5"/>
+  <line x1="560" y1="250" x2="580" y2="250" stroke="#4CAF50" stroke-width="1" opacity="0.5"/>
+
+  <!-- === Stone path (sendero) === -->
+  <path d="M400 370 Q390 340 370 320 Q340 300 330 270 Q320 240 340 220 Q360 200 380 180" stroke="none" fill="none"/>
+  <ellipse cx="400" cy="375" rx="18" ry="8" fill="#BDBDBD" stroke="#9E9E9E" stroke-width="1"/>
+  <ellipse cx="385" cy="355" rx="16" ry="7" fill="#C8C8C8" stroke="#9E9E9E" stroke-width="1"/>
+  <ellipse cx="365" cy="335" rx="17" ry="8" fill="#BDBDBD" stroke="#9E9E9E" stroke-width="1"/>
+  <ellipse cx="345" cy="310" rx="15" ry="7" fill="#C8C8C8" stroke="#9E9E9E" stroke-width="1"/>
+  <ellipse cx="335" cy="285" rx="16" ry="8" fill="#BDBDBD" stroke="#9E9E9E" stroke-width="1"/>
+  <ellipse cx="335" cy="260" rx="14" ry="7" fill="#C8C8C8" stroke="#9E9E9E" stroke-width="1"/>
+  <ellipse cx="350" cy="238" rx="15" ry="7" fill="#BDBDBD" stroke="#9E9E9E" stroke-width="1"/>
+  <ellipse cx="368" cy="218" rx="14" ry="7" fill="#C8C8C8" stroke="#9E9E9E" stroke-width="1"/>
+  <ellipse cx="380" cy="195" rx="16" ry="7" fill="#BDBDBD" stroke="#9E9E9E" stroke-width="1"/>
+  <ellipse cx="390" cy="175" rx="15" ry="7" fill="#C8C8C8" stroke="#9E9E9E" stroke-width="1"/>
+  <text x="355" y="360" text-anchor="middle" font-family="system-ui" font-size="9" fill="#757575" transform="rotate(-30,355,360)">Sendero de Piedra</text>
+
+  <!-- === Flower bed left === -->
+  <rect x="70" y="120" width="100" height="190" fill="#FFCDD2" stroke="#E57373" stroke-width="1.5" rx="6"/>
+  <rect x="70" y="120" width="100" height="24" fill="#EF9A9A" stroke="#E57373" stroke-width="1.5" rx="6"/>
+  <text x="120" y="136" text-anchor="middle" font-family="system-ui" font-size="10" fill="#B71C1C">Cantero de Flores</text>
+
+  <!-- Little flowers -->
+  <circle cx="90" cy="170" r="6" fill="#FF5252"/>
+  <circle cx="90" cy="170" r="2" fill="#FFEB3B"/>
+  <circle cx="120" cy="185" r="6" fill="#FF4081"/>
+  <circle cx="120" cy="185" r="2" fill="#FFEB3B"/>
+  <circle cx="145" cy="165" r="5" fill="#FF5252"/>
+  <circle cx="145" cy="165" r="2" fill="#FFEB3B"/>
+  <circle cx="100" cy="220" r="5" fill="#E040FB"/>
+  <circle cx="100" cy="220" r="2" fill="#FFEB3B"/>
+  <circle cx="135" cy="240" r="6" fill="#FF4081"/>
+  <circle cx="135" cy="240" r="2" fill="#FFEB3B"/>
+  <circle cx="90" cy="260" r="5" fill="#FF5252"/>
+  <circle cx="90" cy="260" r="2" fill="#FFEB3B"/>
+  <circle cx="125" cy="275" r="5" fill="#E040FB"/>
+  <circle cx="125" cy="275" r="2" fill="#FFEB3B"/>
+
+  <!-- Stems -->
+  <line x1="90" y1="176" x2="90" y2="195" stroke="#4CAF50" stroke-width="1.5"/>
+  <line x1="120" y1="191" x2="120" y2="210" stroke="#4CAF50" stroke-width="1.5"/>
+  <line x1="100" y1="225" x2="100" y2="245" stroke="#4CAF50" stroke-width="1.5"/>
+
+  <!-- === Flower bed right === -->
+  <rect x="630" y="120" width="100" height="190" fill="#FFCDD2" stroke="#E57373" stroke-width="1.5" rx="6"/>
+  <rect x="630" y="120" width="100" height="24" fill="#EF9A9A" stroke="#E57373" stroke-width="1.5" rx="6"/>
+  <text x="680" y="136" text-anchor="middle" font-family="system-ui" font-size="10" fill="#B71C1C">Cantero de Flores</text>
+
+  <circle cx="650" cy="170" r="5" fill="#FF5252"/>
+  <circle cx="650" cy="170" r="2" fill="#FFEB3B"/>
+  <circle cx="680" cy="185" r="6" fill="#FF4081"/>
+  <circle cx="680" cy="185" r="2" fill="#FFEB3B"/>
+  <circle cx="705" cy="165" r="5" fill="#E040FB"/>
+  <circle cx="705" cy="165" r="2" fill="#FFEB3B"/>
+  <circle cx="660" cy="220" r="5" fill="#FF5252"/>
+  <circle cx="660" cy="220" r="2" fill="#FFEB3B"/>
+  <circle cx="695" cy="240" r="6" fill="#FF4081"/>
+  <circle cx="695" cy="240" r="2" fill="#FFEB3B"/>
+  <circle cx="650" cy="260" r="5" fill="#E040FB"/>
+  <circle cx="650" cy="260" r="2" fill="#FFEB3B"/>
+  <circle cx="685" cy="275" r="5" fill="#FF5252"/>
+  <circle cx="685" cy="275" r="2" fill="#FFEB3B"/>
+
+  <line x1="680" y1="191" x2="680" y2="210" stroke="#4CAF50" stroke-width="1.5"/>
+  <line x1="660" y1="225" x2="660" y2="245" stroke="#4CAF50" stroke-width="1.5"/>
+
+  <!-- === Tree (árbol) === -->
+  <circle cx="240" cy="110" r="30" fill="#81C784" stroke="#388E3C" stroke-width="2" opacity="0.85"/>
+  <circle cx="240" cy="110" r="30" fill="none" stroke="#388E3C" stroke-width="1" opacity="0.3" rx="-7" ry="7"/>
+  <!-- Shadow / ground -->
+  <ellipse cx="240" cy="145" rx="28" ry="6" fill="#388E3C" opacity="0.25"/>
+  <!-- Trunk -->
+  <rect x="236" y="135" width="8" height="18" fill="#8B6914" rx="2"/>
+  <!-- Branches -->
+  <line x1="230" y1="115" x2="215" y2="105" stroke="#8B6914" stroke-width="2.5"/>
+  <line x1="255" y1="110" x2="270" y2="100" stroke="#8B6914" stroke-width="2"/>
+  <line x1="240" y1="125" x2="225" y2="130" stroke="#8B6914" stroke-width="2"/>
+
+  <text x="240" y="175" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2E7D32">Árbol</text>
+
+  <!-- Small tree/bush right side -->
+  <circle cx="660" cy="80" r="15" fill="#81C784" stroke="#388E3C" stroke-width="1.5" opacity="0.75"/>
+  <rect x="657" y="90" width="6" height="10" fill="#8B6914" rx="1"/>
+
+  <!-- === BBQ Area (Parilla / Quincho) === -->
+  <rect x="600" y="330" width="110" height="90" fill="#FFE0B2" stroke="#FF9800" stroke-width="2" rx="4"/>
+  <rect x="600" y="330" width="110" height="22" fill="#FFB74D" stroke="#FF9800" stroke-width="2" rx="4"/>
+  <text x="655" y="345" text-anchor="middle" font-family="system-ui" font-size="9" font-weight="bold" fill="#E65100">Parilla / Quincho</text>
+
+  <!-- Grill top -->
+  <rect x="620" y="360" width="70" height="4" fill="#5D4037" rx="1"/>
+  <rect x="622" y="368" width="66" height="20" fill="#6D4C41" stroke="#5D4037" stroke-width="1" rx="2"/>
+  <!-- Fire -->
+  <path d="M640 385 Q645 375 650 385 Q655 375 660 385 Q645 378 640 385" fill="#FF5722"/>
+  <path d="M642 385 Q645 378 648 385" fill="#FFEB3B"/>
+
+  <!-- Grill legs -->
+  <line x1="628" y1="385" x2="628" y2="418" stroke="#5D4037" stroke-width="2"/>
+  <line x1="682" y1="385" x2="682" y2="418" stroke="#5D4037" stroke-width="2"/>
+
+  <!-- Table next to grill -->
+  <rect x="620" y="400" width="70" height="8" fill="#A0752E" stroke="#5D4015" stroke-width="1" rx="1"/>
+  <line x1="625" y1="408" x2="625" y2="418" stroke="#5D4015" stroke-width="1.5"/>
+  <line x1="685" y1="408" x2="685" y2="418" stroke="#5D4015" stroke-width="1.5"/>
+
+  <!-- === Small shrubs === -->
+  <ellipse cx="150" cy="360" rx="25" ry="15" fill="#81C784" stroke="#388E3C" stroke-width="1" opacity="0.7"/>
+  <ellipse cx="150" cy="355" rx="18" ry="12" fill="#A5D6A7" stroke="none" opacity="0.6"/>
+
+  <ellipse cx="500" cy="400" rx="20" ry="12" fill="#81C784" stroke="#388E3C" stroke-width="1" opacity="0.7"/>
+  <ellipse cx="500" cy="395" rx="14" ry="9" fill="#A5D6A7" stroke="none" opacity="0.6"/>
+
+  <!-- === Decorative stones === -->
+  <ellipse cx="300" cy="420" rx="8" ry="4" fill="#BDBDBD"/>
+  <ellipse cx="315" cy="415" rx="6" ry="3" fill="#C8C8C8"/>
+  <ellipse cx="285" cy="418" rx="7" ry="3" fill="#B0B0B0"/>
+
+  <!-- === North arrow === -->
+  <circle cx="690" y="410" r="15" fill="none" stroke="#1A1A1A" stroke-width="1.5"/>
+  <polygon points="690,398 686,410 694,410" fill="#1A1A1A"/>
+  <line x1="690" y1="398" x2="690" y2="410" stroke="#1A1A1A" stroke-width="1.5"/>
+  <text x="698" y="405" font-family="system-ui" font-size="8" fill="#1A1A1A">N</text>
+
+  <!-- === Labels === -->
+  <text x="85" y="108" text-anchor="middle" font-family="system-ui" font-size="9" fill="#E57373"></text>
+</svg>

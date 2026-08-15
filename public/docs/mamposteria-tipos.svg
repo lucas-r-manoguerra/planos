@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="#FAF9F6" rx="8"/>
+  <text x="400" y="30" text-anchor="middle" font-family="system-ui" font-size="15" font-weight="bold" fill="#1A1A1A">Muro de Mampostería — Corte Transversal</text>
+
+  <!-- Interior plaster -->
+  <rect x="50" y="70" width="50" height="350" fill="#E8D5B7" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <text x="75" y="430" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">Revoque</text>
+  <text x="75" y="445" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">interior</text>
+
+  <!-- Concrete blocks (3 rows) -->
+  <rect x="100" y="70" width="300" height="90" fill="#D4C5B5" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <rect x="100" y="165" width="300" height="90" fill="#D4C5B5" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <rect x="100" y="260" width="300" height="90" fill="#D4C5B5" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+
+  <!-- Block pattern lines -->
+  <line x1="180" y1="70" x2="180" y2="160" stroke="#A09A91" stroke-width="1"/>
+  <line x1="260" y1="70" x2="260" y2="160" stroke="#A09A91" stroke-width="1"/>
+  <line x1="340" y1="70" x2="340" y2="160" stroke="#A09A91" stroke-width="1"/>
+  <line x1="140" y1="165" x2="140" y2="255" stroke="#A09A91" stroke-width="1"/>
+  <line x1="220" y1="165" x2="220" y2="255" stroke="#A09A91" stroke-width="1"/>
+  <line x1="300" y1="165" x2="300" y2="255" stroke="#A09A91" stroke-width="1"/>
+  <line x1="180" y1="260" x2="180" y2="350" stroke="#A09A91" stroke-width="1"/>
+  <line x1="260" y1="260" x2="260" y2="350" stroke="#A09A91" stroke-width="1"/>
+  <line x1="340" y1="260" x2="340" y2="350" stroke="#A09A91" stroke-width="1"/>
+
+  <!-- Mortar joints (horizontal) -->
+  <rect x="100" y="155" width="300" height="10" fill="#B8A99A" stroke="none" rx="0"/>
+  <rect x="100" y="250" width="300" height="10" fill="#B8A99A" stroke="none" rx="0"/>
+
+  <!-- Exterior render -->
+  <rect x="400" y="70" width="50" height="350" fill="#C4B5A5" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <text x="425" y="430" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">Revoque</text>
+  <text x="425" y="445" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">exterior</text>
+
+  <!-- Foundation base -->
+  <rect x="60" y="370" width="400" height="50" fill="#9C8E7B" stroke="#2D2D2D" stroke-width="1.5" rx="2"/>
+  <text x="260" y="400" text-anchor="middle" font-family="system-ui" font-size="10" fill="white">Base de hormigón (cimentación)</text>
+
+  <!-- Damp-proof course -->
+  <rect x="100" y="355" width="300" height="8" fill="#2D2D2D" stroke="none" rx="1"/>
+  <text x="540" y="380" font-family="system-ui" font-size="10" fill="#2D2D2D">Barrera hidrófuga</text>
+  <line x1="400" y1="359" x2="530" y2="375" stroke="#2D2D2D" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- DPM arrow -->
+  <line x1="400" y1="359" x2="530" y2="375" stroke="#E74C3C" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- Annotations -->
+  <text x="250" y="60" text-anchor="middle" font-family="system-ui" font-size="10" fill="#3B65A3">Bloque de hormigón hueco (20×20×40 cm)</text>
+  <line x1="250" y1="63" x2="250" y2="70" stroke="#3B65A3" stroke-width="1"/>
+
+  <text x="250" y="470" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Junta de mortero: 1 cm espesor</text>
+</svg>

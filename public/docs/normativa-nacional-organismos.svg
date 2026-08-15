@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="#FAF9F6" rx="8"/>
+  <text x="400" y="30" text-anchor="middle" font-family="system-ui" font-size="15" font-weight="bold" fill="#1A1A1A">Organismos Normativos Nacionales</text>
+
+  <!-- === Title / header area === -->
+  <rect x="160" y="50" width="480" height="50" fill="#1A237E" rx="6"/>
+  <text x="400" y="72" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="bold" fill="white">Sistema de Regulación Técnica — Argentina</text>
+  <text x="400" y="88" text-anchor="middle" font-family="system-ui" font-size="9" fill="white" opacity="0.85">Marco normativo para la construcción civil</text>
+
+  <!-- === INTI (top center) === -->
+  <rect x="275" y="120" width="250" height="80" fill="#1565C0" rx="6"/>
+  <rect x="275" y="120" width="250" height="24" fill="#0D47A1" rx="6"/>
+  <text x="400" y="136" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="white">INTI</text>
+  <text x="400" y="155" text-anchor="middle" font-family="system-ui" font-size="9" fill="white">Instituto Nacional de</text>
+  <text x="400" y="168" text-anchor="middle" font-family="system-ui" font-size="9" fill="white">Tecnología Industrial</text>
+  <text x="400" y="188" text-anchor="middle" font-family="system-ui" font-size="8" fill="#BBDEFB">Investigación y ensayos</text>
+
+  <!-- === IRAM (center left) === -->
+  <rect x="80" y="250" width="250" height="90" fill="#2E7D32" rx="6"/>
+  <rect x="80" y="250" width="250" height="24" fill="#1B5E20" rx="6"/>
+  <text x="205" y="266" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="white">IRAM</text>
+  <text x="205" y="285" text-anchor="middle" font-family="system-ui" font-size="9" fill="white">Instituto Argentino de</text>
+  <text x="205" y="298" text-anchor="middle" font-family="system-ui" font-size="9" fill="white">Normalización y Certificación</text>
+  <text x="205" y="318" text-anchor="middle" font-family="system-ui" font-size="8" fill="#C8E6C9">Normas técnicas voluntarias</text>
+  <text x="205" y="330" text-anchor="middle" font-family="system-ui" font-size="8" fill="#C8E6C9">(IRAM 11601, IRAM 11605)</text>
+
+  <!-- === CIRSOC (center right) === -->
+  <rect x="470" y="250" width="250" height="90" fill="#E65100" rx="6"/>
+  <rect x="470" y="250" width="250" height="24" fill="#BF360C" rx="6"/>
+  <text x="595" y="266" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="white">CIRSOC</text>
+  <text x="595" y="285" text-anchor="middle" font-family="system-ui" font-size="9" fill="white">Centro de Investigación de</text>
+  <text x="595" y="298" text-anchor="middle" font-family="system-ui" font-size="9" fill="white">Reglamentos de Seguridad</text>
+  <text x="595" y="318" text-anchor="middle" font-family="system-ui" font-size="8" fill="#FFCCBC">Reglamentos estructurales</text>
+  <text x="595" y="330" text-anchor="middle" font-family="system-ui" font-size="8" fill="#FFCCBC">(CIRSOC 101, 201, 301)</text>
+
+  <!-- === SARE (bottom) === -->
+  <rect x="275" y="390" width="250" height="70" fill="#6A1B9A" rx="6"/>
+  <rect x="275" y="390" width="250" height="24" fill="#4A148C" rx="6"/>
+  <text x="400" y="406" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="white">SARE</text>
+  <text x="400" y="425" text-anchor="middle" font-family="system-ui" font-size="9" fill="white">Sistema de Apoyo al</text>
+  <text x="400" y="438" text-anchor="middle" font-family="system-ui" font-size="9" fill="white">Reglamento Estructural</text>
+  <text x="400" y="453" text-anchor="middle" font-family="system-ui" font-size="8" fill="#E1BEE7">Código de edificación</text>
+
+  <!-- === Lines: INTI → IRAM === -->
+  <line x1="365" y1="200" x2="245" y2="250" stroke="#1A1A1A" stroke-width="2"/>
+  <polygon points="245,250 255,244 255,256" fill="#1A1A1A"/>
+
+  <!-- === Lines: INTI → CIRSOC === -->
+  <line x1="435" y1="200" x2="555" y2="250" stroke="#1A1A1A" stroke-width="2"/>
+  <polygon points="555,250 545,244 545,256" fill="#1A1A1A"/>
+
+  <!-- === Lines: IRAM → SARE === -->
+  <line x1="205" y1="340" x2="330" y2="390" stroke="#1A1A1A" stroke-width="2"/>
+  <polygon points="330,390 322,384 322,396" fill="#1A1A1A"/>
+
+  <!-- === Lines: CIRSOC → SARE === -->
+  <line x1="595" y1="340" x2="470" y2="390" stroke="#1A1A1A" stroke-width="2"/>
+  <polygon points="470,390 478,384 478,396" fill="#1A1A1A"/>
+
+  <!-- === Labels on connecting lines === -->
+  <text x="260" y="235" text-anchor="middle" font-family="system-ui" font-size="8" fill="#6B6B6B" transform="rotate(-25,260,235)">Transferencia tecnológica</text>
+  <text x="540" y="235" text-anchor="middle" font-family="system-ui" font-size="8" fill="#6B6B6B" transform="rotate(25,540,235)">Reglamentación técnica</text>
+
+  <text x="240" y="375" text-anchor="middle" font-family="system-ui" font-size="8" fill="#6B6B6B" transform="rotate(-35,240,375)">Normas de referencia</text>
+  <text x="555" y="375" text-anchor="middle" font-family="system-ui" font-size="8" fill="#6B6B6B" transform="rotate(35,555,375)">Reglamentos base</text>
+
+  <!-- === Legend / Footer === -->
+  <rect x="120" y="475" width="560" height="20" fill="#F5F3EF" stroke="#E0DDD6" rx="4"/>
+  <rect x="135" y="479" width="10" height="10" fill="#1565C0" rx="2"/>
+  <text x="150" y="488" font-family="system-ui" font-size="8" fill="#6B6B6B">Investigación</text>
+  <rect x="210" y="479" width="10" height="10" fill="#2E7D32" rx="2"/>
+  <text x="225" y="488" font-family="system-ui" font-size="8" fill="#6B6B6B">Normalización</text>
+  <rect x="310" y="479" width="10" height="10" fill="#E65100" rx="2"/>
+  <text x="325" y="488" font-family="system-ui" font-size="8" fill="#6B6B6B">Reglamentación</text>
+  <rect x="420" y="479" width="10" height="10" fill="#6A1B9A" rx="2"/>
+  <text x="435" y="488" font-family="system-ui" font-size="8" fill="#6B6B6B">Aplicación local</text>
+</svg>

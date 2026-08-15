@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="#FAF9F6" rx="8"/>
+  <text x="400" y="30" text-anchor="middle" font-family="system-ui" font-size="15" font-weight="bold" fill="#1A1A1A">Comparativa de Normas Internacionales</text>
+  <text x="400" y="48" text-anchor="middle" font-family="system-ui" font-size="11" fill="#6B6B6B">Sistemas de códigos de construcción en Iberoamérica y Europa</text>
+
+  <!-- Card 1 - Argentina -->
+  <rect x="25" y="65" width="175" height="400" fill="#FFFFFF" stroke="#E0DDD6" stroke-width="1.5" rx="6"/>
+  <rect x="25" y="65" width="175" height="55" fill="#1B3A5C" rx="6"/>
+  <rect x="25" y="110" width="175" height="10" fill="#1B3A5C"/>
+  <text x="112" y="88" text-anchor="middle" font-family="system-ui" font-size="14" font-weight="bold" fill="#FFFFFF">Argentina</text>
+  <text x="112" y="105" text-anchor="middle" font-family="system-ui" font-size="10" fill="#A8C8E8">IRAM / CIRSOC</text>
+  <!-- Flag bar -->
+  <rect x="25" y="120" width="175" height="4" fill="#75AADB"/>
+  <rect x="25" y="120" width="58" height="4" fill="#FFFFFF"/>
+  <!-- Content -->
+  <text x="112" y="150" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">Normas principales</text>
+  <text x="35" y="170" font-family="system-ui" font-size="9" fill="#2D2D2D">• IRAM 11654 (térmica)</text>
+  <text x="35" y="185" font-family="system-ui" font-size="9" fill="#2D2D2D">• IRAM 11603 (zonas bioambientales)</text>
+  <text x="35" y="200" font-family="system-ui" font-size="9" fill="#2D2D2D">• CIRSOC 101 (cargas)</text>
+  <text x="35" y="215" font-family="system-ui" font-size="9" fill="#2D2D2D">• CIRSOC 201 (hormigón)</text>
+  <text x="35" y="230" font-family="system-ui" font-size="9" fill="#2D2D2D">• CIRSOC 301 (acero)</text>
+  <text x="35" y="245" font-family="system-ui" font-size="9" fill="#2D2D2D">• CIRSOC 404 (sismorresistente)</text>
+  <line x1="35" y1="260" x2="190" y2="260" stroke="#E0DDD6" stroke-width="1"/>
+  <text x="112" y="280" text-anchor="middle" font-family="system-ui" font-size="10" font-weight="bold" fill="#1A1A1A">Organismo</text>
+  <text x="112" y="296" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">Instituto Argentino de</text>
+  <text x="112" y="310" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">Normalización y Certificación</text>
+  <line x1="35" y1="325" x2="190" y2="325" stroke="#E0DDD6" stroke-width="1"/>
+  <text x="112" y="345" text-anchor="middle" font-family="system-ui" font-size="10" font-weight="bold" fill="#1A1A1A">Enfoque</text>
+  <text x="112" y="362" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">Prescriptivo con</text>
+  <text x="112" y="376" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">recomendaciones de</text>
+  <text x="112" y="390" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">desempeño</text>
+
+  <!-- Card 2 - Chile -->
+  <rect x="215" y="65" width="175" height="400" fill="#FFFFFF" stroke="#E0DDD6" stroke-width="1.5" rx="6"/>
+  <rect x="215" y="65" width="175" height="55" fill="#8B1A1A" rx="6"/>
+  <rect x="215" y="110" width="175" height="10" fill="#8B1A1A"/>
+  <text x="302" y="88" text-anchor="middle" font-family="system-ui" font-size="14" font-weight="bold" fill="#FFFFFF">Chile</text>
+  <text x="302" y="105" text-anchor="middle" font-family="system-ui" font-size="10" fill="#F8C8C8">NCh / OGUC</text>
+  <!-- Flag bar -->
+  <rect x="215" y="120" width="175" height="4" fill="#D52B1E"/>
+  <rect x="215" y="120" width="58" height="4" fill="#0039A6"/>
+  <rect x="273" y="120" width="58" height="4" fill="#FFFFFF"/>
+  <!-- Content -->
+  <text x="302" y="150" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">Normas principales</text>
+  <text x="225" y="170" font-family="system-ui" font-size="9" fill="#2D2D2D">• NCh 1537 (cargas)</text>
+  <text x="225" y="185" font-family="system-ui" font-size="9" fill="#2D2D2D">• NCh 170 (hormigón)</text>
+  <text x="225" y="200" font-family="system-ui" font-size="9" fill="#2D2D2D">• NCh 427 (suelos)</text>
+  <text x="225" y="215" font-family="system-ui" font-size="9" fill="#2D2D2D">• NCh 433 (sismorresistente)</text>
+  <text x="225" y="230" font-family="system-ui" font-size="9" fill="#2D2D2D">• OGUC (Ordenanza General)</text>
+  <line x1="225" y1="260" x2="380" y2="260" stroke="#E0DDD6" stroke-width="1"/>
+  <text x="302" y="280" text-anchor="middle" font-family="system-ui" font-size="10" font-weight="bold" fill="#1A1A1A">Organismo</text>
+  <text x="302" y="296" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">Instituto Nacional de</text>
+  <text x="302" y="310" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">Normalización (INN)</text>
+  <line x1="225" y1="325" x2="380" y2="325" stroke="#E0DDD6" stroke-width="1"/>
+  <text x="302" y="345" text-anchor="middle" font-family="system-ui" font-size="10" font-weight="bold" fill="#1A1A1A">Enfoque</text>
+  <text x="302" y="362" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">Prescriptivo con</text>
+  <text x="302" y="376" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">énfasis en normas</text>
+  <text x="302" y="390" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">sísmicas (zona 1-4)</text>
+
+  <!-- Card 3 - Brasil -->
+  <rect x="405" y="65" width="175" height="400" fill="#FFFFFF" stroke="#E0DDD6" stroke-width="1.5" rx="6"/>
+  <rect x="405" y="65" width="175" height="55" fill="#1B6B3A" rx="6"/>
+  <rect x="405" y="110" width="175" height="10" fill="#1B6B3A"/>
+  <text x="492" y="88" text-anchor="middle" font-family="system-ui" font-size="14" font-weight="bold" fill="#FFFFFF">Brasil</text>
+  <text x="492" y="105" text-anchor="middle" font-family="system-ui" font-size="10" fill="#C8E8D8">NBR / ABNT</text>
+  <!-- Flag bar -->
+  <rect x="405" y="120" width="175" height="4" fill="#009739"/>
+  <rect x="405" y="120" width="175" height="4" fill="#FEDD00"/>
+  <!-- Content -->
+  <text x="492" y="150" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">Normas principales</text>
+  <text x="415" y="170" font-family="system-ui" font-size="9" fill="#2D2D2D">• NBR 6118 (hormigón)</text>
+  <text x="415" y="185" font-family="system-ui" font-size="9" fill="#2D2D2D">• NBR 8800 (acero)</text>
+  <text x="415" y="200" font-family="system-ui" font-size="9" fill="#2D2D2D">• NBR 6120 (cargas)</text>
+  <text x="415" y="215" font-family="system-ui" font-size="9" fill="#2D2D2D">• NBR 15421 (sismorresistente)</text>
+  <text x="415" y="230" font-family="system-ui" font-size="9" fill="#2D2D2D">• NBR 15575 (desempeño)</text>
+  <line x1="415" y1="260" x2="570" y2="260" stroke="#E0DDD6" stroke-width="1"/>
+  <text x="492" y="280" text-anchor="middle" font-family="system-ui" font-size="10" font-weight="bold" fill="#1A1A1A">Organismo</text>
+  <text x="492" y="296" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">Associação Brasileira de</text>
+  <text x="492" y="310" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">Normas Técnicas (ABNT)</text>
+  <line x1="415" y1="325" x2="570" y2="325" stroke="#E0DDD6" stroke-width="1"/>
+  <text x="492" y="345" text-anchor="middle" font-family="system-ui" font-size="10" font-weight="bold" fill="#1A1A1A">Enfoque</text>
+  <text x="492" y="362" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">Mixto: prescriptivo +</text>
+  <text x="492" y="376" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">desempeño (NBR 15575</text>
+  <text x="492" y="390" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">desde 2013)</text>
+
+  <!-- Card 4 - Europa -->
+  <rect x="595" y="65" width="180" height="400" fill="#FFFFFF" stroke="#E0DDD6" stroke-width="1.5" rx="6"/>
+  <rect x="595" y="65" width="180" height="55" fill="#2B3A6B" rx="6"/>
+  <rect x="595" y="110" width="180" height="10" fill="#2B3A6B"/>
+  <text x="685" y="88" text-anchor="middle" font-family="system-ui" font-size="14" font-weight="bold" fill="#FFFFFF">Europa</text>
+  <text x="685" y="105" text-anchor="middle" font-family="system-ui" font-size="10" fill="#C8D0F8">Eurocódigos</text>
+  <!-- Flag bar -->
+  <rect x="595" y="120" width="180" height="4" fill="#003399"/>
+  <circle cx="605" cy="122" r="1.5" fill="#FFCC00"/>
+  <rect x="603" y="120" width="172" height="4" fill="#FFCC00"/>
+  <!-- Content -->
+  <text x="685" y="150" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">Normas principales</text>
+  <text x="605" y="170" font-family="system-ui" font-size="9" fill="#2D2D2D">• EN 1990 (bases de proyecto)</text>
+  <text x="605" y="185" font-family="system-ui" font-size="9" fill="#2D2D2D">• EN 1991 (acciones)</text>
+  <text x="605" y="200" font-family="system-ui" font-size="9" fill="#2D2D2D">• EN 1992 (hormigón)</text>
+  <text x="605" y="215" font-family="system-ui" font-size="9" fill="#2D2D2D">• EN 1993 (acero)</text>
+  <text x="605" y="230" font-family="system-ui" font-size="9" fill="#2D2D2D">• EN 1994 (mixtas)</text>
+  <text x="605" y="245" font-family="system-ui" font-size="9" fill="#2D2D2D">• EN 1995 (madera)</text>
+  <text x="605" y="260" font-family="system-ui" font-size="9" fill="#2D2D2D">• EN 1996 (mampostería)</text>
+  <text x="605" y="275" font-family="system-ui" font-size="9" fill="#2D2D2D">• EN 1997 (geotécnica)</text>
+  <text x="605" y="290" font-family="system-ui" font-size="9" fill="#2D2D2D">• EN 1998 (sismorresistente)</text>
+  <text x="605" y="305" font-family="system-ui" font-size="9" fill="#2D2D2D">• EN 1999 (aluminio)</text>
+  <line x1="605" y1="325" x2="765" y2="325" stroke="#E0DDD6" stroke-width="1"/>
+  <text x="685" y="345" text-anchor="middle" font-family="system-ui" font-size="10" font-weight="bold" fill="#1A1A1A">Organismo</text>
+  <text x="685" y="362" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">Comité Europeo de</text>
+  <text x="685" y="376" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">Normalización (CEN)</text>
+  <line x1="605" y1="325" x2="765" y2="325" stroke="#E0DDD6" stroke-width="1"/>
+  <text x="685" y="345" text-anchor="middle" font-family="system-ui" font-size="10" font-weight="bold" fill="#1A1A1A">Enfoque</text>
+  <text x="685" y="362" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">Basado en desempeño</text>
+  <text x="685" y="376" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">con estados límite</text>
+  <text x="685" y="390" text-anchor="middle" font-family="system-ui" font-size="9" fill="#5A5A5A">(ULS / SLS)</text>
+</svg>

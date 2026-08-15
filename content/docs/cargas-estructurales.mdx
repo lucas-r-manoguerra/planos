@@ -1,0 +1,435 @@
+---
+title: "Cargas Estructurales"
+description: "Cargas muertas, vivas, de viento, sísmicas, térmicas y组合 combinaciones de carga para diseño estructural de viviendas"
+order: 5
+---
+
+Tipos de cargas que actúan sobre las estructuras de viviendas: pesos propios, sobrecargas de uso, acciones del viento, sismo, temperatura y combinaciones de diseño según CIRSOC 2018 y ACI 318.
+
+**Índice de contenidos**
+
+1. Cargas Muertas
+2. Cargas Vivas
+3. Cargas de Viento
+4. Cargas Sísmicas
+5. Cargas Térmicas
+6. Sobrecarga de Nieve
+7. Combinaciones de Carga
+8. Criterios de Diseño
+
+---
+
+<Figure src="/docs/cargas-estructurales.svg" alt="Esquema de cargas estructurales en vivienda" caption="Figura 1: Tipos de cargas estructurales — carga muerta (peso propio), carga viva (uso), carga de viento y carga sísmica" width="500px" />
+
+## 1. Cargas Muertas
+
+Las cargas muertas (o permanentes) son todas las fuerzas que actúan de forma continua y permanente sobre la estructura. Incluyen el peso propio de todos los elementos constructivos, instalaciones fijas y acabados. Son fáciles de calcular con precisión porque dependen únicamente del volumen y la densidad de los materiales.
+
+### 1.1 Peso propio de materiales
+
+Los valores característicos de peso unitario de los materiales más utilizados en construcción residencial argentina son:
+
+| Material | Peso unitario (kN/m³) | Observaciones |
+|---|---|---|
+| Hormigón armado | 24-25 | Incluye armaduras |
+| Hormigón ciclópeo | 22-23 | Con agregados gruesos |
+| Ladrillo macizo | 18-20 | Cerámico, sin huecos |
+| Ladrillo hueco | 10-14 | Según porcentaje de huecos |
+| Mortero de revestimiento | 18-20 | Enduido o contrapiso |
+| Acero estructural | 78 | Perfiles laminados |
+| Madera | 5-8 | Según especie y humedad |
+| Vidrio | 25 | Simple, 4-6 mm |
+| Aislamiento térmico | 0,1-0,5 | Lana de vidrio, EPS, lana de roca |
+| Pintura | 0,03-0,05 | Por capa de 100 μm |
+
+### 1.2 Cálculo de cargas muertas
+
+Para calcular la carga muerta total se multiplica el volumen de cada elemento por su peso unitario:
+
+- **Muros:** peso por m² = espesor (m) × peso unitario (kN/m³). Ejemplo: muro de ladrillo hueco 18 cm → 0,18 × 12 = 2,16 kN/m².
+- **Losas:** peso por m² = espesor (m) × peso unitario. Ejemplo: losa armada 12 cm → 0,12 × 25 = 3,0 kN/m².
+- **Contrapiso:** peso por m² = espesor × peso unitario. Ejemplo: contrapiso 4 cm → 0,04 × 20 = 0,8 kN/m².
+- **Revestimientos:** peso por m² = espesor × peso unitario. Ejemplo: enduido 2 cm → 0,02 × 20 = 0,4 kN/m².
+- **Instalaciones:** se estima 0,1-0,3 kN/m² según complejidad.
+
+### 1.3 Carga muerta total de diseño
+
+La carga muerta total se obtiene sumando todos los componentes:
+
+- **Losa + contrapiso + revestimiento:** 3,0 + 0,8 + 0,4 = 4,2 kN/m² (para losa de 12 cm con contrapiso y acabado).
+- **Muro de 18 cm:** 2,16 kN/m² (muro hueco) o 3,6 kN/m² (muro macizo).
+- **Techos a la francesa:** 0,5-1,0 kN/m² (estructura de madera + chapa o cerámica).
+- **Cubierta plana:** 1,5-2,5 kN/m² (impermeabilización + aislamiento + gravilla).
+
+> **Importante:** el factor de seguridad para cargas muertas es γG = 1,35 en el estado límite último (ELU) según CIRSOC 2018. Esto significa que las cargas muertas se multiplican por 1,35 en las combinaciones de diseño para garantizar un margen de seguridad.
+
+## 2. Cargas Vivas
+
+Las cargas vivas (o transitorias) son las fuerzas que se producen por el uso de la edificación y que no son permanentes. Incluyen el peso de las personas, muebles,Equipamiento y cualquier carga que se aplique temporalmente sobre la estructura. Son variables y dependen del tipo de ambiente.
+
+### 2.1 Valores de diseño según uso
+
+El CIRSOC 2018 establece los siguientes valores de carga viva de diseño para edificios residenciales:
+
+| Ambiente | Carga viva (kN/m²) | Observaciones |
+|---|---|---|
+| Dormitorios | 2,0 | Incluye mobiliario y personas |
+| Salas de estar | 2,0 | Valores habituales de uso |
+| Cocinas | 2,0 | Incluye electrodomésticos fijos |
+| Baños | 2,0 | Incluye artefactos sanitarios |
+| Corredores | 2,0 | Circulación general |
+| Escaleras | 2,0 | Con barandillas resistentes |
+| Balcones | 2,0 | Incluye mobiliario de exterior |
+| Terrazas | 2,0 | Sin mobiliario fijo |
+| Áticos sin carga | 0,5 | Solo para inspección y mantenimiento |
+| Garajes | 2,5 | Vehículos livianos |
+| Depósitos | 5,0-7,5 | Según tipo de almacenamiento |
+
+### 2.2 Reducción de cargas vivas
+
+Para estructuras que soportan grandes áreas de piso, el CIRSOC permite reducir las cargas vivas según la superficie afectada (factores KLL):
+
+- **Área ≤ 20 m²:** factor 1,0 (sin reducción).
+- **Área 50 m²:** factor 0,9.
+- **Área 100 m²:** factor 0,8.
+- **Área 200 m²:** factor 0,7.
+- **Área ≥ 500 m²:** factor 0,6 (mínimo).
+- **Columnas:** factor 0,85 para columnas que soportan ≥ 3 pisos.
+- **Muros de soporte:** factor 0,9 para muros que soportan ≥ 3 pisos.
+
+### 2.3 Cargas concentradas
+
+Además de las cargas distribuidas, deben considerarse cargas puntuales por elementos específicos:
+
+- **Tanques de agua:** peso del tanque lleno + accesorios. Ejemplo: tanque 1.000 L → 10 kN.
+- **Escaleras:** peso de la escalera + carga viva concentrada en un tramo.
+- **Equipamiento pesado:** heladeras industriales, máquinas de lavar, calderas.
+- **Elementos macizos:** estufas, chimeneas, maceteros grandes.
+- **Puertas pesadas:** portones de garaje con peso ≥ 100 kg.
+
+## 3. Cargas de Viento
+
+El viento produce fuerzas horizontales sobre las superficies expuestas de la edificación. La acción del viento es una de las cargas más importantes para estructuras altas y para el diseño de cubiertas y fachadas. En Argentina, los valores de diseño varían significativamente según la región geográfica.
+
+### 3.1 Parámetros básicos de diseño
+
+El CIRSOC 2018 se basa en la norma ASCE 7 (Estados Unidos) para el cálculo de cargas de viento:
+
+- **Velocidad básica de diseño (V):** velocidad del viento a 10 m del suelo, período de retorno 50 años. Varía de 100 km/h (zona 1) a 180 km/h (zona 4) en Argentina.
+- **Categoría de riesgo:** I (vivienda unifamiliar), II (vivienda multifamiliar), III (edificios públicos), IV (hospitales, escuelas).
+- **Exposición:** A (terreno muy rugoso, urbano denso), B (terreno rugoso, suburbano), C (terreno abierto, llanura), D (terreno muy liso, costas, agua).
+- **Factor de ráfaga (G):** 0,85 para estructuras rígidas, 0,95-1,15 para estructuras flexibles.
+
+### 3.2 Coeficientes de presión
+
+Las fuerzas de viento se calculan mediante coeficientes de presión que dependen de la geometría del edificio:
+
+- **Fachada de barlovento (GCpi):** presión positiva (empuje), coeficiente +0,8.
+- **Fachada de sotavento (GCpi):** presión negativa (succión), coeficiente -0,5.
+- **Cubierta plana (GCpl):** succión uniforme, coeficiente -0,7 a -1,2 según relación L/B.
+- **Cubierta a dos aguas (GCpl):** depende de la inclinación y del sentido del viento.
+- **Esquinas y bordes:** concentración de presiones, factor local ×1,5 a ×2,0.
+- **Fachadas laterales:** succión, coeficiente -0,7.
+
+### 3.3 Cálculo de la presión de diseño
+
+La presión de viento de diseño se calcula con la fórmula:
+
+- **q = 0,613 × V²** (en Pa, con V en m/s). Ejemplo: V = 140 km/h → q = 0,613 × (38,9)² = 925 Pa.
+- **P = q × G × Cp** (presión neta sobre la superficie).
+- **Fuerza total = P × A** (área expuesta del elemento).
+- **Reducción para elementos menores:** factor 0,85 para techos y aleros.
+
+### 3.4 Efectos del viento en viviendas
+
+El viento produce tres efectos principales sobre una vivienda:
+
+- **Empuje lateral:** fuerza horizontal que tiende a desplazar la estructura. Crítico para muros delgados y estructuras de madera.
+- **Succión en cubiertas:** fuerza ascendente que puede desprender la cubierta si no está adecuadamente anclada. Especialmente peligrosa en techos a dos aguas.
+- **Filtración de agua:** el viento arrastra lluvia horizontalmente, provocando filtraciones en aberturas mal selladas.
+- **Oscilación:** en estructuras altas o flexibles, el viento puede producir vibraciones percibidas por los ocupantes.
+- **Vibración de fachadas:** paneles de fachada pueden vibrar resonantemente bajo ciertas condiciones de viento.
+
+### 3.5 Anclajes y sujetación
+
+Todos los elementos de la edificación deben anclarse adecuadamente para resistir las fuerzas de viento:
+
+- **Cubiertas:** tornillos de fijación cada 15-20 cm en bordes, cada 25-30 cm en campo.
+- **Fachadas livianas:** anclajes mecánicos cada 0,60 m² mínimo, con resistencia ≥ 1,5 kN por anclaje.
+- **Persianas:** guías laterales ancladas al muro cada 60-80 cm.
+- **Toldos:** estructura metálica con anclajes a la fachada y tensadores.
+- **Aleros:** viguetas empotradas en el muro o apoyadas sobre ménsulas.
+- **Chapas de cubierta:** tornillos autorroscantes con arandelas de estanqueidad.
+
+## 4. Cargas Sísmicas
+
+Las cargas sísmicas son las fuerzas horizontales y verticales que se producen durante un terremoto. Son particularmente importantes en Argentina debido a la actividad sísmica de las zonas andinas y patagónicas. El diseño sismorresistente busca que la estructura no colapse durante un sismo de diseño y que los daños sean proporcionales a la importancia del edificio.
+
+### 4.1 Mapa de amenaza sísmica
+
+El CIRSOC 2018 establece el mapa de amenaza sísmica para toda la Argentina. Los valores de aceleración pico (ag) se expresan como porcentaje de la aceleración de gravedad (g):
+
+- **Zona I (ag = 0,10 g):** Buenos Aires, Rosario, La Plata, Córdoba capital. Baja amenaza sísmica.
+- **Zona II (ag = 0,25 g):** Mendoza, San Juan, San Luis. Amenaza sísmica moderada.
+- **Zona III (ag = 0,35 g):** Valores máximos en regiones de alta actividad tectónica.
+
+### 4.2 Parámetros de diseño
+
+Los parámetros de diseño sísmico dependen del tipo de suelo y de la Importancia del edificio:
+
+| Parámetro | Descripción | Valores típicos |
+|---|---|---|
+| ag | Aceleración pico del suelo | 0,10-0,35 g |
+| I | Factor de Importancia | 1,0 (vivienda), 1,25 (hospital), 1,5 (cuartel bomberos) |
+| R | Factor de comportamiento | 1,5 (mampostería confinada), 4,0 (hormigón armado ductil), 6,0 (con disipadores) |
+| S | Factor de sitio | 1,0 (roca), 1,2 (suelo blando), 1,4 (suelo muy blando) |
+| T | Período natural de vibración | 0,1-1,5 s (según altura y rigidez) |
+| C | Coeficiente de responsea espectral | Función de T, ag, R, S |
+
+### 4.3 Fuerza sísmica de diseño
+
+La fuerza sísmica de diseño (V) se calcula como:
+
+- **V = (ag × W × I × S) / R** (donde W es el peso total de la estructura).
+- La fuerza se distribuye en altura según la masa y la altura de cada piso.
+- La distribución es triangular: mayor fuerza en pisos superiores.
+- Para edificios regulares (sin irregularidades), el método estático equivalente es suficiente.
+- Para edificios irregulares, se requiere análisis dinámico (espectral o temporal).
+
+### 4.4 Diseño de mampostería confinada
+
+La mampostería confinada es el sistema más utilizado en construcción residencial argentina y tiene requisitos específicos de diseño sísmico:
+
+- **Columnas:** mínimo 20×20 cm, armadura 4∅10 + estribos ∅6@200 mm, confinamiento en extremos.
+- **Vigas de amarre:** mínimo 20×20 cm, armadura 4∅10 + estribos ∅6@200 mm.
+- **Refuerzo horizontal:** parrilla electrosoldada cada 50 cm o ladrillo macizo.
+- **Relación de esbeltez:** muros no deben superar h/espesor ≤ 25.
+- **Ductilidad:** las columnas y vigas deben diseñarse con estribos de confinamiento.
+- **Piso blando:** verificación de irregularidad en planta baja.
+
+### 4.5 Pisos blandos
+
+El "piso blando" (soft story) es una irregularidad donde un piso tiene significativamente menor rigidez que los superiores. Es una de las principales causas de colapso en sismos. En Argentina, el piso blando es frecuente en edificios con cocheras en planta baja y departamentos en pisos superiores. La solución requiere reforzar la planta baja con muros de cortante de hormigón armado o estructura de acero rigidizada.
+
+## 5. Cargas Térmicas
+
+Las cargas térmicas son fuerzas que se producen por la variación de temperatura en los elementos estructurales. Cuando un elemento se expande o contrae libremente, no se generan esfuerzos. Pero si está restringido (empotrado en otros elementos), la deformación térmica genera tensiones que pueden provocar fisuras y daños.
+
+### 5.1 Coeficientes de dilatación térmica
+
+| Material | α (10⁻⁶/°C) | Deformación por 30 °C |
+|---|---|---|
+| Hormigón armado | 10-12 | 0,03-0,036 % |
+| Acero | 12 | 0,036 % |
+| Ladrillo cerámico | 5-7 | 0,015-0,021 % |
+| Aluminio | 23 | 0,069 % |
+| PVC | 70-80 | 0,21-0,24 % |
+| Madera (fibra) | 3-5 | 0,009-0,015 % |
+
+### 5.2 Efectos en la estructura
+
+Las cargas térmicas producen varios efectos:
+
+- **Dilatación de losas:** las losas exteriores se expanden en verano y se contraen en invierno, generando esfuerzos en las uniones con muros.
+- **Fisuración:** las fisuras por temperatura suelen ser superficiales, regulares y paralelas al eje del elemento.
+- **Deformaciones diferidas:** los elementos a la intemperie (fachadas, cubiertas) sufieren mayor rango térmico que los interiores.
+- **Juntas de dilatación:** en edificios largos (> 30 m) se recomiendan juntas de dilatación cada 25-30 m.
+- **Puentes térmicos:** los elementos que atraviesan la envolvente térmica (balcones, ménsulas) generan esfuerzos por deformación diferencial.
+
+### 5.3 Prevención de fisuras por temperatura
+
+- **Juntas de construcción:** prever juntas cada 6-8 m en losas y muros extensos.
+- **Refuerzo superficial:** malla electrosoldada B500 5×5 cm en losas expuestas.
+- **Aditivos expansores:** incorporar aditivos compensadores de la contracción en morteros y hormigones.
+- **Cure adecuado:** el curado húmedo durante ≥ 7 días reduce la fisuración por contracción plástica.
+- **Acabados elásticos:** pinturas y revestimientos con capacidad de deformación.
+
+## 6. Sobrecarga de Nieve
+
+En las regiones de mayor altitude y latitud de Argentina, la carga de nieve puede ser significativa. El CIRSOC 2018 define las zonas de carga de nieve y los criterios de diseño para cubiertas expuestas.
+
+### 6.1 Mapa de carga de nieve
+
+Los valores de carga de nieve varían según la ubicación geográfica:
+
+- **Zona 0:** no se considera carga de nieve (gran parte del territorio argentino).
+- **Zona 1:** carga de nieve de 0,5-1,0 kN/m² (Sierras de Córdoba,部分地区 de la Pampa).
+- **Zona 2:** carga de nieve de 1,0-1,5 kN/m² (部分地区 de Neuquén, Río Negro).
+- **Zona 3:** carga de nieve de 1,5-2,5 kN/m² (Altiplano, Patagonia andina).
+- **Zona 4:** carga de nieve de 2,5-4,0 kN/m² (Cordillera andina, > 2.000 msnm).
+
+### 6.2 Factores de diseño
+
+La carga de nieve de diseño depende de varios factores:
+
+- **Forma de la cubierta:** pendiente, orientación, presencia de obstáculos.
+- **Accumulación de nieve:** la nieve se acumula de manera desigual, especialmente en esquinas y zonas protegidas del viento.
+- **Deslizamiento:** en cubiertas inclinadas, la nieve puede deslizarse y golpear elementos inferiores.
+- **Filtración de agua:** la nieve que se derrite puede filtrarse por juntas mal selladas.
+- **Calentamiento:** el calor que escapa del edificio puede derretir la nieve de manera desigual, creando cargas asimétricas.
+
+### 6.3 Criterios para cubiertas
+
+- **Cubiertas planas (< 5°):** carga de nieve completa, sin reducción.
+- **Cubiertas inclinadas (5°-30°):** carga reducida según ángulo, factor Cs = 1,0 a 0,6.
+- **Cubiertas muy inclinadas (> 30°):** la nieve se desliza, carga mínima.
+- **Alero:** acumulación adicional en la zona de viento protegido.
+- **Borde de cubierta:** carga concentrada en los bordes expuestos.
+- **Anclaje de cubierta:** verificar que los tornillos resistan la carga de nieve + viento.
+
+## 7. Combinaciones de Carga
+
+El diseño estructural no se realiza con una sola carga aislada, sino con combinaciones que representan las situaciones más desfavorables que la estructura puede experimentar durante su vida útil. El CIRSOC 2018 establece las combinaciones de carga para el estado límite último (ELU) y el estado límite de servicio (ELS).
+
+### 7.1 Estado límite último (ELU)
+
+Las combinaciones de ELU verifican que la estructura no colapse ni se vuelva inestable:
+
+- **Combinación principal 1:** 1,35 × Carga muerta + 1,50 × Carga viva (factorizados por seguridad).
+- **Combinación principal 2:** 1,35 × Carga muerta + 1,50 × Carga de viento (factorizados).
+- **Combinación principal 3:** 1,35 × Carga muerta + 1,50 × Carga sísmica (factorizados).
+- **Combinación principal 4:** 1,35 × Carga muerta + 0,90 × Carga de viento (para succión, verificar no levantamiento).
+- **Combinación accidental 1:** 1,0 × Carga muerta + 1,0 × Carga sísmica (para diseño sísmico).
+
+### 7.2 Estado límite de servicio (ELS)
+
+Las combinaciones de ELS verifican que la estructura sea funcional y confortable:
+
+- **Combinación de servicio 1:** 1,0 × Carga muerta + 1,0 × Carga viva (verificar deformaciones).
+- **Combinación de servicio 2:** 1,0 × Carga muerta + 1,0 × Carga de viento (verificar desplazamientos).
+- **Combinación de servicio 3:** 1,0 × Carga muerta + 1,0 × Carga térmica (verificar fisuración).
+- **Combinación de servicio 4:** 1,0 × Carga muerta + 0,7 × Carga viva + 0,7 × Carga de viento (uso combinado).
+- **Flecha máxima:** L/250 para vigas de piso, L/180 para vigas de cubierta, H/500 para columnas.
+
+### 7.3 Combinaciones de diseño
+
+El diseño de una vivienda típica requiere verificar múltiples combinaciones:
+
+- **Piso de dormitorio:** 1,35 × (peso propio + contrapiso + revestimiento) + 1,50 × 2,0 kN/m².
+- **Muro exterior:** 1,35 × peso propio + 1,50 × carga de viento (horizontal).
+- **Cubierta:** 1,35 × peso propio + 1,50 × carga de nieve (vertical).
+- **Columna:** 1,35 × carga muerta acumulada + 1,50 × carga viva acumulada.
+- **Viga de amarre:** 1,35 × carga muerta del muro + 1,50 × carga de viento.
+
+## 8. Criterios de Diseño
+
+El diseño estructural de una vivienda debe cumplir múltiples criterios simultáneamente: resistencia (que no colapse), estabilidad (que no se vuelque), servicio (que las deformaciones no afecten el uso) y durabilidad (que mantenga sus propiedades durante la vida útil).
+
+### 8.1 Resistencia
+
+La resistencia es la capacidad de la estructura para soportar las cargas de diseño sin colapsar:
+
+- **Mampostería confinada:** verificación de cortante, compresión y flexión en muros. Carga última de muro de ladrillo hueco 18 cm: 350-500 kN/m lineal.
+- **Hormigón armado:** verificación de flexión, cortante, punzonamiento y torsión. f'c = 25-30 MPa para vivienda.
+- **Acero:** verificación de compresión, flexión, cortante y estabilidad lateral. fy = 235-355 MPa para perfiles estructurales.
+- **Madera:** verificación de flexión, compresión paralela a la fibra, cortante y aplastamiento. fb = 60-120 MPa según especie.
+
+### 8.2 Estabilidad
+
+La estabilidad es la capacidad de la estructura para mantener su equilibrio bajo cargas laterales:
+
+- **Estabilidad global:** verificación de vuelco y deslizamiento de la estructura completa.
+- **Estabilidad local:** verificación de pandeo de elementos esbeltos (columnas, viguetas).
+- **Conectividad:** todas las partes de la estructura deben estar adecuadamente conectadas.
+- **Redundancia:** la estructura debe tener múltiples rutas de carga para evitar colapso progresivo.
+- **Anclaje a la cimentación:** las fuerzas horizontales deben transmitirse al suelo mediante [la cimentación](/docs/cimientos).
+
+### 8.3 Deformaciones
+
+Las deformaciones deben limitarse para garantizar el confort y la funcionalidad:
+
+- **Flecha máxima en piso:** L/250 (para viguetas de 4 m → flecha máxima 16 mm).
+- **Flecha máxima en cubierta:** L/180 (para viguetas de 5 m → flecha máxima 28 mm).
+- **Desplazamiento lateral:** H/500 en el tope del edificio (para edificio de 10 m → 20 mm).
+- **Fisuras en mampostería:** ≤ 0,3 mm (para muros de relleno), no visibles en muros estructurales.
+- **Vibraciones:** frecuencia natural ≥ 3 Hz para pisos residenciales (evitar incomodidad percibida).
+
+### 8.4 Durabilidad
+
+La durabilidad es la capacidad de la estructura para mantener sus propiedades durante la vida útil de diseño:
+
+- **Hormigón armado:** recubrimiento mínimo 25 mm (ambiente interior), 35 mm (exterior expuesto), 50 mm (suelo).
+- **Acero:** protección contra corrosión (pintura, galvanizado, hormigón armado con recubrimiento adecuado).
+- **Madera:** tratamiento con preservantes contra humedad, insectos y hongos.
+- **Mampostería:** mortero de calidad, juntas completas, drenaje adecuado.
+- **Vida útil de diseño:** 50 años (vivienda), 100 años (edificio público), 25 años (elementos expuestos).
+- **Mantenimiento:** inspección periódica de sellados, pinturas, anclajes y drenajes.
+
+> **Criterio fundamental:** el diseño estructural de una vivienda debe ser verificado por un profesional habilitado (ingeniero o arquitecto con matrícula). Los valores y criterios presentados aquí son orientativos y deben ajustarse a las condiciones específicas del sitio, los materiales disponibles y la normativa local aplicable. El CIRSOC 2018 es la norma de referencia obligatoria para el diseño sísmico en Argentina.
+
+---
+
+### Referencias normativas
+
+- [CIRSOC 2018](https://www.cirsoc.org.ar) — Reglamento Argentino de Diseño Sísmico.
+- [ACI 318-19](https://www.concrete.org) — Building Code Requirements for Structural Concrete.
+- [ASCE 7-22](https://www.asce.org) — Minimum Design Loads for Buildings and Other Structures.
+- [IRAM NTP 11654](https://tienda.iram.org.ar) — Acondicionamiento Térmico de Edificios.
+- [EN 1991-1-1](https://eurocodes.jrc.ec.europa.eu) (Eurocode 1) — Acciones en estructuras: Pesos propios y cargas de uso.
+- [EN 1991-1-4](https://eurocodes.jrc.ec.europa.eu) (Eurocode 1) — Acciones en estructuras: Acción del viento.
+- [EN 1991-1-3](https://eurocodes.jrc.ec.europa.eu) (Eurocode 1) — Acciones en estructuras: Acción de la nieve.
+
+### Paso a Paso: Estimar cargas básicas de una losa
+
+1. **Identificar el uso del ambiente** — vivienda: 200 kg/m², oficina: 300 kg/m², depósito: 500 kg/m²
+2. **Medir la superficie de la losa** — largo × ancho en m²
+3. **Calcular carga permanente:** peso propio losa (≈300 kg/m² para 15 cm HA) + contrapiso (≈100 kg/m²) + revestimiento (≈50 kg/m²)
+4. **Calcular carga variable:** según uso (ver paso 1)
+5. **Sumar carga total:** permanente + variable
+6. **Multiplicar por superficie** para obtener carga total sobre la losa
+7. **Verificar con tabla de luces máximas** según espesor de losa
+8. **Consultar con un ingeniero civil** para confirmar (especialmente si > 400 kg/m²)
+
+<Callout type="warning">No te confíes del cálculo estimativo. Una losa mal dimensionada puede colapsar. Siempre verificá con un profesional matriculado.</Callout>
+
+---
+
+## Guía: Cargas Estructurales en Construcción Residencial
+
+<Callout type="info">
+Las cargas son las fuerzas que debe soportar la estructura. Dimensionarlas correctamente es clave para la seguridad.
+</Callout>
+
+### Tipos de Cargas
+
+| Tipo | Descripción | Ejemplo |
+|------|-------------|---------|
+| Muerta | Peso propio de la estructura | Losas, vigas, muros |
+| Viva | Cargas transitorias | Personas, muebles, electrodomésticos |
+| De viento | Fuerza del viento sobre la construcción | Especialmente en techos |
+| Sísmica | Movimiento del terreno | En zonas sísmicas |
+| Nieve | Peso de la nieve acumulada | En zonas frías (no aplica en Entre Ríos) |
+
+### Valores de Referencia (IRAM 11654)
+
+- **Vivienda habitación**: 200 kg/m² (carga viva)
+- **Oficinas**: 250 kg/m²
+- **Comercios**: 350 kg/m²
+- **Terrazas**: 150 kg/m²
+- **Cubiertas**: 50 kg/m²
+
+<Callout type="tip">El cálculo estructural debe ser realizado por un ingeniero civil matriculado. No lo hagas por tu cuenta.</Callout>
+
+<Callout type="hack">Cuando diseñes ambientes, considerá que el peso de los muebles (especialmente estanterías cargadas) puede superar los 200 kg/m².</Callout>
+
+<Callout type="warning">Una estructura mal dimensionada puede colapsar. Siempre consultá a un profesional.</Callout>
+
+## Guía: Cargas Estructurales Residenciales
+
+<Callout type="info">
+Las cargas son las fuerzas que debe soportar la estructura.
+</Callout>
+
+### Tabla de Cargas por Uso (IRAM 11654)
+
+| Tipo de ambiente | Carga viva (kg/m²) |
+|-----------------|-------------------|
+| Vivienda habitación | 200 |
+| Oficinas | 250 |
+| Comercios | 350 |
+| Terrazas | 150 |
+| Cubiertas | 50 |
+
+<Callout type="tip">El cálculo estructural debe ser realizado por un ingeniero civil matriculado.</Callout>
+<Callout type="hack">Considerá que el peso de estanterías llenas puede superar los 200 kg/m².</Callout>
+<Callout type="warning">Una estructura mal dimensionada puede colapsar. Siempre consultá un profesional.</Callout>

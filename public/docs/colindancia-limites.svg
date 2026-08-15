@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="#FAF9F6" rx="8"/>
+  <text x="400" y="30" text-anchor="middle" font-family="system-ui" font-size="15" font-weight="bold" fill="#1A1A1A">Límites y Colindancia</text>
+
+  <!-- === STREET (top) === -->
+  <rect x="0" y="40" width="800" height="70" fill="#D3D9E0" rx="0"/>
+  <text x="400" y="80" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="#4A4A4A">CALLE / VÍA PÚBLICA</text>
+
+  <!-- Sidewalk strip -->
+  <rect x="0" y="110" width="800" height="10" fill="#B0B8C4" rx="0"/>
+
+  <!-- === LÍNEA MUNICIPAL === -->
+  <line x1="0" y1="120" x2="800" y2="120" stroke="#C0392B" stroke-width="3" stroke-dasharray="10 5"/>
+  <text x="730" y="116" text-anchor="middle" font-family="system-ui" font-size="9" fill="#C0392B" font-weight="bold">Línea Municipal</text>
+
+  <!-- === RETIRO FRONTAL dimension === -->
+  <line x1="300" y1="125" x2="300" y2="165" stroke="#C0392B" stroke-width="1.5"/>
+  <line x1="540" y1="125" x2="540" y2="165" stroke="#C0392B" stroke-width="1.5"/>
+  <line x1="300" y1="145" x2="540" y2="145" stroke="#C0392B" stroke-width="1.5"/>
+  <polygon points="300,145 310,142 310,148" fill="#C0392B"/>
+  <polygon points="540,145 530,142 530,148" fill="#C0392B"/>
+  <text x="420" y="142" text-anchor="middle" font-family="system-ui" font-size="9" fill="#C0392B">Retiro Frontal 5m</text>
+
+  <!-- === PROPERTY A (left — green) === -->
+  <rect x="40" y="165" width="340" height="295" fill="#E8F5E9" stroke="#2E7D32" stroke-width="2" rx="2"/>
+
+  <!-- Property A label -->
+  <text x="210" y="188" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="bold" fill="#2E7D32">Propiedad A</text>
+
+  <!-- House A -->
+  <rect x="100" y="210" width="170" height="140" fill="#A5D6A7" stroke="#2E7D32" stroke-width="1.5" rx="3"/>
+  <!-- Roof A -->
+  <polygon points="90,210 185,175 280,210" fill="#66BB6A" stroke="#2E7D32" stroke-width="1.5" stroke-linejoin="round"/>
+
+  <!-- Door A -->
+  <rect x="165" y="295" width="30" height="55" fill="#4A4A4A" rx="3"/>
+
+  <!-- Window A -->
+  <rect x="120" y="250" width="30" height="25" fill="#B3E5FC" stroke="#2E7D32" stroke-width="1" rx="2"/>
+  <rect x="220" y="250" width="30" height="25" fill="#B3E5FC" stroke="#2E7D32" stroke-width="1" rx="2"/>
+
+  <!-- Garden/yard area A -->
+  <text x="210" y="400" text-anchor="middle" font-family="system-ui" font-size="9" fill="#2E7D32">Jardín / Patio</text>
+
+  <!-- === PROPERTY B (right — blue) === -->
+  <rect x="420" y="165" width="340" height="295" fill="#E3F2FD" stroke="#1565C0" stroke-width="2" rx="2"/>
+
+  <!-- Property B label -->
+  <text x="590" y="188" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="bold" fill="#1565C0">Propiedad B</text>
+
+  <!-- House B -->
+  <rect x="480" y="220" width="140" height="130" fill="#90CAF9" stroke="#1565C0" stroke-width="1.5" rx="3"/>
+  <!-- Roof B -->
+  <polygon points="470,220 550,185 630,220" fill="#42A5F5" stroke="#1565C0" stroke-width="1.5" stroke-linejoin="round"/>
+
+  <!-- Door B -->
+  <rect x="535" y="300" width="30" height="50" fill="#4A4A4A" rx="3"/>
+
+  <!-- Window B -->
+  <rect x="495" y="260" width="30" height="25" fill="#B3E5FC" stroke="#1565C0" stroke-width="1" rx="2"/>
+  <rect x="575" y="260" width="30" height="25" fill="#B3E5FC" stroke="#1565C0" stroke-width="1" rx="2"/>
+
+  <!-- Garden/yard area B -->
+  <text x="590" y="400" text-anchor="middle" font-family="system-ui" font-size="9" fill="#1565C0">Jardín / Patio</text>
+
+  <!-- === BOUNDARY LINE between properties === -->
+  <line x1="380" y1="165" x2="380" y2="460" stroke="#7F8C8D" stroke-width="3" stroke-dasharray="8 6"/>
+  <text x="400" y="250" text-anchor="middle" font-family="system-ui" font-size="9" fill="#7F8C8D" transform="rotate(-90, 400, 250)">Límite entre propiedades</text>
+
+  <!-- === RETIRO LATERAL dimensions === -->
+  <!-- Property A left side -->
+  <line x1="40" y1="160" x2="40" y2="130" stroke="#E67E22" stroke-width="1.5"/>
+  <line x1="75" y1="160" x2="75" y2="130" stroke="#E67E22" stroke-width="1.5"/>
+  <line x1="40" y1="145" x2="75" y2="145" stroke="#E67E22" stroke-width="1.5"/>
+  <polygon points="75,145 68,142 68,148" fill="#E67E22"/>
+  <text x="58" y="138" text-anchor="middle" font-family="system-ui" font-size="8" fill="#E67E22">Retiro 1m</text>
+
+  <!-- Property A right side to boundary -->
+  <line x1="380" y1="160" x2="380" y2="130" stroke="#E67E22" stroke-width="1"/>
+  <line x1="395" y1="160" x2="395" y2="130" stroke="#E67E22" stroke-width="1"/>
+  <text x="388" y="138" text-anchor="middle" font-family="system-ui" font-size="8" fill="#E67E22">1m</text>
+
+  <!-- Property B left side to boundary -->
+  <line x1="420" y1="160" x2="420" y2="130" stroke="#E67E22" stroke-width="1"/>
+  <text x="408" y="138" text-anchor="middle" font-family="system-ui" font-size="8" fill="#E67E22">1m</text>
+
+  <!-- Property B right side -->
+  <line x1="760" y1="160" x2="760" y2="130" stroke="#E67E22" stroke-width="1.5"/>
+  <line x1="720" y1="160" x2="720" y2="130" stroke="#E67E22" stroke-width="1.5"/>
+  <line x1="720" y1="145" x2="760" y2="145" stroke="#E67E22" stroke-width="1.5"/>
+  <polygon points="720,145 727,142 727,148" fill="#E67E22"/>
+  <text x="740" y="138" text-anchor="middle" font-family="system-ui" font-size="8" fill="#E67E22">Retiro 1m</text>
+
+  <!-- === Compass / North arrow === -->
+  <line x1="660" y1="450" x2="660" y2="470" stroke="#4A4A4A" stroke-width="2"/>
+  <line x1="660" y1="450" x2="655" y2="458" stroke="#4A4A4A" stroke-width="1.5"/>
+  <line x1="660" y1="450" x2="665" y2="458" stroke="#4A4A4A" stroke-width="1.5"/>
+  <text x="660" y="480" text-anchor="middle" font-family="system-ui" font-size="9" fill="#4A4A4A">N</text>
+
+  <!-- === Lot dimensions === -->
+  <text x="210" y="460" text-anchor="middle" font-family="system-ui" font-size="9" fill="#2E7D32">10m</text>
+  <text x="590" y="460" text-anchor="middle" font-family="system-ui" font-size="9" fill="#1565C0">10m</text>
+
+  <!-- Lot width arrow A -->
+  <line x1="40" y1="455" x2="380" y2="455" stroke="#2E7D32" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="40" y1="450" x2="40" y2="460" stroke="#2E7D32" stroke-width="1"/>
+  <line x1="380" y1="450" x2="380" y2="460" stroke="#2E7D32" stroke-width="1"/>
+
+  <!-- Lot width arrow B -->
+  <line x1="420" y1="455" x2="760" y2="455" stroke="#1565C0" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="420" y1="450" x2="420" y2="460" stroke="#1565C0" stroke-width="1"/>
+  <line x1="760" y1="450" x2="760" y2="460" stroke="#1565C0" stroke-width="1"/>
+</svg>

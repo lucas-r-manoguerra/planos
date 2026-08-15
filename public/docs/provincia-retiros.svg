@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="#FAF9F6" rx="8"/>
+  <text x="400" y="30" text-anchor="middle" font-family="system-ui" font-size="15" font-weight="bold" fill="#1A1A1A">Retiros y Alturas — Entre Ríos</text>
+
+  <!-- === Sky === -->
+  <rect x="0" y="45" width="800" height="100" fill="#E3F2FD" rx="0"/>
+
+  <!-- === Ground / sidewalk area === -->
+  <rect x="0" y="400" width="800" height="70" fill="#BDBDBD" stroke="none"/>
+  <rect x="0" y="400" width="800" height="10" fill="#9E9E9E" stroke="none"/>
+
+  <!-- === Road on the left === -->
+  <rect x="0" y="370" width="180" height="30" fill="#616161" stroke="none"/>
+  <!-- Road center line -->
+  <line x1="0" y1="385" x2="180" y2="385" stroke="#FFD600" stroke-width="2" stroke-dasharray="10 8"/>
+
+  <!-- === Sidewalk === -->
+  <rect x="0" y="400" width="800" height="25" fill="#E0E0E0" stroke="none"/>
+  <rect x="180" y="400" width="2" height="25" fill="#9E9E9E"/>
+  <rect x="180" y="145" width="2" height="255" fill="#9E9E9E" stroke-dasharray="4 4"/>
+
+  <!-- === Línea Municipal === -->
+  <line x1="290" y1="145" x2="290" y2="430" stroke="#E74C3C" stroke-width="2.5" stroke-dasharray="6 4"/>
+  <text x="300" y="155" font-family="system-ui" font-size="10" font-weight="bold" fill="#E74C3C">Línea Municipal</text>
+
+  <!-- === Green setback area (retiro frontal) === -->
+  <rect x="290" y="200" width="100" height="200" fill="#E8F5E9" stroke="#4CAF50" stroke-width="1" rx="2"/>
+  <!-- Grass tufts -->
+  <line x1="310" y1="220" x2="310" y2="210" stroke="#4CAF50" stroke-width="1.5"/>
+  <line x1="330" y1="230" x2="330" y2="218" stroke="#4CAF50" stroke-width="1.5"/>
+  <line x1="350" y1="215" x2="350" y2="205" stroke="#4CAF50" stroke-width="1.5"/>
+  <line x1="300" y1="260" x2="300" y2="250" stroke="#4CAF50" stroke-width="1.5"/>
+  <line x1="360" y1="250" x2="360" y2="240" stroke="#4CAF50" stroke-width="1.5"/>
+  <line x1="320" y1="280" x2="320" y2="270" stroke="#4CAF50" stroke-width="1.5"/>
+  <line x1="340" y1="300" x2="340" y2="290" stroke="#4CAF50" stroke-width="1.5"/>
+
+  <!-- === Building mass === -->
+  <!-- Ground floor -->
+  <rect x="390" y="200" width="180" height="200" fill="#D4C5B5" stroke="#4A4A4A" stroke-width="2" rx="0"/>
+  <!-- Second floor -->
+  <rect x="390" y="80" width="180" height="120" fill="#C8B8A8" stroke="#4A4A4A" stroke-width="2" rx="0"/>
+
+  <!-- Floor division -->
+  <line x1="390" y1="200" x2="570" y2="200" stroke="#4A4A4A" stroke-width="3"/>
+
+  <!-- Windows ground floor -->
+  <rect x="410" y="250" width="30" height="40" fill="#B3D4E0" stroke="#8A8A8A" stroke-width="1.5" rx="1"/>
+  <rect x="460" y="250" width="30" height="40" fill="#B3D4E0" stroke="#8A8A8A" stroke-width="1.5" rx="1"/>
+  <rect x="510" y="250" width="30" height="40" fill="#B3D4E0" stroke="#8A8A8A" stroke-width="1.5" rx="1"/>
+  <!-- Door -->
+  <rect x="440" y="310" width="24" height="45" fill="#5D4037" stroke="#3E2723" stroke-width="1.5" rx="1"/>
+
+  <!-- Windows second floor -->
+  <rect x="410" y="110" width="30" height="40" fill="#B3D4E0" stroke="#8A8A8A" stroke-width="1.5" rx="1"/>
+  <rect x="460" y="110" width="30" height="40" fill="#B3D4E0" stroke="#8A8A8A" stroke-width="1.5" rx="1"/>
+  <rect x="510" y="110" width="30" height="40" fill="#B3D4E0" stroke="#8A8A8A" stroke-width="1.5" rx="1"/>
+
+  <!-- Roof slab -->
+  <rect x="385" y="72" width="190" height="12" fill="#9A8A7A" stroke="#4A4A4A" stroke-width="1.5" rx="2"/>
+
+  <!-- === Retiro Frontal 5m dimension line === -->
+  <!-- Horizontal dimension line -->
+  <line x1="290" y1="450" x2="390" y2="450" stroke="#2B7BE4" stroke-width="2"/>
+  <line x1="290" y1="445" x2="290" y2="455" stroke="#2B7BE4" stroke-width="2"/>
+  <line x1="390" y1="445" x2="390" y2="455" stroke="#2B7BE4" stroke-width="2"/>
+  <!-- Arrow heads -->
+  <polygon points="290,450 298,447 298,453" fill="#2B7BE4"/>
+  <polygon points="390,450 382,447 382,453" fill="#2B7BE4"/>
+  <text x="340" y="443" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2B7BE4">Retiro Frontal 5m</text>
+
+  <!-- === Retiro Lateral 1m dimension line === -->
+  <line x1="570" y1="80" x2="570" y2="200" stroke="#2B7BE4" stroke-width="2"/>
+  <line x1="565" y1="80" x2="575" y2="80" stroke="#2B7BE4" stroke-width="2"/>
+  <line x1="565" y1="200" x2="575" y2="200" stroke="#2B7BE4" stroke-width="2"/>
+  <polygon points="570,80 567,88 573,88" fill="#2B7BE4"/>
+  <polygon points="570,200 567,192 573,192" fill="#2B7BE4"/>
+  <text x="583" y="145" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2B7BE4" transform="rotate(90,583,145)">Retiro Lateral 1m</text>
+
+  <!-- === Altura Máx. 10m dimension line === -->
+  <line x1="650" y1="80" x2="650" y2="400" stroke="#E74C3C" stroke-width="2"/>
+  <line x1="645" y1="80" x2="655" y2="80" stroke="#E74C3C" stroke-width="2"/>
+  <line x1="645" y1="400" x2="655" y2="400" stroke="#E74C3C" stroke-width="2"/>
+  <polygon points="650,80 647,88 653,88" fill="#E74C3C"/>
+  <polygon points="650,400 647,392 653,392" fill="#E74C3C"/>
+  <text x="668" y="245" text-anchor="middle" font-family="system-ui" font-size="10" font-weight="bold" fill="#E74C3C" transform="rotate(90,668,245)">Altura Máx. 10m</text>
+
+  <!-- === Labels === -->
+  <text x="100" y="395" text-anchor="middle" font-family="system-ui" font-size="9" fill="white">Calle / Vía Pública</text>
+
+  <text x="240" y="445" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">Acera</text>
+
+  <text x="335" y="430" text-anchor="middle" font-family="system-ui" font-size="9" fill="#2E7D32">Espacio verde</text>
+  <text x="335" y="440" text-anchor="middle" font-family="system-ui" font-size="9" fill="#2E7D32">(retiro frontal)</text>
+
+  <text x="480" y="425" text-anchor="middle" font-family="system-ui" font-size="10" fill="#4A4A4A">Vivienda / Edificio</text>
+
+  <text x="480" y="195" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">2° Piso</text>
+  <text x="480" y="295" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">PB</text>
+
+  <!-- === Legend === -->
+  <rect x="20" y="470" width="760" height="25" fill="#F5F3EF" stroke="#E0DDD6" rx="4"/>
+  <line x1="35" y1="482" x2="70" y2="482" stroke="#E74C3C" stroke-width="2.5" stroke-dasharray="6 4"/>
+  <text x="75" y="486" font-family="system-ui" font-size="8" fill="#6B6B6B">Línea Municipal</text>
+  <line x1="150" y1="482" x2="185" y2="482" stroke="#2B7BE4" stroke-width="2"/>
+  <text x="190" y="486" font-family="system-ui" font-size="8" fill="#6B6B6B">Dimensiones de retiro</text>
+  <line x1="310" y1="482" x2="345" y2="482" stroke="#E74C3C" stroke-width="2"/>
+  <text x="350" y="486" font-family="system-ui" font-size="8" fill="#6B6B6B">Altura máxima</text>
+</svg>

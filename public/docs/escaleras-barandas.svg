@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#A0A0A0"/>
+      <stop offset="50%" stop-color="#C0C0C0"/>
+      <stop offset="100%" stop-color="#909090"/>
+    </linearGradient>
+    <linearGradient id="vidrio" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A8D8E8" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#B8E8F8" stop-opacity="0.4"/>
+    </linearGradient>
+    <linearGradient id="madera" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#B56A3A"/>
+      <stop offset="50%" stop-color="#C17A57"/>
+      <stop offset="100%" stop-color="#A85F30"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="400" fill="#FAF9F6" rx="8"/>
+
+  <text x="400" y="28" text-anchor="middle" font-size="16" font-weight="700" fill="#333">Barandas y Pasamanos para Escaleras</text>
+
+  <!-- ==================== TYPE 1: ACERO INOXIDABLE ==================== -->
+  <g transform="translate(15, 45)">
+    <text x="256" y="10" text-anchor="middle" font-size="13" font-weight="700" fill="#444">Acero Inoxidable</text>
+
+    <!-- Escalera perfil -->
+    <polyline points="0,130 20,130 20,120 50,120 50,110 80,110 80,100 110,100 110,90 140,90 140,80 170,80 170,70 200,70 200,60 230,60 230,50 260,50 260,40 280,40" fill="none" stroke="#D4C5B5" stroke-width="3"/>
+    <line x1="0" y1="130" x2="280" y2="130" stroke="#D4C5B5" stroke-width="2"/>
+    <line x1="280" y1="40" x2="280" y2="130" stroke="#D4C5B5" stroke-width="2"/>
+
+    <!-- Escalones -->
+    <rect x="2" y="115" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="32" y="105" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="62" y="95" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="92" y="85" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="122" y="75" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="152" y="65" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="182" y="55" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="212" y="45" width="18" height="15" fill="#C8B8A5" rx="1"/>
+
+    <!-- Baranda completa -->
+    <line x1="0" y1="30" x2="280" y2="30" stroke="url(#metal)" stroke-width="5" stroke-linecap="round"/>
+
+    <!-- Barrotes verticales -->
+    <line x1="15" y1="30" x2="15" y2="115" stroke="#6B7B8D" stroke-width="2.5"/>
+    <line x1="40" y1="30" x2="40" y2="105" stroke="#6B7B8D" stroke-width="2.5"/>
+    <line x1="65" y1="30" x2="65" y2="95" stroke="#6B7B8D" stroke-width="2.5"/>
+    <line x1="90" y1="30" x2="90" y2="85" stroke="#6B7B8D" stroke-width="2.5"/>
+    <line x1="115" y1="30" x2="115" y2="75" stroke="#6B7B8D" stroke-width="2.5"/>
+    <line x1="140" y1="30" x2="140" y2="65" stroke="#6B7B8D" stroke-width="2.5"/>
+    <line x1="165" y1="30" x2="165" y2="55" stroke="#6B7B8D" stroke-width="2.5"/>
+    <line x1="190" y1="30" x2="190" y2="45" stroke="#6B7B8D" stroke-width="2.5"/>
+
+    <!-- Separación entre barrotes -->
+    <line x1="15" y1="70" x2="40" y2="70" stroke="#999" stroke-width="0.8" stroke-dasharray="3,3"/>
+    <text x="27" y="68" text-anchor="middle" font-size="8" fill="#888">12cm</text>
+
+    <!-- Cota altura -->
+    <line x1="-5" y1="30" x2="-5" y2="130" stroke="#999" stroke-width="0.8"/>
+    <line x1="-12" y1="30" x2="0" y2="30" stroke="#999" stroke-width="0.8"/>
+    <line x1="-12" y1="130" x2="0" y2="130" stroke="#999" stroke-width="0.8"/>
+    <text x="-18" y="85" text-anchor="end" font-size="9" fill="#888" transform="rotate(-90,-18,85)">Altura 1m</text>
+  </g>
+
+  <!-- ==================== TYPE 2: VIDRIO TEMPLADO ==================== -->
+  <g transform="translate(15, 190)">
+    <text x="256" y="10" text-anchor="middle" font-size="13" font-weight="700" fill="#444">Vidrio Templado</text>
+
+    <!-- Escalera perfil -->
+    <polyline points="0,130 20,130 20,120 50,120 50,110 80,110 80,100 110,100 110,90 140,90 140,80 170,80 170,70 200,70 200,60 230,60 230,50 260,50 260,40 280,40" fill="none" stroke="#D4C5B5" stroke-width="3"/>
+    <line x1="0" y1="130" x2="280" y2="130" stroke="#D4C5B5" stroke-width="2"/>
+    <line x1="280" y1="40" x2="280" y2="130" stroke="#D4C5B5" stroke-width="2"/>
+
+    <!-- Escalones -->
+    <rect x="2" y="115" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="32" y="105" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="62" y="95" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="92" y="85" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="122" y="75" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="152" y="65" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="182" y="55" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="212" y="45" width="18" height="15" fill="#C8B8A5" rx="1"/>
+
+    <!-- Marco superior de acero -->
+    <line x1="0" y1="30" x2="280" y2="30" stroke="#6B7B8D" stroke-width="4" stroke-linecap="round"/>
+
+    <!-- Panel de vidrio -->
+    <rect x="5" y="32" width="270" height="90" fill="url(#vidrio)" stroke="#6B7B8D" stroke-width="2" rx="3"/>
+
+    <!-- Soportes verticales minimalistas -->
+    <line x1="15" y1="30" x2="15" y2="125" stroke="#6B7B8D" stroke-width="2"/>
+    <line x1="140" y1="30" x2="140" y2="125" stroke="#6B7B8D" stroke-width="2"/>
+    <line x1="265" y1="30" x2="265" y2="125" stroke="#6B7B8D" stroke-width="2"/>
+
+    <!-- Líneas sutiles de vidrio -->
+    <line x1="20" y1="55" x2="260" y2="55" stroke="#FFF" stroke-width="0.5" opacity="0.4"/>
+    <line x1="20" y1="80" x2="260" y2="80" stroke="#FFF" stroke-width="0.5" opacity="0.4"/>
+    <line x1="20" y1="105" x2="260" y2="105" stroke="#FFF" stroke-width="0.5" opacity="0.4"/>
+
+    <!-- Cota altura -->
+    <line x1="-5" y1="30" x2="-5" y2="130" stroke="#999" stroke-width="0.8"/>
+    <line x1="-12" y1="30" x2="0" y2="30" stroke="#999" stroke-width="0.8"/>
+    <line x1="-12" y1="130" x2="0" y2="130" stroke="#999" stroke-width="0.8"/>
+    <text x="-18" y="85" text-anchor="end" font-size="9" fill="#888" transform="rotate(-90,-18,85)">Altura 1m</text>
+  </g>
+
+  <!-- ==================== DIVIDER ==================== -->
+  <line x1="296" y1="55" x2="296" y2="360" stroke="#DDD" stroke-width="1.5" stroke-dasharray="6,4"/>
+
+  <!-- ==================== TYPE 3: MADERA (right half) ==================== -->
+  <g transform="translate(310, 45)">
+    <text x="256" y="10" text-anchor="middle" font-size="13" font-weight="700" fill="#444">Madera</text>
+
+    <!-- Escalera perfil -->
+    <polyline points="0,130 20,130 20,120 50,120 50,110 80,110 80,100 110,100 110,90 140,90 140,80 170,80 170,70 200,70 200,60 230,60 230,50 260,50 260,40 280,40" fill="none" stroke="#D4C5B5" stroke-width="3"/>
+    <line x1="0" y1="130" x2="280" y2="130" stroke="#D4C5B5" stroke-width="2"/>
+    <line x1="280" y1="40" x2="280" y2="130" stroke="#D4C5B5" stroke-width="2"/>
+
+    <!-- Escalones -->
+    <rect x="2" y="115" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="32" y="105" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="62" y="95" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="92" y="85" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="122" y="75" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="152" y="65" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="182" y="55" width="18" height="15" fill="#C8B8A5" rx="1"/>
+    <rect x="212" y="45" width="18" height="15" fill="#C8B8A5" rx="1"/>
+
+    <!-- Pasamanos de madera -->
+    <line x1="0" y1="25" x2="280" y2="25" stroke="url(#madera)" stroke-width="8" stroke-linecap="round"/>
+    <line x1="0" y1="25" x2="280" y2="25" stroke="#A85F30" stroke-width="8" stroke-linecap="round" opacity="0.15"/>
+
+    <!-- Balaustres torneados -->
+    <g stroke="#C17A57" stroke-width="4" fill="#B56A3A">
+      <circle cx="15" cy="70" r="3" fill="#C17A57" stroke="none"/>
+      <rect x="13" y="35" width="4" height="95" rx="2" fill="#C17A57"/>
+      <circle cx="15" cy="115" r="3.5" fill="#C17A57" stroke="none"/>
+
+      <circle cx="50" cy="60" r="3" fill="#C17A57" stroke="none"/>
+      <rect x="48" y="35" width="4" height="75" rx="2" fill="#C17A57"/>
+      <circle cx="50" cy="105" r="3.5" fill="#C17A57" stroke="none"/>
+
+      <circle cx="85" cy="50" r="3" fill="#C17A57" stroke="none"/>
+      <rect x="83" y="35" width="4" height="65" rx="2" fill="#C17A57"/>
+      <circle cx="85" cy="95" r="3.5" fill="#C17A57" stroke="none"/>
+
+      <circle cx="120" cy="40" r="3" fill="#C17A57" stroke="none"/>
+      <rect x="118" y="35" width="4" height="55" rx="2" fill="#C17A57"/>
+      <circle cx="120" cy="85" r="3.5" fill="#C17A57" stroke="none"/>
+
+      <circle cx="155" cy="35" r="3" fill="#C17A57" stroke="none"/>
+      <rect x="153" y="35" width="4" height="42" rx="2" fill="#C17A57"/>
+      <circle cx="155" cy="72" r="3.5" fill="#C17A57" stroke="none"/>
+    </g>
+
+    <!-- Barandal inferior -->
+    <line x1="0" y1="35" x2="280" y2="35" stroke="#C17A57" stroke-width="2.5" opacity="0.5"/>
+
+    <!-- Cota separación -->
+    <line x1="15" y1="140" x2="50" y2="140" stroke="#999" stroke-width="0.8" stroke-dasharray="3,3"/>
+    <text x="32" y="152" text-anchor="middle" font-size="8" fill="#888">Sep. máx. 12cm</text>
+
+    <!-- Cota altura -->
+    <line x1="-5" y1="25" x2="-5" y2="130" stroke="#999" stroke-width="0.8"/>
+    <line x1="-12" y1="25" x2="0" y2="25" stroke="#999" stroke-width="0.8"/>
+    <line x1="-12" y1="130" x2="0" y2="130" stroke="#999" stroke-width="0.8"/>
+    <text x="-18" y="82" text-anchor="end" font-size="9" fill="#888" transform="rotate(-90,-18,82)">Altura 1m</text>
+  </g>
+
+  <text x="400" y="388" text-anchor="middle" font-size="10" fill="#6B6B6B" font-style="italic">Todas las barandas deben cumplir altura mínima de 1m desde el borde del escalón y separación máxima de 12cm entre barrotes (IRAM 4067)</text>
+</svg>

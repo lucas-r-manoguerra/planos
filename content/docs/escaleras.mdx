@@ -1,0 +1,458 @@
+---
+title: "Escaleras"
+description: "Diseño, cálculo y construcción de escaleras interiores y exteriores"
+category: "estructura"
+order: 16
+---
+
+# Escaleras
+
+Las escaleras son uno de los elementos arquitectónicos más utilizados en construcciones de más de una planta. Su diseño correcto es fundamental para la seguridad, comodidad y accesibilidad de los ocupantes. Una escalera mal diseñada genera incomodidad, riesgo de accidentes y puede ser incompatible con normativas vigentes.
+
+<Figure src="/docs/escalera-geometria.svg" alt="Geometría de escalera mostrando huella y contrahuella" caption="Figura 1: Geometría básica de una escalera con huella de 28cm y contrahuella de 17cm según IRAM 4067" width="400px" />
+
+---
+
+## Tipos de Escaleras
+
+<Figure src="/docs/escaleras-tipos.svg" alt="Tipos de escalera: recta, en L, caracol y compensada" caption="Figura 2: Tipos de escalera según su trazado en planta" width="600px" />
+
+### Escalera Recta
+
+- La más simple y económica de construir
+- Recto recorrido sin giros
+- Ocupa espacio lineal considerable
+- Ideal para espacios estrechos y largos
+- Pendiente típica: 30° a 40°
+
+**Ventajas:**
+- Fácil de calcular y construir
+- Segura para uso diario
+- Permite trasladar muebles grandes
+
+**Desventajas:**
+- Ocupa mucho espacio en planta
+- No permite descanso intermedio en tramos largos
+- Estéticamente puede resultar monótona
+
+### Escalera con Descanso
+
+- Incluye un rellano o descanso entre tramos
+- Reduce la sensación de cansancio
+- Permite cambiar de dirección (180°)
+- Obligatoria cuando hay más de 18 peldaños seguidos
+- El descanso mide mínimo 90 cm de profundidad
+
+> **Consejo profesional:** Colocar el descanso a mitad de altura entre pisos permite que la escalera sea más cómoda y segura. El descanso debe ser al menos tan ancho como la escalera.
+
+### Escalera de Caracol (Helicoidal)
+
+- Gira alrededor de un eje central
+- Ocupa muy poco espacio en planta
+- Estéticamente atractiva
+- Menos cómoda para uso frecuente
+- Peldaños trapezoidales (más estrechos en el centro)
+
+**Dimensiones mínimas:**
+- Diámetro exterior: 200 cm mínimo (residencial)
+- Ancho de peldaño en el pasamanos: 25 cm mínimo
+- Hueco central: 10-15 cm para ventilación
+
+### Escalera con Cuarto de Descanso
+
+- Similar a la de descanso pero con mayor espacio
+- Permite instalar un ascensor en el futuro
+- Ideal para edificios de apartamentos
+- El cuarto mide al menos 150 × 150 cm
+
+### Escalera Exterior
+
+- Generalmente de hormigón o piedra
+- Requiere material antideslizante
+- Pendiente menos pronunciada que interior
+- Barandilla obligatoria en ambos lados
+- Buena drenaje para evitar acumulación de agua
+
+### Comparativa de Tipos
+
+| Tipo | Espacio necesario | Comodidad | Costo | Complejidad |
+|------|-------------------|-----------|-------|-------------|
+| Recta | Grande | Alta | Bajo | Baja |
+| Con descanso | Medio | Alta | Medio | Media |
+| Caracol | Pequeño | Media | Alto | Alta |
+| Cuarto descanso | Grande | Muy alta | Alto | Media |
+| Exterior | Variable | Media | Medio | Media |
+
+---
+
+## Dimensiones y Cálculo
+
+### Componentes de un Peldaño
+
+- **Huella (H):** parte horizontal donde se pisa, mínimo 25 cm
+- **Contrahuella (C):** parte vertical, máximo 20 cm
+- **Piso:** material que recubre la huella
+- **Tabica:** cara vertical del peldaño
+
+### Fórmula de Blondel
+
+La fórmula de Blondel establece la relación ideal entre huella y contrahuella para una escalera cómoda:
+
+```
+2C + H = 63 a 65 cm
+```
+
+Donde:
+- C = contrahuella (altura del peldaño)
+- H = huella (profundidad del peldaño)
+
+**Ejemplo de cálculo:**
+
+Para una altura entre pisos de 280 cm:
+
+```
+Altura total = 280 cm
+Cantidad de peldaños = 280 / C (contrahuella elegida)
+
+Si C = 17.5 cm:
+  Peldaños = 280 / 17.5 = 16 peldaños
+  H = 63 - (2 × 17.5) = 28 cm
+  Verificar: 2(17.5) + 28 = 63 ✓
+```
+
+### Tabla de Dimensiones Recomendadas
+
+| Contrahuella (cm) | Huella (cm) | Pendiente | Uso recomendado |
+|--------------------|-------------|-----------|-----------------|
+| 14 | 35 | 22° | Accesibilidad |
+| 15 | 33 | 24° | Cómoda |
+| 16 | 31 | 27° | Estándar |
+| 17 | 29 | 30° | Estándar |
+| 18 | 27 | 33° | Funcional |
+| 19 | 25 | 37° | Mínima |
+| 20 | 25 | 39° | Mínima permitida |
+
+#### Dimensiones mínimas normativas
+
+| Tipo de vivienda | Huella mínima | Contrahuella máxima |
+|---|---|---|
+| Vivienda principal | 28 cm | 18 cm |
+| Vivienda secundaria | 25 cm | 20 cm |
+
+#### Ancho mínimo según tipo de edificación
+
+| Edificación | Ancho mínimo |
+|---|---|
+| Vivienda unifamiliar | 90 cm |
+| Edificio público o comercial | 1.20 m |
+
+#### Tabla práctica: escalones según altura a salvar
+
+| Altura a salvar (cm) | Contrahuella (cm) | N° de escalones | Huella resultante (cm) |
+|---|---|---|---|
+| 240 | 17.1 | 14 | 28.7 |
+| 250 | 17.9 | 14 | 27.3 |
+| 260 | 17.3 | 15 | 28.3 |
+| 270 | 18.0 | 15 | 27.0 |
+| 280 | 17.5 | 16 | 28.0 |
+| 290 | 18.1 | 16 | 26.8 |
+| 300 | 17.6 | 17 | 27.7 |
+
+> **Importante:** La contrahuella nunca debe superar los 20 cm y la huella nunca debe ser menor a 25 cm. Estas son las dimensiones mínimas exigidas por normativa.
+
+### Anchura de la Escalera
+
+| Uso | Anchura mínima | Recomendada |
+|-----|----------------|-------------|
+| Vivienda unifamiliar | 80 cm | 90-100 cm |
+| Vivienda doble acceso | 90 cm | 100-110 cm |
+| Edificio de departamentos | 100 cm | 110-120 cm |
+| Local comercial / público | 120 cm | 140-160 cm |
+| Edificio de oficinas | 120 cm | 140-180 cm |
+
+### Espacio Libre Vertical (Mano Dura)
+
+- **Mínimo:** 210 cm desde la huella del peldaño hasta el cielorraso
+- **Recomendado:** 220-230 cm
+- En tramos con descanso: verificar en cada punto del recorrido
+- La mano dura puede ser oblicua en escaleras rectas
+
+---
+
+## Materiales
+
+### Escalera de Hormigón
+
+- **Ventajas:** resistente, duradera, económica, permite terminaciones variadas
+- **Desventajas:** pesada, requiere encofrado, acabado rugoso si no se trata
+- **Usos:** edificios, casas, escaleras exteriores
+- **Espesor mínimo de huella:** 5 cm
+- **Acabados posibles:** cerámica, mármol, pintura antideslizante, alfombra
+
+### Escalera de Madera
+
+- **Ventajas:** cálida, estética, liviana, fácil reparación
+- **Desventajas:** requiere mantenimiento, sensible a humedad, menor duración
+- **Usos:** casas, cabañas, interiores decorativos
+- **Maderas recomendadas:** quebracho, lapacho, roble, pino tratado
+- **Espesor mínimo de huella:** 3.5 cm
+
+### Escalera de Acero
+
+- **Ventajas:** liviana, resistente, moderna, permite diseños creativos
+- **Desventajas:** fría al tacto, ruidosa, requiere pintura anticorrosiva
+- **Usos:** interiores modernos, exteriores, industriales
+- **Perfiles típicos:** I, H, U para estructura; chapa para huellas
+- **Acabados:** pintura epóxica, galvanizado, imprimación + pintura
+
+### Escalera de Vidrio
+
+- **Ventajas:** transparencia, luminosidad, efecto visual espectacular
+- **Desventajas:** cara, frágil si no es templado, requiere mantenimiento
+- **Usos:** interiores de diseño, locales comerciales
+- **Grosor mínimo:** vidrio laminado 3 × 3 mm (huella)
+
+### Comparativa de Materiales
+
+| Material | Peso relativo | Duración | Mantenimiento | Costo |
+|----------|---------------|----------|---------------|-------|
+| Hormigón | Alto | Permanente | Bajo | Medio |
+| Madera | Bajo | 30-50 años | Medio | Alto |
+| Acero | Medio | Permanente | Medio | Alto |
+| Vidrio | Bajo | Permanente | Alto | Muy alto |
+
+---
+
+## Barandillas y Pasamanos
+
+### Altura Obligatoria
+
+- **Interior:** 90 cm mínimo desde la huella del peldaño
+- **Exterior:** 100 cm mínimo (varía según normativa local)
+- **Donde hay niños:** 110 cm recomendados
+- **Descansos y rellanos:** la barandilla debe continuar sin interrupciones
+
+### Separación entre Barrotes
+
+- **Máximo:** 12 cm entre barrotes verticales
+- **Para evitar paso de niños:** máximo 8 cm
+- **Barrotes horizontales:** evitar escalera tipo "pirata" (niños trepan)
+- **Red o malla:** alternativa segura si la separación es mayor
+
+### Tipos de Barandillas
+
+| Tipo | Material | Ventajas | Desventajas |
+|------|----------|----------|-------------|
+| Vertical | Acero / madera | Segura, tradicional | Puede ser rígida |
+| Horizontal | Acero / cable | Moderna, abierta | Riesgo escalada niños |
+| Panel vidrio | Vidrio templado | Luminosa, moderna | Cara, suciedad visible |
+| Muro | Hormigón / albañilería | Sólida, privada | Visualmente pesada |
+| Cable | Acero inoxidable | Minimalista, resistente | Requiere tensado |
+
+### Pasamanos
+
+- **Diámetro:** 4-5 cm para agarre cómodo
+- **Separación de la pared:** 8-10 cm
+- **Material:** madera, acero, aluminio, PVC
+- **Forma:** circular o rectangular para buen agarre
+- **Continuidad:** debe ser continuo sin interrupciones
+
+> **Consejo profesional:** El pasamanos debe poder ser agarrado cómodamente con la mano completa. Un diámetro de 4 cm es ideal para la mayoría de las personas. Evitar formas cuadradas o filosas.
+
+### Altura mínima por ubicación
+
+| Ubicación | Altura mínima |
+|---|---|
+| Escalera interior | 1.00 m |
+| Balcones y descansos | 1.10 m |
+| Escalera exterior | 1.00 m |
+| Edificios públicos | 1.10 m |
+
+### Reglas de pasamanos
+
+- **Ancho de escalera > 1.20 m:** pasamanos obligatorio en ambos lados.
+- **Ancho de escalera > 2.40 m:** baranda central adicional.
+- **Altura de colocación:** 85-95 cm desde la nariz del peldaño.
+- **Extensión:** el pasamanos debe prolongarse 30 cm más allá del primer y último peldaño.
+- **Fijación:** cada 80-100 cm como máximo, con anclajes firmes a la estructura.
+- **Continuidad:** debe ser continuo en descansos y rellanos, sin interrupciones.
+
+### Material Antideslizante para Huellas
+
+- **Cinta antideslizante:** económica, fácil instalación
+- **Pintura antideslizante:** con agregados cerámicos
+- **Baldosa rugosa:** para escaleras de exterior
+- **Alfombra:** cálida pero requiere limpieza
+- **Goma:** buena adherencia, colores variados
+
+---
+
+## Iluminación de Escaleras
+
+### Tipos de Iluminación
+
+1. **Iluminación general:** lámpara en cada descanso o en la parte superior
+2. **Iluminación de peldaños:** luces empotradas en la pared a nivel de huella
+3. **Luz de guía:** tira LED en la base de la barandilla
+4. **Luz natural:** tragaluces o ventanas en descansos
+
+### Recomendaciones
+
+- Mínimo 100 lux en cada peldaño
+- Evitar reflejos directos en los ojos
+- Iluminación uniforme sin puntos ciegos
+- Interruptor en cada planta (arriba y abajo)
+- Luz de emergencia obligatoria en edificios públicos
+
+> **Importante:** La escalera es uno de los lugares más peligrosos de una construcción. Una buena iluminación previene caídas, especialmente para personas mayores y niños.
+
+---
+
+## Accesibilidad
+
+### Rampas como Alternativa
+
+Cuando la accesibilidad es un requisito, las rampas complementan o reemplazan las escaleras:
+
+- **Pendiente máxima:** 8% (1:12) según normativa CUDAP
+- **Pendiente recomendada:** 6% (1:16) o menos
+- **Ancho mínimo:** 90 cm
+- **Descanso:** cada 9 m de longitud
+- **Barandilla:** obligatoria en ambos lados si la altura supera 50 cm
+
+### Ascensor
+
+- **Medidas internas mínimo:** 110 × 140 cm
+- **Puerta:** mínimo 80 cm de clearo
+- **Peso:** 250-400 kg para uso residencial
+- **Costo:** significativamente mayor que escalera
+- **Mantenimiento:** obligatorio semestral
+
+### Consideraciones de Accesibilidad
+
+- Contrahuella máxima: 18 cm para uso público
+- Huella mínima: 28 cm para uso público
+- Señalización táctil para personas con discapacidad visual
+- Contraste visual en el borde de cada peldaño
+- Superficie antideslizante en todas las condiciones
+
+---
+
+## Normativa y Reglamentación
+
+### Dimensiones Mínimas (Resolución SDCU / CUDAP)
+
+| Concepto | Valor mínimo | Valor recomendado |
+|----------|--------------|-------------------|
+| Contrahuella | 12 cm | 16-17 cm |
+| Huella | 25 cm | 28-32 cm |
+| Anchura | 80 cm | 90-110 cm |
+| Mano dura | 210 cm | 220 cm |
+| Barandilla altura | 90 cm | 100 cm |
+| Separación barrotes | Máx 12 cm | Máx 8 cm |
+| Descanso profundidad | 90 cm | 100 cm |
+
+### Pendiente Segura
+
+- **Hasta 30°:** cómoda, uso frecuente
+- **30° a 37°:** estándar, uso habitual
+- **37° a 45°:** funcional, uso moderado
+- **Más de 45°:** solo acceso técnico, con barandilla obligatoria
+
+### Normas de Seguridad
+
+- Los peldaños deben ser uniformes (misma huella y contrahuella en toda la escalera)
+- El primer y último peldaño deben ser visibles
+- La iluminación debe cubrir toda la escalera
+- Las escaleras de emergencia requieren iluminación autónoma
+- En edificios públicos, las escaleras deben tener descansos cada 12 peldaños
+
+---
+
+## Errores Comunes
+
+### 1. Peldaños Irregulares
+
+- Contrahuellas diferentes en un mismo tramo
+- Genera confusión y riesgo de caída
+- **Solución:** verificar cada peldaño antes del acabado
+
+### 2. Mano Dura Insuficiente
+
+- Golpes frecuentes al subir/bajar
+- Particularly molesto en tramos bajos
+- **Solución:** verificar 210 cm mínimo en el punto más bajo del tramo
+
+### 3. Sin Barandilla o con Altura Insuficiente
+
+- Riesgo grave de caída
+- Especialmente peligroso para niños
+- **Solución:** instalar barandilla según normativa
+
+### 4. Superficie Resbaladiza
+
+- Causa principal de caídas en escaleras
+- Agravada con humedad o zapatos mojados
+- **Solución:** material antideslizante en huellas
+
+### 5. Ausencia de Descanso
+
+- Escaleras largas sin punto de reposo
+- Causa cansancio y aumento del riesgo
+- **Solución:** instalar descanso cada 18 peldaños máximo
+
+### 6. Iluminación Insuficiente
+
+- No se ven los peldaños claramente
+- Riesgo especialmente de noche
+- **Solución:** iluminar cada peldaño y tener interruptores en ambas plantas
+
+> **Dato importante:** Según estadísticas de seguridad, las escaleras son el lugar donde ocurren más accidentes domésticos después del baño. Un diseño adecuado y mantenimiento constante son esenciales para prevenir caídas.
+
+---
+
+## Resumen de Buenas Prácticas
+
+1. **Calcular con fórmula de Blondel:** 2C + H = 63-65 cm
+2. **Mantener uniformidad:** todos los peldaños iguales
+3. **Respetar [dimensiones mínimas](/docs/dimensiones-minimas):** huella 25 cm, contrahuella 20 cm
+4. **Instalar barandilla:** 90 cm interior, 100 cm exterior
+5. **Material antideslizante:** en todas las escaleras
+6. **Buena iluminación:** 100 lux mínimo por peldaño
+7. **Considerar accesibilidad:** rampas o ascensor según necesidad
+8. **Mantener mano dura:** 210 cm mínimo en todo el recorrido
+
+## Guía Paso a Paso: Construcción de Escalera de Hormigón
+
+<Callout type="info">
+Seguí esta secuencia para construir una escalera de hormigón armado segura y duradera.
+</Callout>
+
+1. **Cálculo de escalones** — Aplicá la ley de Blondel: 2C + H = 60-64 cm. Determiná la cantidad de escalones según la altura a salvar. Verificá que todos los peldaños tengan la misma huella y contrahuella.
+
+2. **Encofrado de rampa y contrapaso** — Armá el encofrado de la rampa inclinada y los contrapasos con madera fenólica u OSB. Verificá los ángulos con nivel y la pendiente calculada.
+
+3. **Armadura longitudinal y transversal** — Colocá hierros longitudinales (∅8 a ∅12 según cálculo) en la dirección de la rampa, y transversales (∅6 cada 20 cm) como repartición. Usá separadores para garantizar el recubrimiento.
+
+4. **Colocación de separadores** — Instalá separadores plásticos en la armadura para mantener el recubrimiento mínimo de 25 mm contra el encofrado.
+
+5. **Hormigonado** — Verté el hormigón desde la parte inferior hacia arriba, vibrándolo cuidadosamente para evitar huecos sin desplazar la armadura. La consistencia debe ser plástica, no fluida.
+
+6. **Curado** — Mantené el hormigón húmedo durante 7 días mínimo. Regá 2-3 veces al día o cubrí con arpillera y film de polietileno.
+
+7. **Desencofrado** — Retirá el encofrado a los 14 días como mínimo. No forces la remoción; desencofrá con cuidado para no dañar los bordes.
+
+8. **Revestimiento** — Colocá el material de huella (cerámica, madera, pintura antideslizante). Asegurate de que la huella terminada tenga una pendiente mínima del 1-2% hacia adelante para evitar acumulación de agua.
+
+9. **Barandas** — Instalá barandas con altura mínima de 1 m desde la nariz del peldaño. En balcones o descansos, la altura mínima es 1.10 m.
+
+### Barandas
+
+<Figure src="/docs/escaleras-barandas.svg" alt="Tipos de barandas para escaleras: hierro forjado, madera, vidrio templado y acero inoxidable" caption="Barandas para escaleras: de hierro, madera, vidrio y acero inoxidable, con separación máxima de barrotes según normativa." width="800px" />
+
+## Trucos y Hacks de Escaleras
+
+<Callout type="hack">Lijá con granos progresivos 80→120→180 para acabado profesional.</Callout>
+<Callout type="hack">Si es de cerámica, aplicá sellador antes del uso.</Callout>
+<Callout type="tip">El descanso debe tener el mismo ancho que la escalera.</Callout>
+<Callout type="warning">No hagas escaleras de un solo tramo de más de 12 pasos sin descanso.</Callout>

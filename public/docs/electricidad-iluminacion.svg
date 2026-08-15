@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" font-family="system-ui, -apple-system, sans-serif">
+  <rect width="800" height="500" fill="#FAF9F6"/>
+
+  <text x="400" y="36" text-anchor="middle" font-size="18" font-weight="700" fill="#222">Iluminación — Tipos y Ubicación</text>
+
+  <!-- 1. Empotrada (dicroica/led) -->
+  <g transform="translate(40, 60)">
+    <line x1="0" y1="0" x2="230" y2="0" stroke="#CCC" stroke-width="2"/>
+    <rect x="85" y="-2" width="60" height="15" rx="3" fill="#F0EDE8" stroke="#AAA" stroke-width="1"/>
+    <circle cx="115" cy="20" r="14" fill="#F0EDE8" stroke="#999" stroke-width="1.5"/>
+    <circle cx="115" cy="20" r="7" fill="#FFF" opacity="0.95"/>
+    <g stroke="#FFD700" stroke-width="1.5" opacity="0.65">
+      <line x1="115" y1="37" x2="85" y2="80"/>
+      <line x1="115" y1="37" x2="115" y2="88"/>
+      <line x1="115" y1="37" x2="145" y2="80"/>
+      <line x1="115" y1="37" x2="72" y2="65"/>
+      <line x1="115" y1="37" x2="158" y2="65"/>
+    </g>
+    <text x="115" y="108" text-anchor="middle" font-size="13" font-weight="700" fill="#222">Empotrada (Dicroica/LED)</text>
+    <text x="115" y="126" text-anchor="middle" font-size="11" fill="#666">Cocinas, baños, pasillos</text>
+  </g>
+
+  <!-- 2. Colgante / Lámpara -->
+  <g transform="translate(285, 60)">
+    <line x1="0" y1="0" x2="230" y2="0" stroke="#CCC" stroke-width="2"/>
+    <line x1="115" y1="0" x2="115" y2="18" stroke="#B8860B" stroke-width="1.5"/>
+    <line x1="115" y1="18" x2="115" y2="36" stroke="#B8860B" stroke-width="1.5"/>
+    <path d="M92 36 Q92 26 115 26 Q138 26 138 36 L132 54 Q132 60 115 60 Q98 60 98 54 Z" fill="#E8D5B7" stroke="#B8860B" stroke-width="1.5"/>
+    <path d="M105 60 L98 82 Q115 88 132 82 L125 60" fill="#FFD700" opacity="0.25"/>
+    <g stroke="#FFD700" stroke-width="1" opacity="0.45">
+      <line x1="103" y1="65" x2="92" y2="88"/>
+      <line x1="115" y1="68" x2="115" y2="95"/>
+      <line x1="127" y1="65" x2="138" y2="88"/>
+    </g>
+    <text x="115" y="108" text-anchor="middle" font-size="13" font-weight="700" fill="#222">Colgante / Lámpara</text>
+    <text x="115" y="126" text-anchor="middle" font-size="11" fill="#666">Living, comedor, dormitorios</text>
+  </g>
+
+  <!-- 3. Aplique de pared -->
+  <g transform="translate(530, 60)">
+    <rect x="10" y="-5" width="28" height="88" fill="#E0D5C1" stroke="#AAA" stroke-width="1" rx="2"/>
+    <line x1="0" y1="0" x2="230" y2="0" stroke="#CCC" stroke-width="2"/>
+    <path d="M38 28 L62 18" stroke="#6B7B8D" stroke-width="4" stroke-linecap="round"/>
+    <path d="M62 18 L62 46 L48 56" stroke="#6B7B8D" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <path d="M48 56 L38 46 Q33 34 44 28 Z" fill="#D4C5A0" stroke="#6B7B8D" stroke-width="1.5"/>
+    <g stroke="#FFD700" stroke-width="1.5" opacity="0.45">
+      <line x1="44" y1="28" x2="32" y2="8"/>
+      <line x1="50" y1="34" x2="56" y2="12"/>
+      <line x1="46" y1="56" x2="38" y2="78"/>
+      <line x1="54" y1="54" x2="62" y2="76"/>
+    </g>
+    <text x="115" y="108" text-anchor="middle" font-size="13" font-weight="700" fill="#222">Aplique de Pared</text>
+    <text x="115" y="126" text-anchor="middle" font-size="11" fill="#666">Pasillos, baños, dormitorios</text>
+  </g>
+
+  <!-- 4. Cinta LED -->
+  <g transform="translate(162, 260)">
+    <rect x="10" y="0" width="200" height="12" rx="2" fill="#8B7355" stroke="#6B5B3E" stroke-width="1"/>
+    <rect x="10" y="12" width="200" height="6" rx="2" fill="#FFF3CD" stroke="#E0C870" stroke-width="1"/>
+    <path d="M30 18 L18 58" stroke="#FFD700" stroke-width="1.2" opacity="0.35"/>
+    <path d="M70 18 L62 58" stroke="#FFD700" stroke-width="1.2" opacity="0.35"/>
+    <path d="M110 18 L105 58" stroke="#FFD700" stroke-width="1.2" opacity="0.35"/>
+    <path d="M150 18 L155 58" stroke="#FFD700" stroke-width="1.2" opacity="0.35"/>
+    <path d="M190 18 L205 58" stroke="#FFD700" stroke-width="1.2" opacity="0.35"/>
+    <rect x="10" y="18" width="200" height="8" fill="#FFD700" opacity="0.18" rx="1"/>
+    <text x="115" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="#222">Cinta LED</text>
+    <text x="115" y="98" text-anchor="middle" font-size="11" fill="#666">Bajo mueble, zócalo, escaleras</text>
+  </g>
+
+  <!-- 5. Spot direccional -->
+  <g transform="translate(407, 260)">
+    <rect x="20" y="0" width="160" height="8" rx="3" fill="#AAA" stroke="#777" stroke-width="1"/>
+    <rect x="55" y="8" width="20" height="22" rx="2" fill="#2D2D2D" stroke="#111" stroke-width="1"/>
+    <rect x="75" y="8" width="20" height="22" rx="2" fill="#2D2D2D" stroke="#111" stroke-width="1"/>
+    <rect x="95" y="8" width="20" height="22" rx="2" fill="#2D2D2D" stroke="#111" stroke-width="1"/>
+    <path d="M75 30 L55 68" stroke="#FFD700" stroke-width="2" opacity="0.5"/>
+    <path d="M75 30 L90 70" stroke="#FFD700" stroke-width="2" opacity="0.5"/>
+    <path d="M95 30 L80 68" stroke="#FFD700" stroke-width="2" opacity="0.5"/>
+    <path d="M95 30 L110 70" stroke="#FFD700" stroke-width="2" opacity="0.5"/>
+    <path d="M115 30 L105 65" stroke="#FFD700" stroke-width="2" opacity="0.5"/>
+    <text x="115" y="88" text-anchor="middle" font-size="13" font-weight="700" fill="#222">Spot Direccional</text>
+    <text x="115" y="106" text-anchor="middle" font-size="11" fill="#666">Galerías, living, exterior</text>
+  </g>
+</svg>

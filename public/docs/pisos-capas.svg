@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="#FAF9F6" rx="8"/>
+  <text x="400" y="30" text-anchor="middle" font-family="system-ui" font-size="15" font-weight="bold" fill="#1A1A1A">Pisos y Revestimientos — Corte</text>
+
+  <!-- === CERÁMICO (left) === -->
+  <rect x="30" y="50" width="240" height="420" fill="#F5F3EF" stroke="#E0DDD6" rx="6"/>
+  <text x="150" y="75" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="#1A1A1A">Cerámico</text>
+
+  <!-- Ceramic tile -->
+  <rect x="65" y="95" width="170" height="30" fill="#E8E0D0" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <text x="150" y="115" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">Cerámica / Porcelanato</text>
+
+  <!-- Grout -->
+  <rect x="65" y="125" width="170" height="6" fill="#D4C5B5" stroke="#2D2D2D" stroke-width="1" rx="0"/>
+  <text x="150" y="138" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">Fragüe</text>
+
+  <!-- Adhesive -->
+  <rect x="65" y="145" width="170" height="15" fill="#C4B5A5" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <text x="150" y="156" text-anchor="middle" font-family="system-ui" font-size="9" fill="white">Adhesivo</text>
+
+  <!-- Concrete base -->
+  <rect x="65" y="160" width="170" height="60" fill="#A09A91" stroke="#2D2D2D" stroke-width="1.5" rx="2"/>
+  <text x="150" y="195" text-anchor="middle" font-family="system-ui" font-size="10" fill="white">Base de hormigón</text>
+
+  <!-- Compacted ground -->
+  <rect x="65" y="220" width="170" height="40" fill="#8B6914" stroke="#2D2D2D" stroke-width="1.5" rx="2" opacity="0.5"/>
+  <text x="150" y="246" text-anchor="middle" font-family="system-ui" font-size="9" fill="white">Contrapiso</text>
+
+  <!-- === MADERA (center) === -->
+  <rect x="280" y="50" width="240" height="420" fill="#F5F3EF" stroke="#E0DDD6" rx="6"/>
+  <text x="400" y="75" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="#1A1A1A">Madera</text>
+
+  <!-- Hardwood -->
+  <rect x="315" y="95" width="170" height="25" fill="#C49A3C" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <text x="400" y="112" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">Parquet / Laminado</text>
+
+  <!-- Finish layer -->
+  <rect x="315" y="92" width="170" height="6" fill="#DEB887" stroke="none" rx="0"/>
+  <text x="400" y="90" text-anchor="middle" font-family="system-ui" font-size="9" fill="#2D2D2D">Barniz / Acabado</text>
+
+  <!-- Subfloor -->
+  <rect x="315" y="120" width="170" height="20" fill="#D4C5B5" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <text x="400" y="134" text-anchor="middle" font-family="system-ui" font-size="9" fill="#2D2D2D">Entablonado</text>
+
+  <!-- Vapor barrier -->
+  <rect x="315" y="140" width="170" height="8" fill="#2D2D2D" stroke="none" rx="0"/>
+  <text x="400" y="155" text-anchor="middle" font-family="system-ui" font-size="9" fill="#2D2D2D">Barrera de vapor</text>
+
+  <!-- Concrete base -->
+  <rect x="315" y="160" width="170" height="60" fill="#A09A91" stroke="#2D2D2D" stroke-width="1.5" rx="2"/>
+  <text x="400" y="195" text-anchor="middle" font-family="system-ui" font-size="10" fill="white">Base de hormigón</text>
+
+  <rect x="315" y="220" width="170" height="40" fill="#8B6914" stroke="#2D2D2D" stroke-width="1.5" rx="2" opacity="0.5"/>
+  <text x="400" y="246" text-anchor="middle" font-family="system-ui" font-size="9" fill="white">Contrapiso</text>
+
+  <!-- === VINÍLICO (right) === -->
+  <rect x="530" y="50" width="240" height="420" fill="#F5F3EF" stroke="#E0DDD6" rx="6"/>
+  <text x="650" y="75" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="#1A1A1A">Vinílico</text>
+
+  <!-- Vinyl plank -->
+  <rect x="565" y="95" width="170" height="20" fill="#5B9BD5" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <text x="650" y="109" text-anchor="middle" font-family="system-ui" font-size="10" fill="white">Piso vinílico</text>
+
+  <!-- Self-leveling -->
+  <rect x="565" y="115" width="170" height="15" fill="#E8D5B7" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <text x="650" y="126" text-anchor="middle" font-family="system-ui" font-size="9" fill="#2D2D2D">Nivelador</text>
+
+  <!-- Concrete base -->
+  <rect x="565" y="130" width="170" height="60" fill="#A09A91" stroke="#2D2D2D" stroke-width="1.5" rx="2"/>
+  <text x="650" y="165" text-anchor="middle" font-family="system-ui" font-size="10" fill="white">Base de hormigón</text>
+
+  <rect x="565" y="190" width="170" height="40" fill="#8B6914" stroke="#2D2D2D" stroke-width="1.5" rx="2" opacity="0.5"/>
+  <text x="650" y="216" text-anchor="middle" font-family="system-ui" font-size="9" fill="white">Contrapiso</text>
+</svg>

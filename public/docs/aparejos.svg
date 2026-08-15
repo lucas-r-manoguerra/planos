@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 550" fill="none">
+  <rect width="800" height="550" fill="#FAF9F6" rx="8"/>
+  <text x="400" y="30" text-anchor="middle" font-family="system-ui" font-size="16" font-weight="bold" fill="#1A1A1A">Aparejos de Mampostería</text>
+
+  <!-- Quadrant dividers -->
+  <line x1="400" y1="50" x2="400" y2="490" stroke="#D4C5B5" stroke-width="1.5"/>
+  <line x1="30" y1="275" x2="770" y2="275" stroke="#D4C5B5" stroke-width="1.5"/>
+
+  <!-- ============================================ -->
+  <!-- QUADRANT 1: Soga (top-left) -->
+  <!-- ============================================ -->
+  <text x="215" y="75" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="#1A1A1A">Aparejo a Soga</text>
+  <text x="215" y="92" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">14 cm (½ pie)</text>
+
+  <!-- Hilada 1 -->
+  <rect x="70" y="110" width="280" height="40" fill="#C17A57" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <!-- Brick divisions (3 ladrillos staggered) -->
+  <line x1="163" y1="110" x2="163" y2="150" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="256" y1="110" x2="256" y2="150" stroke="#2D2D2D" stroke-width="1.5"/>
+  <!-- Mortar vertical between bricks -->
+  <rect x="158" y="110" width="8" height="40" fill="#B8A99A" stroke="none"/>
+  <rect x="251" y="110" width="8" height="40" fill="#B8A99A" stroke="none"/>
+
+  <!-- Mortar horizontal hilada 1→2 -->
+  <rect x="70" y="150" width="280" height="6" fill="#B8A99A" stroke="none"/>
+
+  <!-- Hilada 2 (offset half) -->
+  <rect x="70" y="156" width="280" height="40" fill="#C17A57" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <line x1="117" y1="156" x2="117" y2="196" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="210" y1="156" x2="210" y2="196" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="303" y1="156" x2="303" y2="196" stroke="#2D2D2D" stroke-width="1.5"/>
+  <rect x="112" y="156" width="8" height="40" fill="#B8A99A" stroke="none"/>
+  <rect x="205" y="156" width="8" height="40" fill="#B8A99A" stroke="none"/>
+  <rect x="298" y="156" width="8" height="40" fill="#B8A99A" stroke="none"/>
+
+  <!-- Mortar horizontal hilada 2→3 -->
+  <rect x="70" y="196" width="280" height="6" fill="#B8A99A" stroke="none"/>
+
+  <!-- Hilada 3 -->
+  <rect x="70" y="202" width="280" height="40" fill="#C17A57" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <line x1="163" y1="202" x2="163" y2="242" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="256" y1="202" x2="256" y2="242" stroke="#2D2D2D" stroke-width="1.5"/>
+  <rect x="158" y="202" width="8" height="40" fill="#B8A99A" stroke="none"/>
+  <rect x="251" y="202" width="8" height="40" fill="#B8A99A" stroke="none"/>
+
+  <text x="215" y="268" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Junta vertical alternada (trabazón de medio ladrillo)</text>
+
+  <!-- ============================================ -->
+  <!-- QUADRANT 2: Tizón (top-right) -->
+  <!-- ============================================ -->
+  <text x="605" y="75" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="#1A1A1A">Aparejo a Tizón</text>
+  <text x="605" y="92" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">28 cm (1 pie)</text>
+
+  <!-- Hilada 1 -->
+  <rect x="435" y="110" width="310" height="40" fill="#C17A57" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <line x1="495" y1="110" x2="495" y2="150" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="555" y1="110" x2="555" y2="150" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="615" y1="110" x2="615" y2="150" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="675" y1="110" x2="675" y2="150" stroke="#2D2D2D" stroke-width="1.5"/>
+  <rect x="490" y="110" width="8" height="40" fill="#B8A99A" stroke="none"/>
+  <rect x="550" y="110" width="8" height="40" fill="#B8A99A" stroke="none"/>
+  <rect x="610" y="110" width="8" height="40" fill="#B8A99A" stroke="none"/>
+  <rect x="670" y="110" width="8" height="40" fill="#B8A99A" stroke="none"/>
+
+  <rect x="435" y="150" width="310" height="6" fill="#B8A99A" stroke="none"/>
+
+  <!-- Hilada 2 (offset half) -->
+  <rect x="435" y="156" width="310" height="40" fill="#C17A57" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <line x1="465" y1="156" x2="465" y2="196" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="525" y1="156" x2="525" y2="196" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="585" y1="156" x2="585" y2="196" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="645" y1="156" x2="645" y2="196" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="705" y1="156" x2="705" y2="196" stroke="#2D2D2D" stroke-width="1.5"/>
+  <rect x="460" y="156" width="8" height="40" fill="#B8A99A" stroke="none"/>
+  <rect x="520" y="156" width="8" height="40" fill="#B8A99A" stroke="none"/>
+  <rect x="580" y="156" width="8" height="40" fill="#B8A99A" stroke="none"/>
+  <rect x="640" y="156" width="8" height="40" fill="#B8A99A" stroke="none"/>
+  <rect x="700" y="156" width="8" height="40" fill="#B8A99A" stroke="none"/>
+
+  <rect x="435" y="196" width="310" height="6" fill="#B8A99A" stroke="none"/>
+
+  <!-- Hilada 3 -->
+  <rect x="435" y="202" width="310" height="40" fill="#C17A57" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <line x1="495" y1="202" x2="495" y2="242" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="555" y1="202" x2="555" y2="242" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="615" y1="202" x2="615" y2="242" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="675" y1="202" x2="675" y2="242" stroke="#2D2D2D" stroke-width="1.5"/>
+  <rect x="490" y="202" width="8" height="40" fill="#B8A99A" stroke="none"/>
+  <rect x="550" y="202" width="8" height="40" fill="#B8A99A" stroke="none"/>
+  <rect x="610" y="202" width="8" height="40" fill="#B8A99A" stroke="none"/>
+  <rect x="670" y="202" width="8" height="40" fill="#B8A99A" stroke="none"/>
+
+  <text x="605" y="268" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Ladrillos de punta, ancho doble</text>
+
+  <!-- Dimensional annotations for Soga -->
+  <line x1="70" y1="253" x2="70" y2="280" stroke="#3B65A3" stroke-width="1"/>
+  <line x1="350" y1="253" x2="350" y2="280" stroke="#3B65A3" stroke-width="1"/>
+  <line x1="70" y1="275" x2="350" y2="275" stroke="#3B65A3" stroke-width="1"/>
+  <text x="210" y="288" text-anchor="middle" font-family="system-ui" font-size="9" fill="#3B65A3">~14 cm</text>
+
+  <!-- Dimensional annotations for Tizón -->
+  <line x1="435" y1="253" x2="435" y2="280" stroke="#3B65A3" stroke-width="1"/>
+  <line x1="745" y1="253" x2="745" y2="280" stroke="#3B65A3" stroke-width="1"/>
+  <line x1="435" y1="275" x2="745" y2="275" stroke="#3B65A3" stroke-width="1"/>
+  <text x="590" y="288" text-anchor="middle" font-family="system-ui" font-size="9" fill="#3B65A3">~28 cm</text>
+
+  <!-- ============================================ -->
+  <!-- QUADRANT 3: Inglés (bottom-left) -->
+  <!-- ============================================ -->
+  <text x="215" y="305" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="#1A1A1A">Aparejo Inglés</text>
+  <text x="215" y="322" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Máxima resistencia</text>
+
+  <!-- Hilada 1: Soga -->
+  <rect x="70" y="340" width="280" height="30" fill="#C17A57" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <line x1="163" y1="340" x2="163" y2="370" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="256" y1="340" x2="256" y2="370" stroke="#2D2D2D" stroke-width="1.5"/>
+  <rect x="158" y="340" width="8" height="30" fill="#B8A99A" stroke="none"/>
+  <rect x="251" y="340" width="8" height="30" fill="#B8A99A" stroke="none"/>
+  <rect x="70" y="370" width="280" height="5" fill="#B8A99A" stroke="none"/>
+
+  <!-- Hilada 2: Tizón -->
+  <rect x="70" y="375" width="280" height="30" fill="#D4896A" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <line x1="117" y1="375" x2="117" y2="405" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="164" y1="375" x2="164" y2="405" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="211" y1="375" x2="211" y2="405" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="258" y1="375" x2="258" y2="405" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="305" y1="375" x2="305" y2="405" stroke="#2D2D2D" stroke-width="1.5"/>
+  <rect x="112" y="375" width="8" height="30" fill="#B8A99A" stroke="none"/>
+  <rect x="159" y="375" width="8" height="30" fill="#B8A99A" stroke="none"/>
+  <rect x="206" y="375" width="8" height="30" fill="#B8A99A" stroke="none"/>
+  <rect x="253" y="375" width="8" height="30" fill="#B8A99A" stroke="none"/>
+  <rect x="300" y="375" width="8" height="30" fill="#B8A99A" stroke="none"/>
+  <rect x="70" y="405" width="280" height="5" fill="#B8A99A" stroke="none"/>
+
+  <!-- Hilada 3: Soga -->
+  <rect x="70" y="410" width="280" height="30" fill="#C17A57" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <line x1="163" y1="410" x2="163" y2="440" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="256" y1="410" x2="256" y2="440" stroke="#2D2D2D" stroke-width="1.5"/>
+  <rect x="158" y="410" width="8" height="30" fill="#B8A99A" stroke="none"/>
+  <rect x="251" y="410" width="8" height="30" fill="#B8A99A" stroke="none"/>
+
+  <text x="215" y="468" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Alternancia soga/tizón hilada por hilada</text>
+
+  <!-- ============================================ -->
+  <!-- QUADRANT 4: Flamenco (bottom-right) -->
+  <!-- ============================================ -->
+  <text x="605" y="305" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="#1A1A1A">Aparejo Flamenco</text>
+  <text x="605" y="322" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Decorativo</text>
+
+  <!-- Hilada 1: Soga -->
+  <rect x="435" y="340" width="310" height="30" fill="#C17A57" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <line x1="502" y1="340" x2="502" y2="370" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="569" y1="340" x2="569" y2="370" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="636" y1="340" x2="636" y2="370" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="703" y1="340" x2="703" y2="370" stroke="#2D2D2D" stroke-width="1.5"/>
+  <rect x="497" y="340" width="8" height="30" fill="#B8A99A" stroke="none"/>
+  <rect x="564" y="340" width="8" height="30" fill="#B8A99A" stroke="none"/>
+  <rect x="631" y="340" width="8" height="30" fill="#B8A99A" stroke="none"/>
+  <rect x="698" y="340" width="8" height="30" fill="#B8A99A" stroke="none"/>
+  <rect x="435" y="370" width="310" height="5" fill="#B8A99A" stroke="none"/>
+
+  <!-- Hilada 2: Alternados soga/tizón offset -->
+  <rect x="435" y="375" width="310" height="30" fill="#C17A57" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <line x1="469" y1="375" x2="469" y2="405" stroke="#2D2D2D" stroke-width="1.5"/>
+  <rect x="464" y="375" width="8" height="30" fill="#B8A99A" stroke="none"/>
+  <line x1="502" y1="375" x2="502" y2="405" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="569" y1="375" x2="569" y2="405" stroke="#2D2D2D" stroke-width="1.5"/>
+  <rect x="564" y="375" width="8" height="30" fill="#B8A99A" stroke="none"/>
+  <line x1="636" y1="375" x2="636" y2="405" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="703" y1="375" x2="703" y2="405" stroke="#2D2D2D" stroke-width="1.5"/>
+  <rect x="631" y="375" width="8" height="30" fill="#B8A99A" stroke="none"/>
+  <rect x="698" y="375" width="8" height="30" fill="#B8A99A" stroke="none"/>
+  <rect x="435" y="405" width="310" height="5" fill="#B8A99A" stroke="none"/>
+
+  <!-- Hilada 3: Soga -->
+  <rect x="435" y="410" width="310" height="30" fill="#C17A57" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <line x1="502" y1="410" x2="502" y2="440" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="569" y1="410" x2="569" y2="440" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="636" y1="410" x2="636" y2="440" stroke="#2D2D2D" stroke-width="1.5"/>
+  <line x1="703" y1="410" x2="703" y2="440" stroke="#2D2D2D" stroke-width="1.5"/>
+  <rect x="497" y="410" width="8" height="30" fill="#B8A99A" stroke="none"/>
+  <rect x="564" y="410" width="8" height="30" fill="#B8A99A" stroke="none"/>
+  <rect x="631" y="410" width="8" height="30" fill="#B8A99A" stroke="none"/>
+  <rect x="698" y="410" width="8" height="30" fill="#B8A99A" stroke="none"/>
+
+  <text x="605" y="468" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Soga y tizón alternados en cada hilada</text>
+</svg>

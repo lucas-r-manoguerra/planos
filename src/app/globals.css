@@ -176,3 +176,71 @@ button, a, [role="button"], input, select {
 .dark .docs-container img {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
+
+/* Anclas del TOC: que los headings no queden ocultos bajo el header */
+.docs-container h1[id],
+.docs-container h2[id],
+.docs-container h3[id] {
+  scroll-margin-top: 2rem;
+}
+
+/* ========== Syntax highlighting (rehype-highlight) ==========
+   Paletas que siguen al tema (light/dark). Los tokens son spans con clases
+   `hljs-*` generadas por rehype-highlight sobre los bloques de código. */
+.docs-container .hljs-comment,
+.docs-container .hljs-quote,
+.docs-container .hljs-deletion { color: #6b7280; }
+.docs-container .hljs-keyword,
+.docs-container .hljs-selector-tag,
+.docs-container .hljs-doctag { color: #7c3aed; }
+.docs-container .hljs-string,
+.docs-container .hljs-regexp,
+.docs-container .hljs-addition { color: #15803d; }
+.docs-container .hljs-number,
+.docs-container .hljs-built_in,
+.docs-container .hljs-literal,
+.docs-container .hljs-symbol { color: #b45309; }
+.docs-container .hljs-title,
+.docs-container .hljs-title.function_,
+.docs-container .hljs-section,
+.docs-container .hljs-title.class_ { color: #1d4ed8; }
+.docs-container .hljs-type,
+.docs-container .hljs-params,
+.docs-container .hljs-attr,
+.docs-container .hljs-attribute,
+.docs-container .hljs-variable,
+.docs-container .hljs-template-variable { color: #0f766e; }
+.docs-container .hljs-name,
+.docs-container .hljs-tag,
+.docs-container .hljs-selector-id,
+.docs-container .hljs-selector-class,
+.docs-container .hljs-meta { color: #b91c1c; }
+
+.dark .docs-container .hljs-comment,
+.dark .docs-container .hljs-quote,
+.dark .docs-container .hljs-deletion { color: #8b8f98; }
+.dark .docs-container .hljs-keyword,
+.dark .docs-container .hljs-selector-tag,
+.dark .docs-container .hljs-doctag { color: #c4a5f9; }
+.dark .docs-container .hljs-string,
+.dark .docs-container .hljs-regexp,
+.dark .docs-container .hljs-addition { color: #6fcf97; }
+.dark .docs-container .hljs-number,
+.dark .docs-container .hljs-built_in,
+.dark .docs-container .hljs-literal,
+.dark .docs-container .hljs-symbol { color: #e0a75e; }
+.dark .docs-container .hljs-title,
+.dark .docs-container .hljs-title.function_,
+.dark .docs-container .hljs-section,
+.dark .docs-container .hljs-title.class_ { color: #7ba4db; }
+.dark .docs-container .hljs-type,
+.dark .docs-container .hljs-params,
+.dark .docs-container .hljs-attr,
+.dark .docs-container .hljs-attribute,
+.dark .docs-container .hljs-variable,
+.dark .docs-container .hljs-template-variable { color: #5fc1b5; }
+.dark .docs-container .hljs-name,
+.dark .docs-container .hljs-tag,
+.dark .docs-container .hljs-selector-id,
+.dark .docs-container .hljs-selector-class,
+.dark .docs-container .hljs-meta { color: #e58a8a; }

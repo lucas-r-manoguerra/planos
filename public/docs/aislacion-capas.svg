@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="#FAF9F6" rx="8"/>
+  <text x="400" y="30" text-anchor="middle" font-family="system-ui" font-size="15" font-weight="bold" fill="#1A1A1A">Aislación Térmica — Corte de Muro y Techo</text>
+
+  <text x="210" y="55" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="bold" fill="#3B65A3">MURO</text>
+  <text x="600" y="55" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="bold" fill="#3B65A3">TECHO</text>
+
+  <!-- === MURO (left half) === -->
+  <!-- Exterior brick -->
+  <rect x="40" y="80" width="80" height="350" fill="#C75B39" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <text x="80" y="445" text-anchor="middle" font-family="system-ui" font-size="10" fill="white">Ladrillo</text>
+  <text x="80" y="458" text-anchor="middle" font-family="system-ui" font-size="9" fill="#FFD4C0">exterior</text>
+
+  <!-- Air gap -->
+  <rect x="120" y="80" width="30" height="350" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <text x="135" y="260" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B" transform="rotate(-90,135,260)">Cámara de aire</text>
+
+  <!-- Insulation -->
+  <rect x="150" y="80" width="70" height="350" fill="#5B9BD5" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <text x="185" y="260" text-anchor="middle" font-family="system-ui" font-size="9" fill="white" transform="rotate(-90,185,260)">Aislación térmica</text>
+
+  <!-- Vapor barrier -->
+  <rect x="220" y="80" width="15" height="350" fill="#2D2D2D" stroke="none" rx="0"/>
+  <text x="227" y="260" text-anchor="middle" font-family="system-ui" font-size="8" fill="white" transform="rotate(-90,227,260)">Barrera de vapor</text>
+
+  <!-- Interior drywall -->
+  <rect x="235" y="80" width="60" height="350" fill="#E8D5B7" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <text x="265" y="445" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">Placa de yeso</text>
+
+  <!-- Arrow labels for muro -->
+  <text x="40" y="470" font-family="system-ui" font-size="9" fill="#E74C3C">← Exterior</text>
+  <text x="260" y="470" font-family="system-ui" font-size="9" fill="#E74C3C">Interior →</text>
+
+  <!-- === TECHO (right half) === -->
+  <!-- Tiles -->
+  <path d="M375 80 L395 60 L415 80 L435 60 L455 80 L475 60 L495 80 L515 60 L535 80 L555 60 L575 80 L595 60 L615 80 L635 60 L655 80 L675 60 L695 80 L715 60 L735 80 L760 90 L760 110 L375 110 Z" fill="#C75B39" stroke="#2D2D2D" stroke-width="1"/>
+  <text x="570" y="100" text-anchor="middle" font-family="system-ui" font-size="9" fill="white">Tejas</text>
+
+  <!-- Battens + ventilation -->
+  <rect x="375" y="110" width="385" height="15" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="1" rx="0"/>
+  <text x="570" y="121" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">Cámara ventilada</text>
+
+  <!-- Insulation -->
+  <rect x="375" y="130" width="385" height="60" fill="#5B9BD5" stroke="#2D2D2D" stroke-width="1.5" rx="2"/>
+  <text x="570" y="165" text-anchor="middle" font-family="system-ui" font-size="10" fill="white">Aislación térmica (lana de vidrio)</text>
+
+  <!-- Vapor barrier -->
+  <rect x="375" y="190" width="385" height="12" fill="#2D2D2D" stroke="none" rx="0"/>
+  <text x="570" y="210" text-anchor="middle" font-family="system-ui" font-size="9" fill="#2D2D2D">Barrera de vapor</text>
+
+  <!-- Ceiling -->
+  <rect x="375" y="210" width="385" height="30" fill="#E8D5B7" stroke="#2D2D2D" stroke-width="1.5" rx="2"/>
+  <text x="570" y="230" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">Cielorraso de yeso</text>
+
+  <!-- Arrow labels for techo -->
+  <text x="400" y="280" font-family="system-ui" font-size="9" fill="#E74C3C">↑ Exterior</text>
+  <text x="660" y="280" font-family="system-ui" font-size="9" fill="#E74C3C">Interior ↓</text>
+</svg>

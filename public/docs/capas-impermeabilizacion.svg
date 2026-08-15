@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250" fill="none">
+  <rect width="400" height="250" fill="#FAF9F6" rx="8"/>
+  <text x="200" y="25" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="#1A1A1A">Capas de Impermeabilización</text>
+  <rect x="60" y="200" width="280" height="30" fill="#A09A91" stroke="#2D2D2D" rx="2"/>
+  <text x="200" y="220" text-anchor="middle" font-family="system-ui" font-size="10" fill="white">Sustrato</text>
+  <rect x="60" y="165" width="280" height="30" fill="#3B65A3" stroke="#2D2D2D" rx="2"/>
+  <text x="200" y="185" text-anchor="middle" font-family="system-ui" font-size="10" fill="white">Imprimación</text>
+  <rect x="60" y="130" width="280" height="30" fill="#1A1A1A" stroke="#2D2D2D" rx="2"/>
+  <text x="200" y="150" text-anchor="middle" font-family="system-ui" font-size="10" fill="white">Membrana asfáltica</text>
+  <rect x="60" y="95" width="280" height="30" fill="#27AE60" stroke="#2D2D2D" rx="2"/>
+  <text x="200" y="115" text-anchor="middle" font-family="system-ui" font-size="10" fill="white">Barrera de vapor</text>
+  <rect x="60" y="60" width="280" height="30" fill="#E8D5B7" stroke="#2D2D2D" rx="2"/>
+  <text x="200" y="80" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">Aislación térmica</text>
+  <line x1="50" y1="215" x2="50" y2="75" stroke="#E74C3C" stroke-width="1.5"/>
+  <polygon points="50,75 45,85 55,85" fill="#E74C3C"/>
+  <text x="35" y="145" text-anchor="middle" font-family="system-ui" font-size="9" fill="#E74C3C" transform="rotate(-90,35,145)">Superior</text>
+</svg>

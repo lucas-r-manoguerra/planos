@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="system-ui, -apple-system, sans-serif">
+  <rect width="800" height="450" fill="#FAF9F6" rx="8"/>
+  <text x="400" y="30" text-anchor="middle" font-size="17" font-weight="700" fill="#2D2D2D">Circuito Eléctrico Básico</text>
+
+  <!-- TABLERO PRINCIPAL -->
+  <rect x="30" y="65" width="130" height="235" rx="6" fill="#FFF3CD" stroke="#2D2D2D" stroke-width="2"/>
+  <text x="95" y="57" text-anchor="middle" font-size="11" font-weight="700" fill="#2D2D2D">Tablero Principal</text>
+
+  <!-- Termomagnética dentro del tablero -->
+  <rect x="45" y="85" width="100" height="38" rx="4" fill="#FFF3CD" stroke="#2D2D2D" stroke-width="1.5"/>
+  <rect x="50" y="90" width="90" height="10" rx="2" fill="#E74C3C"/>
+  <rect x="50" y="105" width="90" height="10" rx="2" fill="#E74C3C"/>
+  <text x="95" y="138" text-anchor="middle" font-size="8" font-weight="600" fill="#2D2D2D">Termomagnética</text>
+
+  <!-- Disyuntor diferencial dentro del tablero -->
+  <rect x="45" y="150" width="100" height="38" rx="4" fill="#FFF3CD" stroke="#2D2D2D" stroke-width="1.5"/>
+  <rect x="50" y="155" width="90" height="10" rx="2" fill="#3498DB"/>
+  <rect x="50" y="170" width="90" height="10" rx="2" fill="#3498DB"/>
+  <text x="95" y="203" text-anchor="middle" font-size="8" font-weight="600" fill="#2D2D2D">Disyuntor Diferencial</text>
+
+  <!-- Barra de conexiones / tierra -->
+  <rect x="55" y="225" width="80" height="25" rx="3" fill="#2ECC71" opacity="0.15" stroke="#2ECC71" stroke-width="1"/>
+  <text x="95" y="242" text-anchor="middle" font-size="7.5" fill="#2ECC71" font-weight="600">Barra de Tierra</text>
+
+  <!-- Conexiones internas del tablero -->
+  <line x1="95" y1="123" x2="95" y2="150" stroke="#2D2D2D" stroke-width="1" stroke-dasharray="3,2"/>
+  <circle cx="95" cy="123" r="2" fill="#2D2D2D"/>
+  <circle cx="95" cy="150" r="2" fill="#2D2D2D"/>
+
+  <line x1="95" y1="188" x2="95" y2="225" stroke="#2D2D2D" stroke-width="1" stroke-dasharray="3,2"/>
+  <circle cx="95" cy="188" r="2" fill="#2D2D2D"/>
+  <circle cx="95" cy="225" r="2" fill="#2D2D2D"/>
+
+  <!-- SALIDA DE CABLES DEL TABLERO -->
+  <!-- Fase sale del tablero -->
+  <line x1="160" y1="108" x2="200" y2="108" stroke="#E74C3C" stroke-width="2.5"/>
+  <text x="180" y="100" text-anchor="middle" font-size="7" fill="#E74C3C" font-weight="600">Fase</text>
+
+  <!-- Neutro sale del tablero (vuelve) -->
+  <line x1="160" y1="174" x2="200" y2="174" stroke="#3498DB" stroke-width="2.5"/>
+  <text x="180" y="190" text-anchor="middle" font-size="7" fill="#3498DB" font-weight="600">Neutro</text>
+
+  <!-- Tierra sale del tablero -->
+  <line x1="95" y1="250" x2="95" y2="395" stroke="#2ECC71" stroke-width="2.5" stroke-dasharray="8,4"/>
+  <text x="70" y="370" text-anchor="end" font-size="7" fill="#2ECC71" font-weight="500">Tierra</text>
+
+  <!-- BUSES PRINCIPALES -->
+  <!-- Bus de fase (rojo) -->
+  <line x1="200" y1="108" x2="700" y2="108" stroke="#E74C3C" stroke-width="2.5"/>
+  <polyline points="694,104 704,108 694,112" stroke="#E74C3C" stroke-width="1.5" fill="none"/>
+
+  <!-- Bus de neutro (azul) -->
+  <line x1="200" y1="174" x2="700" y2="174" stroke="#3498DB" stroke-width="2.5"/>
+  <polyline points="694,170 704,174 694,178" stroke="#3498DB" stroke-width="1.5" fill="none"/>
+
+  <!-- RAMA 1: TOMACORRIENTE (x=320) -->
+  <g>
+    <line x1="320" y1="108" x2="320" y2="200" stroke="#E74C3C" stroke-width="2"/>
+    <line x1="320" y1="280" x2="320" y2="174" stroke="#3498DB" stroke-width="2"/>
+
+    <!-- Tomacorriente -->
+    <circle cx="320" cy="240" r="30" fill="#F0EDE8" stroke="#2D2D2D" stroke-width="1.5"/>
+    <!-- Ranuras del tomacorriente -->
+    <line x1="308" y1="234" x2="308" y2="242" stroke="#2D2D2D" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="332" y1="234" x2="332" y2="242" stroke="#2D2D2D" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="314" y1="235" x2="314" y2="242" stroke="#2D2D2D" stroke-width="1" stroke-linecap="round"/>
+    <line x1="326" y1="235" x2="326" y2="242" stroke="#2D2D2D" stroke-width="1" stroke-linecap="round"/>
+    <circle cx="320" cy="253" r="3" fill="#2D2D2D"/>
+    <text x="320" y="286" text-anchor="middle" font-size="9" font-weight="600" fill="#2D2D2D">Tomacorriente</text>
+  </g>
+
+  <!-- RAMA 2: INTERRUPTOR + LÁMPARA (x=470, x=550) -->
+  <g>
+    <!-- Fase: bus → interruptor -->
+    <line x1="470" y1="108" x2="470" y2="240" stroke="#E74C3C" stroke-width="2"/>
+    <!-- Fase: interruptor → lámpara -->
+    <line x1="500" y1="250" x2="545" y2="250" stroke="#E74C3C" stroke-width="2"/>
+    <!-- Neutro: lámpara → bus -->
+    <line x1="550" y1="174" x2="550" y2="260" stroke="#3498DB" stroke-width="2"/>
+
+    <!-- Interruptor -->
+    <rect x="470" y="240" width="30" height="20" rx="3" fill="#FFF3CD" stroke="#2D2D2D" stroke-width="1.5"/>
+    <line x1="480" y1="245" x2="490" y2="255" stroke="#2D2D2D" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- Lámpara -->
+    <circle cx="550" cy="240" r="24" fill="#FFF3CD" stroke="#2D2D2D" stroke-width="1.5"/>
+    <!-- Rayo dentro de la lámpara -->
+    <polyline points="548,226 543,238 553,238 547,254" stroke="#E74C3C" stroke-width="2" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+
+    <text x="485" y="278" text-anchor="middle" font-size="8" font-weight="600" fill="#2D2D2D">Interruptor</text>
+    <text x="550" y="280" text-anchor="middle" font-size="9" font-weight="600" fill="#2D2D2D">Iluminación</text>
+  </g>
+
+  <!-- RAMA 3: COCINA / TERMO (x=640) -->
+  <g>
+    <line x1="640" y1="108" x2="640" y2="240" stroke="#E74C3C" stroke-width="2"/>
+    <line x1="640" y1="240" x2="640" y2="174" stroke="#3498DB" stroke-width="2"/>
+
+    <rect x="618" y="240" width="44" height="38" rx="4" fill="#FFF3CD" stroke="#2D2D2D" stroke-width="1.5"/>
+    <!-- Resistencia / elemento calefactor -->
+    <path d="M625,253 Q630,248 635,253 Q640,258 645,253 Q650,248 655,253" stroke="#E74C3C" stroke-width="1.5" fill="none"/>
+    <path d="M625,262 Q630,257 635,262 Q640,267 645,262 Q650,257 655,262" stroke="#E74C3C" stroke-width="1.5" fill="none"/>
+    <text x="640" y="296" text-anchor="middle" font-size="9" font-weight="600" fill="#2D2D2D">Cocina / Termo</text>
+    <text x="640" y="310" text-anchor="middle" font-size="7" fill="#888" font-style="italic">Línea dedicada</text>
+  </g>
+
+  <!-- JABALINA DE TIERRA -->
+  <g>
+    <line x1="95" y1="395" x2="95" y2="430" stroke="#2ECC71" stroke-width="2.5"/>
+    <line x1="78" y1="430" x2="112" y2="430" stroke="#2ECC71" stroke-width="2"/>
+    <line x1="70" y1="437" x2="120" y2="437" stroke="#2ECC71" stroke-width="2"/>
+    <line x1="62" y1="444" x2="128" y2="444" stroke="#2ECC71" stroke-width="2"/>
+    <text x="95" y="422" text-anchor="middle" font-size="8" font-weight="600" fill="#2ECC71">Jabalina de tierra</text>
+  </g>
+
+  <!-- ETIQUETAS DE CABLES -->
+  <text x="260" y="101" font-size="7" fill="#E74C3C">Fase (rojo)</text>
+  <text x="260" y="182" font-size="7" fill="#3498DB">Neutro (azul)</text>
+
+  <!-- LEYENDA -->
+  <rect x="580" y="340" width="205" height="95" rx="6" fill="#FAF9F6" stroke="#CCC" stroke-width="1"/>
+  <text x="682" y="358" text-anchor="middle" font-size="9" font-weight="700" fill="#2D2D2D">Leyenda de Colores</text>
+
+  <rect x="590" y="367" width="14" height="8" rx="1" fill="#E74C3C"/>
+  <text x="610" y="374" font-size="7.5" fill="#2D2D2D">Fase (rojo)</text>
+
+  <rect x="700" y="367" width="14" height="8" rx="1" fill="#3498DB"/>
+  <text x="720" y="374" font-size="7.5" fill="#2D2D2D">Neutro (azul)</text>
+
+  <rect x="590" y="381" width="14" height="8" rx="1" fill="#2ECC71"/>
+  <text x="610" y="388" font-size="7.5" fill="#2D2D2D">Tierra (verde/amarillo)</text>
+
+  <rect x="700" y="381" width="14" height="8" rx="1" fill="#FFF3CD" stroke="#999" stroke-width="0.5"/>
+  <text x="720" y="388" font-size="7.5" fill="#2D2D2D">Tablero / Protección</text>
+
+  <rect x="590" y="395" width="14" height="8" rx="1" fill="#F0EDE8" stroke="#999" stroke-width="0.5"/>
+  <text x="610" y="402" font-size="7.5" fill="#2D2D2D">Tomacorriente</text>
+
+  <circle cx="707" cy="402" r="4" fill="#FFF3CD" stroke="#999" stroke-width="0.5"/>
+  <text x="720" y="405" font-size="7.5" fill="#2D2D2D">Iluminación</text>
+
+  <text x="640" y="428" text-anchor="middle" font-size="6.5" fill="#999">— La fase llega al artefacto, el neutro vuelve al tablero —</text>
+</svg>

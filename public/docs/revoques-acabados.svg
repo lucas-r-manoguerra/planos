@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" fill="none">
+  <rect width="800" height="450" fill="#FAF9F6" rx="8"/>
+  <text x="400" y="30" text-anchor="middle" font-family="system-ui" font-size="15" font-weight="bold" fill="#1A1A1A">Acabados de Revoque</text>
+
+  <!-- ============================================ -->
+  <!-- PANEL 1: Liso -->
+  <!-- ============================================ -->
+  <rect x="40" y="60" width="170" height="220" fill="#E8D5B7" stroke="#2D2D2D" stroke-width="1.5" rx="6"/>
+  <!-- Subtle horizontal fratás lines -->
+  <line x1="50" y1="90" x2="200" y2="90" stroke="#D4C0A0" stroke-width="0.7"/>
+  <line x1="50" y1="110" x2="200" y2="110" stroke="#D4C0A0" stroke-width="0.7"/>
+  <line x1="50" y1="130" x2="200" y2="130" stroke="#D4C0A0" stroke-width="0.7"/>
+  <line x1="50" y1="150" x2="200" y2="150" stroke="#D4C0A0" stroke-width="0.7"/>
+  <line x1="50" y1="170" x2="200" y2="170" stroke="#D4C0A0" stroke-width="0.7"/>
+  <line x1="50" y1="190" x2="200" y2="190" stroke="#D4C0A0" stroke-width="0.7"/>
+  <line x1="50" y1="210" x2="200" y2="210" stroke="#D4C0A0" stroke-width="0.7"/>
+  <line x1="50" y1="230" x2="200" y2="230" stroke="#D4C0A0" stroke-width="0.7"/>
+  <line x1="50" y1="250" x2="200" y2="250" stroke="#D4C0A0" stroke-width="0.7"/>
+  <line x1="50" y1="270" x2="200" y2="270" stroke="#D4C0A0" stroke-width="0.7"/>
+
+  <text x="125" y="315" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="#1A1A1A">Liso</text>
+  <text x="125" y="332" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Interiores, paredes</text>
+  <text x="125" y="346" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">para pintar</text>
+
+  <!-- ============================================ -->
+  <!-- PANEL 2: Apomazado -->
+  <!-- ============================================ -->
+  <rect x="230" y="60" width="170" height="220" fill="#E0D0B5" stroke="#2D2D2D" stroke-width="1.5" rx="6"/>
+  <!-- Small circular undulations -->
+  <circle cx="280" cy="100" r="12" fill="none" stroke="#C8B89A" stroke-width="0.8" opacity="0.7"/>
+  <circle cx="280" cy="100" r="8" fill="none" stroke="#C8B89A" stroke-width="0.6" opacity="0.5"/>
+  <circle cx="350" cy="130" r="14" fill="none" stroke="#C8B89A" stroke-width="0.8" opacity="0.7"/>
+  <circle cx="350" cy="130" r="9" fill="none" stroke="#C8B89A" stroke-width="0.6" opacity="0.5"/>
+  <circle cx="270" cy="170" r="10" fill="none" stroke="#C8B89A" stroke-width="0.8" opacity="0.7"/>
+  <circle cx="270" cy="170" r="6" fill="none" stroke="#C8B89A" stroke-width="0.6" opacity="0.5"/>
+  <circle cx="320" cy="200" r="13" fill="none" stroke="#C8B89A" stroke-width="0.8" opacity="0.7"/>
+  <circle cx="320" cy="200" r="8" fill="none" stroke="#C8B89A" stroke-width="0.6" opacity="0.5"/>
+  <circle cx="370" cy="170" r="11" fill="none" stroke="#C8B89A" stroke-width="0.8" opacity="0.7"/>
+  <circle cx="370" cy="170" r="7" fill="none" stroke="#C8B89A" stroke-width="0.6" opacity="0.5"/>
+  <circle cx="300" cy="240" r="10" fill="none" stroke="#C8B89A" stroke-width="0.8" opacity="0.7"/>
+  <circle cx="300" cy="240" r="6" fill="none" stroke="#C8B89A" stroke-width="0.6" opacity="0.5"/>
+  <circle cx="360" cy="250" r="12" fill="none" stroke="#C8B89A" stroke-width="0.8" opacity="0.7"/>
+
+  <text x="315" y="315" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="#1A1A1A">Apomazado</text>
+  <text x="315" y="332" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Exteriores,</text>
+  <text x="315" y="346" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">fachadas</text>
+
+  <!-- ============================================ -->
+  <!-- PANEL 3: Raspado -->
+  <!-- ============================================ -->
+  <rect x="420" y="60" width="170" height="220" fill="#D8C8A8" stroke="#2D2D2D" stroke-width="1.5" rx="6"/>
+  <!-- Vertical parallel comb lines -->
+  <line x1="435" y1="65" x2="435" y2="275" stroke="#C0B090" stroke-width="1.2"/>
+  <line x1="445" y1="65" x2="445" y2="275" stroke="#C0B090" stroke-width="1.2"/>
+  <line x1="455" y1="65" x2="455" y2="275" stroke="#C0B090" stroke-width="1.2"/>
+  <line x1="465" y1="65" x2="465" y2="275" stroke="#C0B090" stroke-width="1.2"/>
+  <line x1="475" y1="65" x2="475" y2="275" stroke="#C0B090" stroke-width="1.2"/>
+  <line x1="485" y1="65" x2="485" y2="275" stroke="#C0B090" stroke-width="1.2"/>
+  <line x1="495" y1="65" x2="495" y2="275" stroke="#C0B090" stroke-width="1.2"/>
+  <line x1="505" y1="65" x2="505" y2="275" stroke="#C0B090" stroke-width="1.2"/>
+  <line x1="515" y1="65" x2="515" y2="275" stroke="#C0B090" stroke-width="1.2"/>
+  <line x1="525" y1="65" x2="525" y2="275" stroke="#C0B090" stroke-width="1.2"/>
+  <line x1="535" y1="65" x2="535" y2="275" stroke="#C0B090" stroke-width="1.2"/>
+  <line x1="545" y1="65" x2="545" y2="275" stroke="#C0B090" stroke-width="1.2"/>
+  <line x1="555" y1="65" x2="555" y2="275" stroke="#C0B090" stroke-width="1.2"/>
+  <line x1="565" y1="65" x2="565" y2="275" stroke="#C0B090" stroke-width="1.2"/>
+  <line x1="575" y1="65" x2="575" y2="275" stroke="#C0B090" stroke-width="1.2"/>
+
+  <text x="505" y="315" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="#1A1A1A">Raspado</text>
+  <text x="505" y="332" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Fachadas rústicas,</text>
+  <text x="505" y="346" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">muros de jardín</text>
+
+  <!-- ============================================ -->
+  <!-- PANEL 4: Salpicado -->
+  <!-- ============================================ -->
+  <rect x="610" y="60" width="170" height="220" fill="#D0C0A0" stroke="#2D2D2D" stroke-width="1.5" rx="6"/>
+  <!-- Granular texture: scattered dots -->
+  <circle cx="630" cy="80" r="2" fill="#B8A888" opacity="0.7"/>
+  <circle cx="650" cy="90" r="3" fill="#B8A888" opacity="0.7"/>
+  <circle cx="670" cy="75" r="2.5" fill="#B8A888" opacity="0.7"/>
+  <circle cx="700" cy="85" r="2" fill="#B8A888" opacity="0.7"/>
+  <circle cx="735" cy="80" r="3" fill="#B8A888" opacity="0.7"/>
+  <circle cx="760" cy="95" r="2" fill="#B8A888" opacity="0.7"/>
+  <circle cx="640" cy="110" r="3" fill="#B8A888" opacity="0.7"/>
+  <circle cx="680" cy="115" r="2" fill="#B8A888" opacity="0.7"/>
+  <circle cx="710" cy="105" r="3.5" fill="#B8A888" opacity="0.7"/>
+  <circle cx="750" cy="110" r="2.5" fill="#B8A888" opacity="0.7"/>
+  <circle cx="625" cy="140" r="2" fill="#B8A888" opacity="0.7"/>
+  <circle cx="660" cy="135" r="3" fill="#B8A888" opacity="0.7"/>
+  <circle cx="690" cy="145" r="2.5" fill="#B8A888" opacity="0.7"/>
+  <circle cx="730" cy="140" r="2" fill="#B8A888" opacity="0.7"/>
+  <circle cx="765" cy="130" r="3" fill="#B8A888" opacity="0.7"/>
+  <circle cx="635" cy="165" r="3.5" fill="#B8A888" opacity="0.7"/>
+  <circle cx="670" cy="170" r="2" fill="#B8A888" opacity="0.7"/>
+  <circle cx="705" cy="165" r="3" fill="#B8A888" opacity="0.7"/>
+  <circle cx="745" cy="170" r="2.5" fill="#B8A888" opacity="0.7"/>
+  <circle cx="650" cy="195" r="2" fill="#B8A888" opacity="0.7"/>
+  <circle cx="685" cy="200" r="3" fill="#B8A888" opacity="0.7"/>
+  <circle cx="720" cy="190" r="2.5" fill="#B8A888" opacity="0.7"/>
+  <circle cx="755" cy="195" r="2" fill="#B8A888" opacity="0.7"/>
+  <circle cx="630" cy="225" r="3" fill="#B8A888" opacity="0.7"/>
+  <circle cx="665" cy="230" r="2" fill="#B8A888" opacity="0.7"/>
+  <circle cx="695" cy="220" r="3.5" fill="#B8A888" opacity="0.7"/>
+  <circle cx="735" cy="225" r="2" fill="#B8A888" opacity="0.7"/>
+  <circle cx="770" cy="235" r="2.5" fill="#B8A888" opacity="0.7"/>
+  <circle cx="645" cy="255" r="2.5" fill="#B8A888" opacity="0.7"/>
+  <circle cx="680" cy="260" r="2" fill="#B8A888" opacity="0.7"/>
+  <circle cx="715" cy="250" r="3" fill="#B8A888" opacity="0.7"/>
+  <circle cx="750" cy="260" r="2" fill="#B8A888" opacity="0.7"/>
+  <circle cx="760" cy="240" r="2.5" fill="#B8A888" opacity="0.7"/>
+  <circle cx="630" cy="260" r="2" fill="#B8A888" opacity="0.7"/>
+  <circle cx="700" cy="265" r="2" fill="#B8A888" opacity="0.7"/>
+  <circle cx="670" cy="100" r="2" fill="#B8A888" opacity="0.7"/>
+  <circle cx="720" cy="120" r="2" fill="#B8A888" opacity="0.7"/>
+  <circle cx="660" cy="155" r="2" fill="#B8A888" opacity="0.7"/>
+
+  <text x="695" y="315" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="#1A1A1A">Salpicado</text>
+  <text x="695" y="332" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Exteriores</text>
+  <text x="695" y="346" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">decorativos</text>
+
+  <!-- Separator lines between panels -->
+  <line x1="210" y1="65" x2="210" y2="275" stroke="#D5D0C8" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="400" y1="65" x2="400" y2="275" stroke="#D5D0C8" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="590" y1="65" x2="590" y2="275" stroke="#D5D0C8" stroke-width="1" stroke-dasharray="4,4"/>
+
+  <!-- Footer note -->
+  <text x="400" y="440" text-anchor="middle" font-family="system-ui" font-size="11" fill="#6B6B6B">Los acabados se eligen según el uso del ambiente y la estética deseada</text>
+</svg>

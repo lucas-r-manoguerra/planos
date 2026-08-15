@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="#FAF9F6" rx="8"/>
+  <text x="400" y="30" text-anchor="middle" font-family="system-ui" font-size="15" font-weight="bold" fill="#1A1A1A">Cargas Estructurales — Esquema</text>
+
+  <!-- === HOUSE FRAME (cross-section) === -->
+  <!-- Foundation base -->
+  <rect x="140" y="410" width="520" height="24" fill="#B8A99A" stroke="#4A4A4A" stroke-width="2" rx="3"/>
+  <text x="400" y="427" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">Fundación / Base</text>
+
+  <!-- Left wall -->
+  <rect x="160" y="160" width="28" height="250" fill="#D4C5B5" stroke="#4A4A4A" stroke-width="2" rx="2"/>
+  <!-- Right wall -->
+  <rect x="612" y="160" width="28" height="250" fill="#D4C5B5" stroke="#4A4A4A" stroke-width="2" rx="2"/>
+
+  <!-- Roof (sloped) -->
+  <polygon points="160,160 400,60 640,160" fill="#C8B8A8" stroke="#4A4A4A" stroke-width="2" stroke-linejoin="round"/>
+  <rect x="160" y="155" width="480" height="10" fill="#B8A99A" stroke="#4A4A4A" stroke-width="1.5" rx="1"/>
+  <text x="400" y="115" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">Cubierta / Techo</text>
+
+  <!-- Floor beam -->
+  <rect x="160" y="320" width="480" height="12" fill="#A09A91" stroke="#4A4A4A" stroke-width="1.5" rx="2"/>
+
+  <!-- Interior label -->
+  <text x="400" y="230" text-anchor="middle" font-family="system-ui" font-size="11" fill="#6B6B6B">Interior</text>
+
+  <!-- Person icon (interior) -->
+  <circle cx="340" cy="270" r="10" fill="none" stroke="#2B7BE4" stroke-width="2"/>
+  <line x1="340" y1="280" x2="340" y2="305" stroke="#2B7BE4" stroke-width="2"/>
+  <line x1="325" y1="290" x2="355" y2="290" stroke="#2B7BE4" stroke-width="2"/>
+  <line x1="340" y1="305" x2="328" y2="315" stroke="#2B7BE4" stroke-width="2"/>
+  <line x1="340" y1="305" x2="352" y2="315" stroke="#2B7BE4" stroke-width="2"/>
+
+  <!-- Furniture icon (table) -->
+  <line x1="440" y1="312" x2="480" y2="312" stroke="#2B7BE4" stroke-width="2.5"/>
+  <line x1="445" y1="312" x2="445" y2="320" stroke="#2B7BE4" stroke-width="2"/>
+  <line x1="475" y1="312" x2="475" y2="320" stroke="#2B7BE4" stroke-width="2"/>
+
+  <!-- === CARGA MUERTA (Dead Load) — dark gray arrows === -->
+  <!-- Roof dead load arrows -->
+  <line x1="200" y1="140" x2="200" y2="120" stroke="#2D2D2D" stroke-width="2.5" marker-end="url(#arrowDead)"/>
+  <line x1="270" y1="105" x2="270" y2="85" stroke="#2D2D2D" stroke-width="2.5" marker-end="url(#arrowDead)"/>
+  <line x1="400" y1="70" x2="400" y2="50" stroke="#2D2D2D" stroke-width="2.5" marker-end="url(#arrowDead)"/>
+  <line x1="530" y1="105" x2="530" y2="85" stroke="#2D2D2D" stroke-width="2.5" marker-end="url(#arrowDead)"/>
+  <line x1="600" y1="140" x2="600" y2="120" stroke="#2D2D2D" stroke-width="2.5" marker-end="url(#arrowDead)"/>
+
+  <!-- Wall dead load arrows -->
+  <line x1="174" y1="280" x2="174" y2="260" stroke="#2D2D2D" stroke-width="2.5" marker-end="url(#arrowDead)"/>
+  <line x1="626" y1="280" x2="626" y2="260" stroke="#2D2D2D" stroke-width="2.5" marker-end="url(#arrowDead)"/>
+
+  <text x="270" y="78" text-anchor="middle" font-family="system-ui" font-size="9" fill="#2D2D2D">Carga Muerta</text>
+  <text x="530" y="78" text-anchor="middle" font-family="system-ui" font-size="9" fill="#2D2D2D">(peso propio)</text>
+
+  <!-- === CARGA VIVA (Live Load) — blue arrows === -->
+  <line x1="340" y1="362" x2="340" y2="342" stroke="#2B7BE4" stroke-width="2.5" marker-end="url(#arrowLive)"/>
+  <line x1="460" y1="362" x2="460" y2="342" stroke="#2B7BE4" stroke-width="2.5" marker-end="url(#arrowLive)"/>
+  <text x="400" y="378" text-anchor="middle" font-family="system-ui" font-size="9" fill="#2B7BE4">Carga Viva (personas + mobiliario)</text>
+
+  <!-- === CARGA DE VIENTO (Wind Load) — orange horizontal arrows === -->
+  <line x1="80" y1="190" x2="140" y2="190" stroke="#E67E22" stroke-width="3" marker-end="url(#arrowWind)"/>
+  <line x1="55" y1="260" x2="140" y2="260" stroke="#E67E22" stroke-width="3" marker-end="url(#arrowWind)"/>
+  <line x1="80" y1="330" x2="140" y2="330" stroke="#E67E22" stroke-width="3" marker-end="url(#arrowWind)"/>
+
+  <text x="98" y="180" text-anchor="middle" font-family="system-ui" font-size="9" fill="#E67E22">Carga de</text>
+  <text x="98" y="216" text-anchor="middle" font-family="system-ui" font-size="9" fill="#E67E22">Viento</text>
+
+  <!-- Small wind gust icon -->
+  <path d="M30 190 Q20 180 30 170 Q40 160 30 150" stroke="#E67E22" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <path d="M40 260 Q30 250 40 240 Q50 230 40 220" stroke="#E67E22" stroke-width="1.5" fill="none" opacity="0.5"/>
+
+  <!-- === CARGA SÍSMICA — red wavy arrows at base === -->
+  <path d="M90 440 Q100 430 110 440 Q120 450 130 440 Q140 430 150 440" stroke="#E74C3C" stroke-width="2" fill="none" marker-end="url(#arrowSeismic)"/>
+  <path d="M300 440 Q310 430 320 440 Q330 450 340 440 Q350 430 360 440 Q370 450 380 440 Q390 430 400 440" stroke="#E74C3C" stroke-width="2" fill="none" marker-end="url(#arrowSeismic)"/>
+  <path d="M550 440 Q560 430 570 440 Q580 450 590 440 Q600 430 610 440" stroke="#E74C3C" stroke-width="2" fill="none" marker-end="url(#arrowSeismic)"/>
+
+  <text x="350" y="472" text-anchor="middle" font-family="system-ui" font-size="9" fill="#E74C3C">Carga Sísmica (movimiento horizontal del suelo)</text>
+
+  <!-- === LEGEND === -->
+  <rect x="40" y="90" width="12" height="12" fill="#2D2D2D" rx="2"/>
+  <text x="58" y="100" font-family="system-ui" font-size="9" fill="#2D2D2D">Carga Muerta</text>
+
+  <rect x="40" y="110" width="12" height="12" fill="#2B7BE4" rx="2"/>
+  <text x="58" y="120" font-family="system-ui" font-size="9" fill="#2B7BE4">Carga Viva</text>
+
+  <rect x="40" y="130" width="12" height="12" fill="#E67E22" rx="2"/>
+  <text x="58" y="140" font-family="system-ui" font-size="9" fill="#E67E22">Carga de Viento</text>
+
+  <rect x="40" y="150" width="12" height="12" fill="#E74C3C" rx="2"/>
+  <text x="58" y="160" font-family="system-ui" font-size="9" fill="#E74C3C">Carga Sísmica</text>
+
+  <!-- === ARROW MARKER DEFS === -->
+  <defs>
+    <marker id="arrowDead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2D2D2D"/>
+    </marker>
+    <marker id="arrowLive" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2B7BE4"/>
+    </marker>
+    <marker id="arrowWind" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#E67E22"/>
+    </marker>
+    <marker id="arrowSeismic" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#E74C3C"/>
+    </marker>
+  </defs>
+</svg>

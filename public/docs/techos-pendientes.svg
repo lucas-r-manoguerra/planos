@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <marker id="arrowBrown" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#8B6914"/>
+    </marker>
+    <marker id="arrowGray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#6B7B8D"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="450" fill="#FAF9F6" rx="8"/>
+
+  <text x="400" y="30" text-anchor="middle" font-size="18" font-weight="700" fill="#333">Tipos de Cubierta según Pendiente</text>
+
+  <line x1="15" y1="330" x2="785" y2="330" stroke="#8B6914" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <line x1="15" y1="315" x2="785" y2="315" stroke="#8B6914" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.4"/>
+
+  <!-- ===== Profile 1: Azotea ===== -->
+  <g transform="translate(5, 0)">
+    <text x="75" y="360" text-anchor="middle" font-size="13" font-weight="600" fill="#333">Plano / Azotea</text>
+    <text x="75" y="377" text-anchor="middle" font-size="10" fill="#6B6B6B">Pendiente 1-2%</text>
+
+    <polygon points="10,315 140,312 140,330 10,330" fill="#A8B5A0" opacity="0.25"/>
+    <rect x="10" y="312" width="130" height="5" fill="#6B7B8D" opacity="0.6" rx="1"/>
+    <rect x="10" y="317" width="130" height="12" fill="#D4C5B5" opacity="0.7" rx="1"/>
+    <rect x="10" y="329" width="130" height="15" fill="#A8B5A0" opacity="0.4" rx="1"/>
+
+    <text x="75" y="326" text-anchor="middle" font-size="6.5" fill="#555">losa</text>
+    <text x="30" y="321" font-size="5.5" fill="#777">aislación</text>
+
+    <line x1="10" y1="315" x2="140" y2="312" stroke="#A8B5A0" stroke-width="2.5"/>
+    <line x1="10" y1="330" x2="140" y2="330" stroke="#8B6914" stroke-width="1"/>
+
+    <line x1="30" y1="305" x2="60" y2="304" stroke="#8B6914" stroke-width="1" marker-end="url(#arrowBrown)"/>
+    <text x="45" y="301" text-anchor="middle" font-size="7" fill="#8B6914">pend. mín.</text>
+  </g>
+
+  <!-- ===== Profile 2: Baja pendiente 15° ===== -->
+  <g transform="translate(160, 0)">
+    <text x="75" y="360" text-anchor="middle" font-size="13" font-weight="600" fill="#333">Baja pendiente</text>
+    <text x="75" y="377" text-anchor="middle" font-size="10" fill="#6B6B6B">15°</text>
+
+    <polygon points="10,315 140,281 140,330 10,330" fill="#C17A57" opacity="0.12"/>
+    <line x1="10" y1="315" x2="140" y2="281" stroke="#C17A57" stroke-width="2.5"/>
+
+    <line x1="10" y1="330" x2="140" y2="330" stroke="#8B6914" stroke-width="1"/>
+
+    <line x1="15" y1="315" x2="35" y2="315" stroke="#6B7B8D" stroke-width="0.8"/>
+    <line x1="25" y1="315" x2="25" y2="330" stroke="#6B7B8D" stroke-width="0.5"/>
+    <line x1="50" y1="307" x2="50" y2="330" stroke="#6B7B8D" stroke-width="0.5"/>
+    <line x1="75" y1="299" x2="75" y2="330" stroke="#6B7B8D" stroke-width="0.5"/>
+    <line x1="100" y1="290" x2="100" y2="330" stroke="#6B7B8D" stroke-width="0.5"/>
+    <line x1="125" y1="283" x2="125" y2="330" stroke="#6B7B8D" stroke-width="0.5"/>
+
+    <path d="M 22 325 A 8 8 0 0 1 19.3 316" fill="none" stroke="#8B6914" stroke-width="0.8"/>
+    <text x="13" y="312" font-size="7" fill="#8B6914">15°</text>
+
+    <line x1="50" y1="299" x2="100" y2="280" stroke="#8B6914" stroke-width="1" marker-end="url(#arrowBrown)"/>
+  </g>
+
+  <!-- ===== Profile 3: Media pendiente 30° ===== -->
+  <g transform="translate(315, 0)">
+    <text x="75" y="360" text-anchor="middle" font-size="13" font-weight="600" fill="#333">Media pendiente</text>
+    <text x="75" y="377" text-anchor="middle" font-size="10" fill="#6B6B6B">30°</text>
+
+    <polygon points="10,315 140,246 140,330 10,330" fill="#C17A57" opacity="0.12"/>
+    <line x1="10" y1="315" x2="140" y2="246" stroke="#C17A57" stroke-width="2.5"/>
+
+    <line x1="10" y1="330" x2="140" y2="330" stroke="#8B6914" stroke-width="1"/>
+
+    <line x1="15" y1="315" x2="35" y2="315" stroke="#6B7B8D" stroke-width="0.8"/>
+    <line x1="25" y1="315" x2="25" y2="330" stroke="#6B7B8D" stroke-width="0.5"/>
+    <line x1="50" y1="300" x2="50" y2="330" stroke="#6B7B8D" stroke-width="0.5"/>
+    <line x1="75" y1="285" x2="75" y2="330" stroke="#6B7B8D" stroke-width="0.5"/>
+    <line x1="100" y1="270" x2="100" y2="330" stroke="#6B7B8D" stroke-width="0.5"/>
+    <line x1="125" y1="256" x2="125" y2="330" stroke="#6B7B8D" stroke-width="0.5"/>
+
+    <path d="M 22 325 A 8 8 0 0 1 16 315" fill="none" stroke="#8B6914" stroke-width="0.8"/>
+    <text x="10" y="310" font-size="7" fill="#8B6914">30°</text>
+
+    <line x1="50" y1="295" x2="100" y2="268" stroke="#8B6914" stroke-width="1" marker-end="url(#arrowBrown)"/>
+  </g>
+
+  <!-- ===== Profile 4: Alta pendiente 45° ===== -->
+  <g transform="translate(470, 0)">
+    <text x="75" y="360" text-anchor="middle" font-size="13" font-weight="600" fill="#333">Alta pendiente</text>
+    <text x="75" y="377" text-anchor="middle" font-size="10" fill="#6B6B6B">45°</text>
+
+    <polygon points="10,315 140,195 140,330 10,330" fill="#D4896A" opacity="0.12"/>
+    <line x1="10" y1="315" x2="140" y2="195" stroke="#D4896A" stroke-width="2.5"/>
+
+    <line x1="10" y1="330" x2="140" y2="330" stroke="#8B6914" stroke-width="1"/>
+
+    <line x1="15" y1="315" x2="35" y2="315" stroke="#6B7B8D" stroke-width="0.8"/>
+    <line x1="25" y1="315" x2="25" y2="330" stroke="#6B7B8D" stroke-width="0.5"/>
+    <line x1="50" y1="290" x2="50" y2="330" stroke="#6B7B8D" stroke-width="0.5"/>
+    <line x1="75" y1="265" x2="75" y2="330" stroke="#6B7B8D" stroke-width="0.5"/>
+    <line x1="100" y1="240" x2="100" y2="330" stroke="#6B7B8D" stroke-width="0.5"/>
+    <line x1="125" y1="217" x2="125" y2="330" stroke="#6B7B8D" stroke-width="0.5"/>
+
+    <path d="M 22 325 A 8 8 0 0 1 12.4 314" fill="none" stroke="#8B6914" stroke-width="0.8"/>
+    <text x="7" y="308" font-size="7" fill="#8B6914">45°</text>
+
+    <line x1="50" y1="285" x2="100" y2="245" stroke="#8B6914" stroke-width="1" marker-end="url(#arrowBrown)"/>
+  </g>
+
+  <!-- ===== Profile 5: Curvo / Bóveda ===== -->
+  <g transform="translate(625, 0)">
+    <text x="75" y="360" text-anchor="middle" font-size="13" font-weight="600" fill="#333">Curvo / Bóveda</text>
+    <text x="75" y="377" text-anchor="middle" font-size="10" fill="#6B6B6B">Chapa sinusoidal</text>
+
+    <path d="M 10 315 Q 75 230 140 315 L 140 330 L 10 330 Z" fill="#6B7B8D" opacity="0.08"/>
+    <path d="M 10 315 Q 75 230 140 315" fill="none" stroke="#6B7B8D" stroke-width="2.5"/>
+    <path d="M 10 311 Q 75 226 140 311" fill="none" stroke="#6B7B8D" stroke-width="0.7" opacity="0.4"/>
+    <path d="M 10 307 Q 75 222 140 307" fill="none" stroke="#6B7B8D" stroke-width="0.7" opacity="0.4"/>
+
+    <line x1="10" y1="330" x2="140" y2="330" stroke="#8B6914" stroke-width="1"/>
+
+    <line x1="35" y1="315" x2="35" y2="330" stroke="#6B7B8D" stroke-width="1.2"/>
+    <line x1="75" y1="268" x2="75" y2="330" stroke="#6B7B8D" stroke-width="1.2"/>
+    <line x1="115" y1="315" x2="115" y2="330" stroke="#6B7B8D" stroke-width="1.2"/>
+
+    <path d="M 22 325 A 8 8 0 0 1 18 316" fill="none" stroke="#8B6914" stroke-width="0.8"/>
+
+    <line x1="40" y1="300" x2="60" y2="282" stroke="#8B6914" stroke-width="1" marker-end="url(#arrowBrown)"/>
+  </g>
+</svg>

@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="#FAF9F6" rx="8"/>
+  <text x="400" y="28" text-anchor="middle" font-family="system-ui" font-size="16" font-weight="bold" fill="#1A1A1A">Tipos de Hormigón</text>
+
+  <!-- Probeta 1: H-13 (simple) -->
+  <rect x="40" y="90" width="120" height="120" fill="#B0B8A8" stroke="#2D2D2D" stroke-width="2" rx="2"/>
+  <text x="100" y="145" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="#2D2D2D">H-13</text>
+  <text x="100" y="162" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">Simple</text>
+  <text x="100" y="230" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">13 MPa</text>
+  <text x="100" y="250" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Contrapisos, bases</text>
+  <text x="100" y="268" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">no estructurales</text>
+
+  <!-- Probeta 2: H-17 (cíclopeo) -->
+  <rect x="180" y="90" width="120" height="120" fill="#A0A898" stroke="#2D2D2D" stroke-width="2" rx="2"/>
+  <!-- Piedritas visibles -->
+  <circle cx="210" cy="115" r="7" fill="#8B8B80" stroke="#2D2D2D" stroke-width="1" opacity="0.6"/>
+  <circle cx="245" cy="130" r="9" fill="#8B8B80" stroke="#2D2D2D" stroke-width="1" opacity="0.6"/>
+  <circle cx="220" cy="155" r="8" fill="#8B8B80" stroke="#2D2D2D" stroke-width="1" opacity="0.6"/>
+  <circle cx="260" cy="110" r="6" fill="#8B8B80" stroke="#2D2D2D" stroke-width="1" opacity="0.6"/>
+  <circle cx="230" cy="180" r="10" fill="#8B8B80" stroke="#2D2D2D" stroke-width="1" opacity="0.6"/>
+  <circle cx="265" cy="170" r="7" fill="#8B8B80" stroke="#2D2D2D" stroke-width="1" opacity="0.6"/>
+  <circle cx="200" cy="140" r="5" fill="#8B8B80" stroke="#2D2D2D" stroke-width="1" opacity="0.6"/>
+  <circle cx="255" cy="195" r="8" fill="#8B8B80" stroke="#2D2D2D" stroke-width="1" opacity="0.6"/>
+  <text x="240" y="145" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="#2D2D2D">H-17</text>
+  <text x="240" y="162" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">Cíclopeo</text>
+  <text x="240" y="230" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">17 MPa</text>
+  <text x="240" y="250" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Cimientos,</text>
+  <text x="240" y="268" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">bases</text>
+
+  <!-- Probeta 3: H-21 (estructural) -->
+  <rect x="320" y="90" width="120" height="120" fill="#909888" stroke="#2D2D2D" stroke-width="2" rx="2"/>
+  <!-- Barras de acero visibles -->
+  <circle cx="345" cy="120" r="7" fill="#8B4513" stroke="#5C2E0A" stroke-width="1.5"/>
+  <circle cx="345" cy="120" r="3.5" fill="#A0522D"/>
+  <circle cx="380" cy="120" r="7" fill="#8B4513" stroke="#5C2E0A" stroke-width="1.5"/>
+  <circle cx="380" cy="120" r="3.5" fill="#A0522D"/>
+  <circle cx="415" cy="120" r="7" fill="#8B4513" stroke="#5C2E0A" stroke-width="1.5"/>
+  <circle cx="415" cy="120" r="3.5" fill="#A0522D"/>
+  <circle cx="345" cy="180" r="7" fill="#8B4513" stroke="#5C2E0A" stroke-width="1.5"/>
+  <circle cx="345" cy="180" r="3.5" fill="#A0522D"/>
+  <circle cx="380" cy="180" r="7" fill="#8B4513" stroke="#5C2E0A" stroke-width="1.5"/>
+  <circle cx="380" cy="180" r="3.5" fill="#A0522D"/>
+  <circle cx="415" cy="180" r="7" fill="#8B4513" stroke="#5C2E0A" stroke-width="1.5"/>
+  <circle cx="415" cy="180" r="3.5" fill="#A0522D"/>
+  <!-- Estribo -->
+  <rect x="335" y="110" width="90" height="80" fill="none" stroke="#8B4513" stroke-width="1.5" rx="1"/>
+  <text x="380" y="152" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="#2D2D2D">H-21</text>
+  <text x="380" y="169" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">Estructural</text>
+  <text x="380" y="230" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">21 MPa</text>
+  <text x="380" y="250" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Losas, columnas,</text>
+  <text x="380" y="268" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">vigas</text>
+
+  <!-- Probeta 4: H-30 (alta resistencia) -->
+  <rect x="460" y="90" width="120" height="120" fill="#808878" stroke="#2D2D2D" stroke-width="2" rx="2"/>
+  <text x="520" y="145" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="white">H-30</text>
+  <text x="520" y="162" text-anchor="middle" font-family="system-ui" font-size="10" fill="white">Alta resistencia</text>
+  <text x="520" y="230" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">30 MPa</text>
+  <text x="520" y="250" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Estructuras</text>
+  <text x="520" y="268" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">especiales, puentes</text>
+
+  <!-- Probeta 5: H-40 (prefabricado) -->
+  <rect x="600" y="90" width="120" height="120" fill="#707868" stroke="#2D2D2D" stroke-width="2" rx="2"/>
+  <text x="660" y="145" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="white">H-40</text>
+  <text x="660" y="162" text-anchor="middle" font-family="system-ui" font-size="10" fill="white">Prefabricado</text>
+  <text x="660" y="230" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">40 MPa</text>
+  <text x="660" y="250" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Prefabricados,</text>
+  <text x="660" y="268" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">pretensado</text>
+
+  <!-- Eje de resistencia (flecha horizontal) -->
+  <line x1="40" y1="330" x2="720" y2="330" stroke="#6B6B6B" stroke-width="1.5"/>
+  <polygon points="720,330 710,326 710,334" fill="#6B6B6B"/>
+  <!-- Marcas de graduación en el eje -->
+  <line x1="100" y1="325" x2="100" y2="335" stroke="#6B6B6B" stroke-width="1"/>
+  <line x1="240" y1="325" x2="240" y2="335" stroke="#6B6B6B" stroke-width="1"/>
+  <line x1="380" y1="325" x2="380" y2="335" stroke="#6B6B6B" stroke-width="1"/>
+  <line x1="520" y1="325" x2="520" y2="335" stroke="#6B6B6B" stroke-width="1"/>
+  <line x1="660" y1="325" x2="660" y2="335" stroke="#6B6B6B" stroke-width="1"/>
+  <!-- Etiqueta del eje -->
+  <text x="400" y="352" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">Mayor resistencia →</text>
+
+  <!-- Etiquetas de tipo debajo -->
+  <text x="100" y="375" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Simple</text>
+  <text x="100" y="390" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">(hormigón solo)</text>
+  <text x="240" y="375" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Cíclopeo</text>
+  <text x="240" y="390" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">(con piedras bolsones)</text>
+  <text x="380" y="375" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Estructural</text>
+  <text x="380" y="390" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">(armado con acero)</text>
+  <text x="520" y="375" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Alta resistencia</text>
+  <text x="520" y="390" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">(relación a/c baja)</text>
+  <text x="660" y="375" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Prefabricado</text>
+  <text x="660" y="390" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">(alta resistencia)</text>
+
+  <!-- Header de columnas -->
+  <text x="400" y="70" text-anchor="middle" font-family="system-ui" font-size="11" fill="#6B6B6B">Probetas representativas (escala: 120 × 120 mm)</text>
+
+  <!-- Nota inferior -->
+  <text x="400" y="475" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">Fuente: CIRSOC 201, IRAM 50000 — Clasificación por resistencia a compresión a 28 días</text>
+
+  <!-- Leyenda -->
+  <rect x="240" y="415" width="320" height="40" fill="#F5F3EF" stroke="#E0DDD6" rx="4"/>
+  <text x="400" y="432" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">La resistencia del hormigón se especifica como H-x, donde x es la resistencia</text>
+  <text x="400" y="448" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">característica a compresión a los 28 días en MPa (ej. H-21 = 21 MPa)</text>
+</svg>

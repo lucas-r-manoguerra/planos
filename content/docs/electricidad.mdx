@@ -1,0 +1,704 @@
+---
+title: "Instalación Eléctrica"
+description: "Diseño, cableado, tablero, protecciones y normativa eléctrica para viviendas en Argentina"
+category: "instalaciones"
+order: 20
+---
+
+# Instalación Eléctrica
+
+Guía completa para el diseño y ejecución de instalaciones eléctricas en viviendas.
+
+La instalación eléctrica es una de las partes más importantes de cualquier obra.
+Un diseño incorrecto puede provocar desde inconvenientes cotidianos hasta
+[incendios](/docs/proteccion-incendios) o electrocuciones. Esta guía cubre todo lo que necesitás saber
+para proyectar, ejecutar y mantener una instalación segura y eficiente.
+
+<Figure src="/docs/plano-casa-ejemplo.svg" alt="Ejemplo de plano de vivienda con distribución de ambientes" caption="Figura 1: Ejemplo de distribución de ambientes en vivienda unifamiliar tipo" width="500px" />
+
+**Índice de contenidos**
+
+1. Conceptos Básicos
+2. Circuitos
+3. Tablero Eléctrico
+4. Cableado
+5. Protecciones
+6. Puesta a Tierra
+7. Iluminación
+8. Tomas de Corriente
+9. Normativa
+10. Errores Comunes
+
+---
+
+## 1. Conceptos Básicos
+
+### Tensiones en Argentina
+
+En la República Argentina, el sistema eléctrico residencial funciona con
+tensión simple de 220V entre fase y neutro. Esto es diferente a muchos
+países europeos donde se usa 230V o 110V como en Estados Unidos.
+
+- **Fase:** 220V (±10%), es decir entre 198V y 242V
+- **Neutro:** 0V, referencia de tierra
+- **Fase-Neutro:** 220V (tensión de uso domiciliario)
+- **Fase-Fase:** 380V (sistema trifásico, para grandes consumos)
+
+Es fundamental verificar la tensión real con un multímetro antes de
+conectar equipos sensibles. Las fluctuaciones en barrios alejados del
+centro pueden ser significativas.
+
+### Frecuencia
+
+- **50 Hz** es el estándar nacional (mismos valores que Europa)
+- La frecuencia determina la velocidad de rotación de motores eléctricos
+- Los equipos importados de 60 Hz (Estados Unidos) funcionan pero con
+  menor eficiencia en motores y transformadores
+
+### Potencia
+
+La potencia eléctrica se mide en Watts y se calcula como:
+
+- **Watts (W) = Voltios × Amperios**
+- **Kilowatts (kW) = Watts / 1000**
+- **Ejemplo:** 220V × 10A = 2.200 W = 2.2 kW
+
+Para calcular el consumo mensual, multiplicás los kW por las horas de
+uso y lo pasás a kilowatt-hora (kWh), que es la unidad que factura
+Edenor o Edesur.
+
+- **Ejemplo de consumo:** 2.2 kW × 8 horas diarias × 30 días = 528 kWh
+- **Costo estimado:** 528 kWh × $150/kWh = $79.200 (varía según tarifa)
+
+### Corriente Continua vs Alterna
+
+- **Corriente alterna (CA):** la que llega de la red pública, cambia
+  de polaridad 50 veces por segundo
+- **Corriente continua (CC):** la que usan baterías, paneles solares,
+  y electrónica de potencia
+- Los cargadores de celular convierten CA a CC internamente
+
+### Unidades de Medida Comunes
+
+| Magnitud | Unidad | Símbolo |
+|----------|--------|---------|
+| Tensión | Voltio | V |
+| Corriente | Amperio | A |
+| Potencia | Watt | W |
+| Resistencia | Ohm | Ω |
+| Energía | Kilowatt-hora | kWh |
+
+---
+
+## 2. Circuitos
+
+### Principio General
+
+Cada circuito debe estar diseñado para un tipo específico de consumo.
+Nunca mezclar iluminación con enchufes de alto consumo en el mismo
+circuitos, ya que una falla en uno afecta al otro.
+
+<Figure src="/docs/electricidad-circuito.svg" alt="Circuito eléctrico básico con tablero, termomagnética, disyuntor y derivaciones" caption="Figura 2: Circuito eléctrico básico de vivienda — desde el tablero hasta los puntos de consumo" width="600px" />
+
+### Circuito de Iluminación
+
+- **Cable:** 1.5 mm² de sección
+- **Protección:** interruptor termomagnético de 10A
+- **Uso:** lámparas, apliques, tiras LED
+- **Cantidad máxima de puntos:** 10-12 luminarias por circuito
+- **Nota:** los LED modernos consumen muy poco, pero es mejor
+  separar circuitos para facilidad de mantenimiento
+
+### Circuito de Enchufes Generales
+
+- **Cable:** 2.5 mm² de sección
+- **Protección:** interruptor termomagnético de 16A
+- **Uso:** electrodomésticos, herramientas, artefactos varios
+- **Cantidad máxima de tomas:** 8-10 por circuito
+- **Nota:** no conectar artefactos de más de 1.000W en este circuito
+
+### Circuito de Enchufes Cocina
+
+- **Cable:** 4 mm² de sección
+- **Protección:** interruptor termomagnético de 20A
+- **Uso:** heladera, microondas, horno eléctrico, batidora
+- **Nota:** la cocina suele necesitar 2-3 circuitos dedicados
+  porque concentra los mayores consumos del hogar
+
+### Circuito de Aire Acondicionado
+
+- **Cable:** 4-6 mm² de sección (depende de la potencia)
+- **Protección:** interruptor termomagnético de 20-25A
+- **Uso:** split, central, portátil con enchufe dedicado
+- **Nota:** cada equipo split necesita su propio circuito
+- **Consumo típico:** 1.000-3.500W según potencia (frío/calor)
+
+### Circuito de Calefacción
+
+- **Cable:** 6-10 mm² de sección
+- **Protección:** interruptor termomagnético de 32A
+- **Uso:** estufa eléctrica, radiador, piso radiante
+- **Nota:** estos equipos son los de mayor consumo del hogar,
+  pueden superar los 5.000W fácilmente
+- **Importante:** verificar que la entrada del edificio soporte
+  la carga total si se usa calefacción eléctrica
+
+### Circuito de Türla (Lavadero)
+
+- **Cable:** 2.5 mm² de sección
+- **Protección:** interruptor termomagnético de 16A
+- **Uso:** lavarropas, secarropas, plancha
+- **Nota:** el lavarropas automático moderno consume 500-2.000W
+- **Recomendación:** tener al menos 2 tomas en el lavadero
+  para no usar zapatillas que generan puntos de falla
+
+### Circuito de Termotanque
+
+- **Cable:** 4 mm² de sección (para eléctrico)
+- **Protección:** interruptor termomagnético de 20A
+- **Uso:** termotanque eléctrico
+- **Nota:** si es a gas, solo necesita enchufe para el encendido
+  electrónico, con cable de 1.5 mm² y protección de 10A
+
+### Circuito de Garage
+
+- **Cable:** 2.5-4 mm² de sección
+- **Protección:** interruptor termomagnético de 16-20A
+- **Uso:** portón automático, herramientas, compresor
+- **Nota:** instalar detector de gas en cocheras cerradas
+  si hay posibilidad de acumulación de gases de escape
+
+### Cálculo de Carga por Circuito
+
+Para dimensionar correctamente un circuito, sumá todos los artefactos
+que se conectarán y verificá que no supere la capacidad del cable
+y la protección:
+
+- **Fórmula:** Potencia total (W) / Tensión (V) = Corriente (A)
+- **Ejemplo:** (800W heladera + 1.200W microondas) / 220V = 9.1A
+- **Resultado:** un circuito de 16A con cable de 2.5 mm² es suficiente
+
+---
+
+## 3. Tablero Eléctrico
+
+### Ubicación
+
+- Cerca de la entrada del domicilio
+- Accesible pero fuera del alcance de niños (mínimo 1.50 m del piso)
+- Ventilado y seco (nunca en baños o cocinas)
+- Sin obstrucciones delante
+- Buena iluminación para poder trabajar en caso de falla
+- Lejos de fuentes de calor (calefactores, cocinas)
+
+### Organización del Tablero
+
+Un tablero residencial típico incluye:
+
+1. **Disyuntor general (diferencial):** corta toda la instalación
+   si detecta una fuga de corriente a tierra
+2. **Interruptor termomagnético general:** protección contra
+   sobrecarga y cortocircuito de toda la instalación
+3. **Circuitos individuales:** cada uno con su propia protección
+4. **Circuitos diferenciados:** para baños y zonas húmedas
+
+### Componentes del Tablero
+
+| Componente | Función |
+|------------|---------|
+| Disyuntor general | Protección contra fugas |
+| Termomagnético general | Protección contra sobrecarga |
+| Termomagnético por circuito | Protección individual |
+| Diferencial para baños | Protección en zonas húmedas |
+| Bornera de conexiones | Punto de unión de cables |
+
+### Señalización
+
+- Etiquetar cada circuito con su función (ej: "Cocina", "Baño 1")
+- Indicar la potencia o corriente de cada circuito
+- Mantener el manual de instalación en el tablero o cerca
+- Usar colores diferentes para identificar circuitos críticos
+- Numeral los circuitos para facilitar la referencia en el plano
+
+### Dimensionamiento del Tablero
+
+- Calcular el número total de circuitos necesarios
+- Dejar espacio para futuras ampliaciones (2-3 slots libres)
+- Verificar que la entrada del tablero soporte la carga total
+- En departamentos nuevos, el tablero viene predimensionado
+  según la potencia contratada ante la distribuidora
+
+---
+
+## 4. Cableado
+
+### Tipos de Cables
+
+| Sección | Uso | Corriente Máx | Ejemplo de Artefacto |
+|---------|-----|---------------|----------------------|
+| 1.5 mm² | Iluminación | 10A | Lámparas, apliques |
+| 2.5 mm² | Enchufes generales | 16A | TV, notebook, cargador |
+| 4 mm² | Cocina, A/C | 20A | Heladera, microondas |
+| 6 mm² | Calefacción, horno | 25A | Estufa eléctrica |
+| 10 mm² | Trifásico, industrial | 32A | Taller, machine shop |
+
+### Colores de Cables (Norma IRAM)
+
+Los colores de los cables no son decorativos: tienen un significado
+de seguridad que todos los electricistas deben respetar:
+
+- **Fase:** marrón, negro o gris (cualquiera de los tres)
+- **Neutro:** azul claro (siempre el mismo color)
+- **Tierra:** verde/amarillo a rayas (jamás usar para otra función)
+
+### Materiales de Conducción
+
+- **Cañerías PVC:** para instalaciones empotradas en pared
+  - Más económicas y fáciles de instalar
+  - No resisten altas temperaturas
+  - Tamaño estándar: 20 mm o 25 mm de diámetro
+- **Canaletas PVC:** para instalaciones aéreas o superficiales
+  - Útiles en remodelaciones donde no se puede empotrar
+  - Menos estéticas pero más prácticas
+- **Tubos flexibles:** para conexiones móviles o puntos difíciles
+- **Protección contra humedad:** usar sellador o cinta aisladora
+  en zonas húmedas (baños, exteriores)
+
+### Reglas de Cableado
+
+1. **Nunca empalmar cables dentro de cañerías** (usar borneras)
+2. **Respetar las curvas de radio** (no doblar en ángulo recto)
+3. **No llenar más del 40% la cañería** con cables
+4. **Dejar repuesto** de cada tipo de cable en el tablero
+5. **Identificar cada cable** con etiquetas o cinta de colores
+6. **Verificar continuidad** antes de sellar las paredes
+
+---
+
+## 5. Protecciones
+
+### Disyuntor Diferencial (IDR)
+
+El disyuntor diferencial es el dispositivo de seguridad más importante
+de la instalación. Detecta cuando la corriente que entra por la fase
+no es igual a la que sale por el neutro (fuga a tierra) y corta el
+circuito en milésimas de segundo.
+
+- **Sensibilidad 30 mA:** obligatoria en baños y zonas húmedas
+- **Sensibilidad 100 mA:** para circuitos generales del hogar
+- **Sensibilidad 300 mA:** para protección contra incendios
+- **Si se dispara:** revisar la instalación, no volver a activar
+  sin encontrar la causa de la fuga
+- **Prueba mensual:** apretar el botón "Test" del diferencial
+
+### Interruptor Termomagnético
+
+Protege contra dos tipos de falla:
+
+1. **Sobrecarga:** cuando se conectan demasiados artefactos en un
+   circuito y la corriente supera la capacidad del cable
+2. **Cortocircuito:** cuando fase y neutro se tocan directamente,
+   generando una corriente enorme instantánea
+
+- **Selección:** debe ser menor a la capacidad del cable pero mayor
+  al consumo normal del circuito
+- **Tabla de referencia:** ver sección de Circuitos
+
+### Fusibles (Obsoletos)
+
+Los fusibles eran el sistema de protección anterior a los interruptores
+termomagnéticos. Ya no se usan en instalaciones nuevas porque:
+
+- Se quemaban y había que reemplazarlos manualmente
+- No se podía saber cuál se quemó sin inspeccionar uno por uno
+- No protección contra sobrecarga progresiva
+- Riesgo de que alguien pusiera un fusible de mayor amperaje
+
+**Recomendación:** si tu casa tiene fusibles, actualizar a un tablero
+con interruptores termomagnéticos. Es una inversión que vale la pena.
+
+### Protección contra Descargas Atmosféricas
+
+- **Pararrayos:** obligatorios en edificios altos (más de 15 m)
+- **Limitador de sobretensiones:** recomendado en zonas con tormentas
+- **Conexión a tierra:**必须 ser independiente o conectada a la
+  puesta a tierra general con cable de 16 mm² mínimo
+
+---
+
+## 6. Puesta a Tierra
+
+### Para Qué Sirve
+
+La puesta a tierra es el sistema que evita que una persona reciba
+una descarga eléctrica si toca un equipo con falla de aislación.
+Sin tierra, el cuerpo humano se convierte en el camino de la
+corriente hacia el suelo.
+
+- **Evita descargas eléctricas** en baños, cocinas, y cualquier
+  lugar donde haya humedad o contacto metálico
+- **Protege equipos electrónicos** de picos de tensión
+- **Obligatoria** en toda instalación según normativa IRAM
+
+### Componentes del Sistema
+
+1. **Varilla de cobre enterrada:** mínimo 2 metros de profundidad
+   en suelo húmedo, o 3 metros en suelo seco
+2. **Conductor de tierra:** cable verde/amarillo, mínimo 16 mm²
+   desde la varilla hasta el tablero
+3. **Borne de conexión:** punto de unión entre la tierra y la
+   instalación del edificio
+4. **Resistencia máxima admisible:** 10 ohms (medir con tester
+   de tierra especializado)
+
+### Equipos que Requieren Puesta a Tierra
+
+Todos los equipos con carcasa metálica o que manipulan agua deben
+estar conectados a tierra:
+
+- Heladera y freezer
+- Lavarropas y secarropas
+- Horno eléctrico y microondas
+- Aire acondicionado
+- Computadoras y servers
+- Equipos de sonido profesional
+- Herramientas eléctricas
+
+### Verificación de la Tierra
+
+- Medir la resistencia con un earth tester cada 2-3 años
+- Verificar que el borne esté bien apretado y sin corrosión
+- En departamentos, la tierra suele estar compartida con el edificio
+- En casas, cada propiedad debe tener su propia puesta a tierra
+
+---
+
+## 7. Iluminación
+
+### Tipos de Iluminación
+
+| Tipo | Eficiencia | Vida Útil | Costo | Recomendación |
+|------|------------|-----------|-------|---------------|
+| LED | 80-110 lm/W | 25.000-50.000 h | Medio | Ideal para todo |
+| Fluorescente | 60-80 lm/W | 8.000-15.000 h | Bajo | Ambiental |
+| Halógena | 20-30 lm/W | 2.000-4.000 h | Bajo | Decorativa |
+| Incandescente | 10-15 lm/W | 1.000 h | Muy bajo | Obsoleta |
+
+### Distribución de la Iluminación
+
+- **Central:** lámpara principal en el centro del ambiente
+  - Funciona para salas y comedores
+  - Puede tener regulador (dimmer)
+- **Perimetral:** múltiples puntos en el perímetro del techo
+  - Iluminación均匀 y sin sombras
+  - Ideal para ambientes de trabajo
+- **Decorativa:** luces indirectas, tiras LED, apliques
+  - Crea ambiente y calidez
+  - Usa poca potencia pero mucha cantidad
+- **Tarea:** luz dirigida a zonas específicas
+  - Sobre mesada de cocina
+  - Lámpara de escritorio
+  - Lectura en dormitorio
+
+### Reglas de Iluminación
+
+1. **Baños:** usar luminarias IP44 o superior (resistentes a salpicaduras)
+2. **Exteriores:** IP65 mínimo (resistentes a lluvia)
+3. **Cocina:** iluminación bajo mesada para ver al cortar
+4. **Dormitorio:** regulador de intensidad (dimmer)
+5. **Escaleras:** iluminación constante en todos los tramos
+6. **Garage:** luz blanca fría (5000-6500K) para ver bien
+
+### Temperatura de Color
+
+La temperatura de color se mide en Kelvin (K) y define la tonalidad de la luz:
+
+| Temperatura | Tonalidad | Ambiente | Recomendación |
+|-------------|-----------|----------|---------------|
+| 2700K - 3000K | Cálido (amarillenta) | Living, dormitorios | Descanso, cena |
+| 4000K - 4500K | Neutro (blanca) | Cocina, baño, escritorio | Lectura, tareas |
+| 5000K - 6500K | Frío (azulada) | Garage, taller, exterior | Trabajo detallado |
+
+<Callout type="tip">En un mismo ambiente se pueden combinar temperaturas: luz cálida general con luz neutra para lectura o maquillaje. Esto se llama **iluminación por capas**.</Callout>
+
+### Iluminancia Recomendada
+
+La iluminancia (lux) mide la cantidad de luz que llega a una superficie:
+
+| Ambiente | Lux recomendados | Ejemplo |
+|----------|-----------------|---------|
+| Pasillos, circulación | 100 - 150 lux | Luz indirecta suave |
+| Living, comedor | 150 - 300 lux | Luz general regulable |
+| Cocina (general) | 300 - 500 lux | Luz blanca neutra |
+| Cocina (mesada) | 500 - 750 lux | Foco bajo alacena |
+| Dormitorio | 75 - 150 lux | Luz regulable cálida |
+| Baño | 300 - 500 lux | Luz general + espejo |
+| Escritorio / lectura | 400 - 600 lux | Lámpara de escritorio |
+| Garage / taller | 500 - 750 lux | Luz fría general |
+
+### Ubicación por Ambiente
+
+| Ambiente | Tipo de luz | Temperatura | Ubicación |
+|----------|------------|-------------|-----------|
+| Cocina | General + bajo mesada | 4000K | Techo empotrada + tira LED bajo alacena |
+| Baño | General + espejo | 4000K | Plafón techo + apliques laterales al espejo |
+| Living | General + puntual + decorativa | 2700K - 3000K | Colgante central + velador + tira LED |
+| Dormitorio | General + lectura | 2700K | Colgante con dimmer + aplique cabecero |
+| Pasillo | General + decorativa | 3000K | Apliques pared o dicroicas cada 2m |
+| Exterior | Seguridad + ambiental | 3000K - 4000K | Apliques pared, spots, solares |
+
+### Eficiencia Energética
+
+| Tecnología | Consumo (W eq. 800 lm) | Vida útil | Costo relativo | Retorno de inversión |
+|------------|------------------------|-----------|----------------|---------------------|
+| LED | 8 - 12 W | 25.000 - 50.000 h | Medio | Se paga sola en 1-2 años |
+| Fluorescente compacta | 15 - 20 W | 8.000 - 15.000 h | Bajo | Bajo consumo inicial |
+| Halógena | 40 - 60 W | 2.000 - 4.000 h | Bajo | Alto consumo eléctrico |
+| Incandescente | 60 - 100 W | 1.000 h | Muy bajo | Obsoleta — no comprar |
+
+<Callout type="info">**Regla práctica:** dividí los Watts de una halógena/incandescente por 8 para obtener el equivalente LED. Ej: una lámpara halógena de 60 W se reemplaza por un LED de 7-8 W.</Callout>
+
+<Figure src="/docs/electricidad-iluminacion.svg" alt="Tipos de iluminación — empotrada, colgante, aplique, cinta LED y spot direccional" caption="Figura 3: Tipos de artefactos de iluminación — empotrada (dicroica/LED), colgante, aplique de pared, cinta LED y spot direccional con ubicaciones típicas" width="600px" />
+
+### Guía Paso a Paso: Instalación de un Circuito de Iluminación
+
+<Callout type="info">Esta guía asume que ya tenés el plano de iluminación definido. Revisá la sección de Iluminación primero. Trabajá siempre con la energía general desconectada.</Callout>
+
+1. **Elegí el cable correcto** — cable de 1.5 mm² para iluminación. Si el circuito tiene más de 12 bocas o recorre más de 30 m, considerá 2.5 mm².
+
+2. **Dibujá el recorrido** — marcá en la pared la ruta de las cañerías desde el tablero hasta cada punto de luz. Evitá cruzar con cañerías de gas y agua (distancia mínima 10 cm).
+
+3. **Instalá las cajas de luz** — colocá cajas rectangulares de PVC para cada interruptor y cajas redondas para cada artefacto. Cada caja debe quedar firme y a nivel.
+
+4. **Colocá las cañerías** — caño corrugado de 16 mm o rígido de 20 mm desde cada punto hasta la caja de paso. Respetá radios de curvatura mínimos de 10 cm.
+
+5. **Pasá los cables** — pasá fase, neutro y tierra (opcional para artefactos metálicos) por cada caño. Usá los colores reglamentarios: marrón/negro para fase, azul para neutro, verde/amarillo para tierra.
+
+6. **Conectá los interruptores** — la fase llega al interruptor y vuelve al artefacto. El neutro va directo al artefacto (nunca al interruptor).
+
+7. **Conectá el tablero** — cada circuito de iluminación a su termomagnética de 10A. Identificá cada circuito con una etiqueta clara ("Iluminación Living", "Iluminación Cocina", etc.).
+
+8. **Probá cada boca** — antes de cerrar las paredes, verificá con un tester que llegue tensión correcta a cada punto. Probá el funcionamiento de cada interruptor.
+
+<Callout type="warning">No conectes los artefactos hasta tener las paredes cerradas y pintadas. El polvo de obra arruina las lámparas y los LED se llenan de tierra que después no se limpia.</Callout>
+
+---
+
+## 8. Tomas de Corriente
+
+### Tipos de Tomas
+
+- **Simple:** 2 clavijas, para cargadores y artefactos bajos consumo
+- **Doble:** 4 clavijas, para conectar dos artefactos simultáneamente
+- **Con puesta a tierra:** 3 clavijas, obligatoria para equipos de
+  carcasa metálica (heladera, lavarropas, etc.)
+- **Empotradas:** van dentro de la pared, más estéticas
+- **Superficiales:** van sobre la pared, más fáciles de instalar
+- **Estancas:** para exteriores o zonas húmedas (IP44 o superior)
+
+### Cantidad Recomendada por Ambiente
+
+| Ambiente | Cantidad Mínima | Cantidad Ideal |
+|----------|-----------------|----------------|
+| Living/Comedor | 4 | 6-8 |
+| Dormitorio | 3 | 4-5 |
+| Cocina | 6 | 8-12 |
+| Baño | 2 | 3-4 |
+| Türla/Lavadero | 2 | 3-4 |
+| Garage | 2 | 3-4 |
+| Recibidor | 2 | 2-3 |
+
+### Alturas de Instalación
+
+Las alturas están estandarizadas para comodidad y seguridad:
+
+- **Enchufes generales:** 0.30 m del piso (para muebles bajos)
+- **Cocina sobre mesada:** 1.10 m del piso (sobre la mesada)
+- **Baños:** mínimo 1.20 m del piso, lejos de fuentes de agua
+- **Aire acondicionado:** 2.00 m del piso (en la parte alta)
+- **Termotanque:** según fabricante, generalmente 1.50-1.80 m
+- **Garage:** 1.00 m del piso (para conectar herramientas)
+
+### Zapatillas y Regletas
+
+- **Nunca** usar zapatillas en ambientes húmedos
+- **No** conectar más de 3 artefactos en una zapatilla
+- **Preferir** zapatillas con protección contra sobrecarga
+- **Verificar** que la zapatilla tenga puesta a tierra si la
+  necesita el artefacto conectado
+- **Reemplazar** zapatillas con cables dañados o clavijas flojas
+
+---
+
+## 9. Normativa
+
+### Reglamento Electro Técnico (RENYRE)
+
+El RENYRE (Reglamento de Instalaciones Eléctricas de Baja Tensión)
+es la normativa principal que regula las instalaciones eléctricas
+domiciliarias en Argentina. Establece:
+
+- Normas de seguridad obligatorias para todo tipo de instalación
+- Requisitos para los profesionales habilitados (matriculados)
+- Certificación y verificación de instalaciones nuevas
+- Procedimientos para ampliaciones y modificaciones
+- Sanciones por incumplimiento
+
+### Normas IRAM
+
+El Instituto Argentino de Normalización y Certificación establece
+las normas técnicas específicas:
+
+- **IRAM 2070:** Tensiones nominales y frecuencias del sistema
+  eléctrico de distribución
+- **IRAM 2071:** Conductores eléctricos aislados de aluminio y
+  cobre para instalaciones fijas
+- **IRAM 2098:** Instalaciones eléctricas en viviendas, el más
+  importante para el diseño residencial
+- **IRAM 2181:** Conductores de puesta a tierra
+- **IRAM 2336:** Interruptores automáticos de protección contra
+  sobrecarga y cortocircuito
+- **IRAM 2430:** Disyuntores diferenciales para protección
+  contra contactos indirectos
+
+### Profesionales Habilitados
+
+- Solo los electricistas matriculados pueden firmar instalaciones
+- La matrícula se obtiene después de aprobar un examen profesional
+- Cada provincia tiene su propio colegio de electricistas
+- La certificación es obligatoria antes de habilitar el inmueble
+- Las instalaciones no certificadas pueden generar multas
+
+---
+
+## 10. Errores Comunes
+
+### 1. No poner puesta a tierra
+**Riesgo:** electrocución al tocar equipos con falla
+**Solución:** instalar sistema de tierra completo según norma IRAM
+**Costo de evitarlo:** una multa o un accidente grave
+
+### 2. Usar cable demasiado delgado
+**Riesgo:** sobrecalentamiento del cable, derretimiento de la
+aislación, cortocircuito y posibles incendios
+**Solución:** respetar las tablas de sección de cable según corriente
+**Ejemplo:** nunca usar 1.5 mm² para un enchufe de cocina
+
+### 3. Conectar muchos artefactos en un mismo circuito
+**Riesgo:** sobrecarga del circuito, calentamiento de conexiones,
+disparo del termomagnético continuamente
+**Solución:** distribuir los artefactos en circuitos dedicados
+
+### 4. No diferenciar circuitos por función
+**Riesgo:** difícil identificar qué circuito falla, imposibilidad
+de aislar un sector sin apagar toda la casa
+**Solución:** circuitos separados para iluminación, enchufes, cocina,
+baños, etc.
+
+### 5. Cableado expuesto sin protección
+**Riesgo:** daño mecánico al cable, contacto accidental, corto
+**Solución:** usar cañerías o canaletas para todo cableado visible
+
+### 6. Sin protecciones adecuadas en el tablero
+**Riesgo:** no hay corta en caso de falla, riesgo de incendio o
+electrocución
+**Solución:** tablero completo con disyuntor diferencial y
+termomagnéticos por circuito
+
+### 7. Mezclar colores de cables
+**Riesgo:** confusiones en futuras reparaciones, errores en la
+identificación de fase y neutro
+**Solución:** respetar la norma IRAM de colores estrictamente
+
+### 8. No dejar planos de la instalación
+**Riesgo:** cualquier electricista que trabaje después no sabe
+dónde están los cables empotrados
+**Solución:** dibujar un plano detallado antes de cerrar las paredes
+
+### 9. Usar zapatillas como solución permanente
+**Riesgo:** puntos de falla, sobrecarga, incendio
+**Solución:** instalar tomas de corriente adicionales donde se necesiten
+
+### 10. No hacer mantenimiento preventivo
+**Riesgo:** conexiones flojas, contacto deteriorado, riesgo de
+cortocircuito
+**Solución:** revisar el tablero y conexiones cada 2-3 años con
+un electricista matriculado
+
+---
+
+## 11. Guía Paso a Paso: Cablear una Casa Nueva
+
+### Paso 1: Planificación
+
+1. Dibujá un plano con la ubicación de muebles y artefactos
+2. Marcá las rutas de cañerías (evitar cruces con gas y agua)
+3. Calculá la carga total por ambiente
+4. Definí la cantidad de circuitos necesarios
+
+<Callout type="tip">Usá el editor de planos para ubicar tomas y puntos de luz antes de empezar la obra. Es más fácil mover un círculo en pantalla que romper una pared.</Callout>
+
+### Paso 2: Circuito por Función
+
+1. **Iluminación:** 1.5 mm², 10A — un circuito por planta
+2. **Enchufes generales:** 2.5 mm², 16A — 8-10 tomas máximo
+3. **Cocina:** 4 mm², 20A — heladera y microondas por separado
+4. **A/C:** 4-6 mm², 20-25A — cada split con su circuito
+5. **Calefacción:** 6-10 mm², 32A — verificar entrada del edificio
+6. **Türla:** 2.5 mm², 16A — lavarropas y secarropas
+
+### Paso 3: Cañerías y Cableado
+
+1. Cortar ranuras con cortafierro o radial
+2. Colocar cañerías PVC de 20-25mm
+3. Trenzar y pasar cables (dejar 20cm de sobra en cada extremo)
+4. Etiquetar cada cable en ambos extremos
+5. No llenar más del 40% la cañería
+
+### Paso 4: Tablero
+
+1. Cortar energía general
+2. Cablear disyuntor diferencial → termomagnético general → individuales
+3. Verificar cada circuito por separado
+4. Etiquetar cada interruptor
+
+### Paso 5: Pruebas
+
+1. Medir 220V en cada toma
+2. Probar disyuntor y cada termomagnético
+3. Verificar tierra (menos de 10 ohms)
+4. Probar diferencial (botón Test)
+
+<Callout type="warning">Nunca energizar sin verificar cada conexión. Un error puede causar incendio o electrocución.</Callout>
+
+---
+
+## 12. Trucos y Hacks
+
+<Callout type="hack">Pasá un cable de repuesto (1.5 y 2.5 mm²) por cada cañería mientras está abierta. Cuando la pared esté cerrada, vas a agradecer tener repuesto sin romper todo.</Callout>
+
+<Callout type="hack">Etiquetá cada cable con cinta de colores ANTES de cerrar la pared. Rojo = crítico, azul = iluminación, verde = enchufes. En 10 años vas a necesitar saber dónde pasa cada cable.</Callout>
+
+<Callout type="hack">Instalá un 30% más de tomas de corriente de las que creés necesitar. Las casas nuevas siempre terminan con zapatillas colgando por todos lados.</Callout>
+
+<Callout type="hack">Una lámpara LED con batería en el pasillo y la escalera cuesta poco y salva caídas nocturnas cuando corta la luz.</Callout>
+
+<Callout type="tip">Sacá fotos de las cañerías ANTES de cerrar las paredes. Guardá junto con el plano eléctrico. En 10 años vas a necesitarlo.</Callout>
+
+---
+
+## 13. Checklist Pre-Entrega
+
+- Tablero etiquetado con todos los circuitos
+- Disyuntor diferencial probado
+- Todos los termomagnéticos funcionando
+- Tierra verificada (menos de 10 ohms)
+- Polaridad correcta en todas las tomas
+- Tensiones dentro de rango (198-242V)
+- Sin cables sueltos ni empalmes visibles
+- Plano eléctrico documentado con fotos
+- Certificado del electricista matriculado
+
+> **Consejo:** Siempre contratar un electricista matriculado. La instalación eléctrica mal hecha puede causar incendios o electrocución. No es el lugar para ahorrar dinero.
+
+**Normativa:** [RENYRE](https://www.renyre.org.ar), [IRAM](https://tienda.iram.org.ar), [CIRSOC](https://www.cirsoc.org.ar).

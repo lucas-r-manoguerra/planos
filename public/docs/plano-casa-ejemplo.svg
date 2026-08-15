@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 350" fill="none">
+  <rect width="500" height="350" fill="#FAF9F6" rx="8"/>
+  <text x="250" y="25" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="bold" fill="#1A1A1A">Ejemplo: Plano de Vivienda</text>
+  <rect x="40" y="40" width="420" height="280" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="2" rx="4"/>
+  <rect x="60" y="60" width="150" height="120" fill="#E8F4E8" stroke="#2D2D2D" stroke-width="1.5"/>
+  <text x="135" y="120" text-anchor="middle" font-family="system-ui" font-size="11" fill="#2D2D2D">Living</text>
+  <text x="135" y="135" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">4.5m x 3.6m</text>
+  <rect x="210" y="60" width="120" height="120" fill="#FFF3E0" stroke="#2D2D2D" stroke-width="1.5"/>
+  <text x="270" y="120" text-anchor="middle" font-family="system-ui" font-size="11" fill="#2D2D2D">Cocina</text>
+  <text x="270" y="135" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">3.6m x 3.6m</text>
+  <rect x="330" y="60" width="110" height="120" fill="#E3F2FD" stroke="#2D2D2D" stroke-width="1.5"/>
+  <text x="385" y="120" text-anchor="middle" font-family="system-ui" font-size="11" fill="#2D2D2D">Dormitorio</text>
+  <text x="385" y="135" text-anchor="middle" font-family="system-ui" font-size="9" fill="#6B6B6B">3.3m x 3.6m</text>
+  <rect x="60" y="180" width="80" height="80" fill="#F3E5F5" stroke="#2D2D2D" stroke-width="1.5"/>
+  <text x="100" y="220" text-anchor="middle" font-family="system-ui" font-size="11" fill="#2D2D2D">Baño</text>
+  <rect x="140" y="180" width="110" height="80" fill="#E3F2FD" stroke="#2D2D2D" stroke-width="1.5"/>
+  <text x="195" y="220" text-anchor="middle" font-family="system-ui" font-size="11" fill="#2D2D2D">Dormitorio</text>
+  <rect x="250" y="180" width="80" height="80" fill="#ECEFF1" stroke="#2D2D2D" stroke-width="1.5"/>
+  <text x="290" y="220" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">Lavadero</text>
+  <rect x="330" y="180" width="110" height="80" fill="#ECEFF1" stroke="#2D2D2D" stroke-width="1.5"/>
+  <text x="385" y="220" text-anchor="middle" font-family="system-ui" font-size="11" fill="#2D2D2D">Garage</text>
+  <line x1="60" y1="280" x2="160" y2="280" stroke="#2D2D2D" stroke-width="2"/>
+  <text x="110" y="298" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">3 metros</text>
+  <g transform="translate(440,80)">
+    <circle cx="0" cy="0" r="15" fill="none" stroke="#2D2D2D" stroke-width="1"/>
+    <text x="0" y="-20" text-anchor="middle" font-family="system-ui" font-size="10" font-weight="bold" fill="#E74C3C">N</text>
+    <line x1="0" y1="-12" x2="0" y2="-5" stroke="#E74C3C" stroke-width="2"/>
+  </g>
+</svg>

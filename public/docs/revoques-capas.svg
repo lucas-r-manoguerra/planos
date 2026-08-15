@@ -1,0 +1,216 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" fill="none">
+  <rect width="800" height="450" fill="#FAF9F6" rx="8"/>
+  <text x="400" y="30" text-anchor="middle" font-family="system-ui" font-size="15" font-weight="bold" fill="#1A1A1A">Capas del Revoque</text>
+
+  <!-- Direction labels -->
+  <text x="80" y="225" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#6B6B6B">LADRILLO</text>
+  <text x="720" y="225" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#6B6B6B">SUPERFICIE</text>
+
+  <!-- Direction arrow -->
+  <polygon points="115,210 125,215 115,220" fill="#6B6B6B"/>
+  <line x1="100" y1="215" x2="115" y2="215" stroke="#6B6B6B" stroke-width="1.5"/>
+  <line x1="685" y1="215" x2="700" y2="215" stroke="#6B6B6B" stroke-width="1.5"/>
+  <polygon points="700,210 710,215 700,220" fill="#6B6B6B"/>
+
+  <!-- ============================================ -->
+  <!-- LAYER 1: Ladrillo cerámico hueco -->
+  <!-- ============================================ -->
+  <rect x="130" y="100" width="310" height="260" fill="#C17A57" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+
+  <!-- Horizontal mortar lines -->
+  <rect x="130" y="128" width="310" height="4" fill="#B8A99A"/>
+  <rect x="130" y="156" width="310" height="4" fill="#B8A99A"/>
+  <rect x="130" y="184" width="310" height="4" fill="#B8A99A"/>
+  <rect x="130" y="212" width="310" height="4" fill="#B8A99A"/>
+  <rect x="130" y="240" width="310" height="4" fill="#B8A99A"/>
+  <rect x="130" y="268" width="310" height="4" fill="#B8A99A"/>
+  <rect x="130" y="296" width="310" height="4" fill="#B8A99A"/>
+  <rect x="130" y="324" width="310" height="4" fill="#B8A99A"/>
+  <rect x="130" y="352" width="310" height="4" fill="#B8A99A"/>
+
+  <!-- Vertical holes in brick cross-section -->
+  <!-- Row 1 -->
+  <rect x="155" y="105" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="190" y="105" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="225" y="105" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="260" y="105" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="295" y="105" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="330" y="105" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="365" y="105" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="400" y="105" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <!-- Row 2 -->
+  <rect x="155" y="133" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="190" y="133" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="225" y="133" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="260" y="133" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="295" y="133" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="330" y="133" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="365" y="133" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="400" y="133" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <!-- Row 3 -->
+  <rect x="155" y="161" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="190" y="161" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="225" y="161" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="260" y="161" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="295" y="161" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="330" y="161" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="365" y="161" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="400" y="161" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <!-- Row 4 -->
+  <rect x="155" y="189" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="190" y="189" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="225" y="189" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="260" y="189" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="295" y="189" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="330" y="189" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="365" y="189" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="400" y="189" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <!-- Row 5 -->
+  <rect x="155" y="217" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="190" y="217" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="225" y="217" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="260" y="217" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="295" y="217" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="330" y="217" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="365" y="217" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="400" y="217" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <!-- Row 6 -->
+  <rect x="155" y="245" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="190" y="245" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="225" y="245" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="260" y="245" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="295" y="245" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="330" y="245" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="365" y="245" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="400" y="245" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <!-- Row 7 -->
+  <rect x="155" y="273" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="190" y="273" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="225" y="273" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="260" y="273" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="295" y="273" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="330" y="273" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="365" y="273" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="400" y="273" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <!-- Row 8 -->
+  <rect x="155" y="301" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="190" y="301" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="225" y="301" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="260" y="301" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="295" y="301" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="330" y="301" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="365" y="301" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="400" y="301" width="18" height="23" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <!-- Row 9 -->
+  <rect x="155" y="328" width="18" height="24" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="190" y="328" width="18" height="24" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="225" y="328" width="18" height="24" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="260" y="328" width="18" height="24" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="295" y="328" width="18" height="24" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="330" y="328" width="18" height="24" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="365" y="328" width="18" height="24" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+  <rect x="400" y="328" width="18" height="24" fill="#F5F3EF" stroke="#9C4A2E" stroke-width="1" rx="1"/>
+
+  <!-- ============================================ -->
+  <!-- LAYER 2: Salpicado (adherence bridge) -->
+  <!-- ============================================ -->
+  <rect x="440" y="100" width="8" height="260" fill="#D4C5B5" stroke="#2D2D2D" stroke-width="1" rx="0"/>
+  <!-- Dotted dashed internal line for texture -->
+  <line x1="443" y1="110" x2="443" y2="350" stroke="#B8A99A" stroke-width="1" stroke-dasharray="2,3"/>
+
+  <!-- ============================================ -->
+  <!-- LAYER 3: Revoque grueso -->
+  <!-- ============================================ -->
+  <rect x="448" y="100" width="85" height="260" fill="#E8D5B7" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <!-- Coarse aggregate dots -->
+  <circle cx="460" cy="125" r="3" fill="#D4B89A" opacity="0.5"/>
+  <circle cx="480" cy="150" r="2.5" fill="#D4B89A" opacity="0.5"/>
+  <circle cx="510" cy="135" r="3.5" fill="#D4B89A" opacity="0.5"/>
+  <circle cx="470" cy="185" r="2" fill="#D4B89A" opacity="0.5"/>
+  <circle cx="500" cy="200" r="3" fill="#D4B89A" opacity="0.5"/>
+  <circle cx="520" cy="175" r="2.5" fill="#D4B89A" opacity="0.5"/>
+  <circle cx="465" cy="230" r="3" fill="#D4B89A" opacity="0.5"/>
+  <circle cx="495" cy="260" r="2.5" fill="#D4B89A" opacity="0.5"/>
+  <circle cx="515" cy="290" r="3" fill="#D4B89A" opacity="0.5"/>
+  <circle cx="475" cy="310" r="2" fill="#D4B89A" opacity="0.5"/>
+  <circle cx="505" cy="335" r="3.5" fill="#D4B89A" opacity="0.5"/>
+
+  <!-- ============================================ -->
+  <!-- LAYER 4: Revoque fino -->
+  <!-- ============================================ -->
+  <rect x="533" y="100" width="18" height="260" fill="#F0EDE8" stroke="#2D2D2D" stroke-width="1.5" rx="0"/>
+  <!-- Smooth surface hint -->
+  <line x1="535" y1="150" x2="549" y2="150" stroke="#D5D0C8" stroke-width="0.5"/>
+  <line x1="535" y1="200" x2="549" y2="200" stroke="#D5D0C8" stroke-width="0.5"/>
+  <line x1="535" y1="250" x2="549" y2="250" stroke="#D5D0C8" stroke-width="0.5"/>
+  <line x1="535" y1="300" x2="549" y2="300" stroke="#D5D0C8" stroke-width="0.5"/>
+
+  <!-- ============================================ -->
+  <!-- LAYER 5: Pintura -->
+  <!-- ============================================ -->
+  <rect x="551" y="100" width="5" height="260" fill="#7BA4DB" stroke="#2D2D2D" stroke-width="1" rx="0"/>
+
+  <!-- ============================================ -->
+  <!-- NUMBER CIRCLES (above each layer) -->
+  <!-- ============================================ -->
+  <!-- Layer 1: Ladrillo -->
+  <circle cx="285" cy="80" r="12" fill="#2D2D2D"/>
+  <text x="285" y="85" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="bold" fill="white">1</text>
+  <line x1="285" y1="92" x2="285" y2="99" stroke="#2D2D2D" stroke-width="1.5"/>
+
+  <!-- Layer 2: Salpicado -->
+  <circle cx="444" cy="80" r="12" fill="#2D2D2D"/>
+  <text x="444" y="85" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="bold" fill="white">2</text>
+  <line x1="444" y1="92" x2="444" y2="99" stroke="#2D2D2D" stroke-width="1.5"/>
+
+  <!-- Layer 3: Revoque grueso -->
+  <circle cx="490" cy="80" r="12" fill="#2D2D2D"/>
+  <text x="490" y="85" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="bold" fill="white">3</text>
+  <line x1="490" y1="92" x2="490" y2="99" stroke="#2D2D2D" stroke-width="1.5"/>
+
+  <!-- Layer 4: Revoque fino -->
+  <circle cx="542" cy="80" r="12" fill="#2D2D2D"/>
+  <text x="542" y="85" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="bold" fill="white">4</text>
+  <line x1="542" y1="92" x2="542" y2="99" stroke="#2D2D2D" stroke-width="1.5"/>
+
+  <!-- Layer 5: Pintura -->
+  <circle cx="553" cy="80" r="12" fill="#2D2D2D"/>
+  <text x="553" y="85" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="bold" fill="white">5</text>
+  <line x1="553" y1="92" x2="553" y2="99" stroke="#2D2D2D" stroke-width="1.5"/>
+
+  <!-- ============================================ -->
+  <!-- LABELS WITH ARROWS (below) -->
+  <!-- ============================================ -->
+  <!-- Layer 1: Ladrillo cerámico hueco -->
+  <line x1="285" y1="365" x2="285" y2="410" stroke="#2D2D2D" stroke-width="1.5"/>
+  <polygon points="285,410 280,400 290,400" fill="#2D2D2D"/>
+  <text x="285" y="425" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">Ladrillo cerámico hueco</text>
+  <text x="285" y="440" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">14 cm</text>
+
+  <!-- Layer 2: Salpicado -->
+  <line x1="444" y1="365" x2="444" y2="385" stroke="#2D2D2D" stroke-width="1.5"/>
+  <polygon points="444,385 439,375 449,375" fill="#2D2D2D"/>
+  <text x="444" y="400" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">Salpicado</text>
+  <text x="444" y="415" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">3 mm</text>
+
+  <!-- Layer 3: Revoque grueso -->
+  <line x1="490" y1="365" x2="490" y2="405" stroke="#2D2D2D" stroke-width="1.5"/>
+  <polygon points="490,405 485,395 495,395" fill="#2D2D2D"/>
+  <text x="490" y="420" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">Revoque grueso</text>
+  <text x="490" y="435" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">2 cm</text>
+
+  <!-- Layer 4: Revoque fino -->
+  <line x1="542" y1="365" x2="542" y2="385" stroke="#2D2D2D" stroke-width="1.5"/>
+  <polygon points="542,385 537,375 547,375" fill="#2D2D2D"/>
+  <text x="542" y="400" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">Revoque fino</text>
+  <text x="542" y="415" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">5 mm</text>
+
+  <!-- Layer 5: Pintura -->
+  <line x1="553" y1="365" x2="553" y2="385" stroke="#2D2D2D" stroke-width="1.5"/>
+  <polygon points="553,385 548,375 558,375" fill="#2D2D2D"/>
+  <text x="553" y="400" text-anchor="middle" font-family="system-ui" font-size="11" font-weight="bold" fill="#1A1A1A">Pintura</text>
+  <text x="553" y="415" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">1 mm</text>
+
+  <!-- Footer note -->
+  <text x="400" y="440" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Corte horizontal — del muro a la superficie terminada</text>
+</svg>

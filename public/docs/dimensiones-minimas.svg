@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <text x="400" y="30" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="bold" fill="#444">Dimensiones Mínimas de Ambientes</text>
+  <!-- Dormitorio 3x3 -->
+  <rect x="30" y="60" width="210" height="210" fill="#f5e6d3" stroke="#bbb" stroke-width="2"/>
+  <text x="135" y="285" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#666">Dormitorio simple</text>
+  <text x="135" y="300" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#999">3.00 × 3.00 m</text>
+  <rect x="80" y="120" width="50" height="90" rx="4" fill="#d4c9b8" stroke="#bbb" stroke-width="1"/>
+  <text x="105" y="170" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#888">cama</text>
+  <rect x="160" y="210" width="40" height="40" rx="20" fill="#e8e0d4" stroke="#bbb" stroke-width="1"/>
+  <text x="180" y="238" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#888">WC</text>
+  <rect x="35" y="245" width="35" height="20" fill="#d4d4d4" stroke="#bbb" stroke-width="1"/>
+  <path d="M 30 60 L 30 50 L 240 50 L 240 60" fill="none" stroke="#888" stroke-width="1" marker-start="url(#arrL)" marker-end="url(#arrR)"/>
+  <text x="135" y="45" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#888">3.00 m</text>
+  <!-- Baño 2x2.5 -->
+  <rect x="290" y="60" width="140" height="175" fill="#e8f4e8" stroke="#bbb" stroke-width="2"/>
+  <text x="360" y="250" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#666">Baño</text>
+  <text x="360" y="265" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#999">2.00 × 2.50 m</text>
+  <ellipse cx="340" cy="130" rx="18" ry="18" fill="#d4d4d4" stroke="#bbb" stroke-width="1"/>
+  <text x="340" y="134" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#888">inod.</text>
+  <circle cx="310" cy="155" r="12" fill="#d4d4d4" stroke="#bbb" stroke-width="1"/>
+  <text x="310" y="159" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#888">lav.</text>
+  <rect x="380" y="70" width="35" height="35" rx="4" fill="#d4d4d4" stroke="#bbb" stroke-width="1"/>
+  <text x="397" y="90" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#888">ducha</text>
+  <path d="M 290 60 L 290 50 L 430 50 L 430 60" fill="none" stroke="#888" stroke-width="1" marker-start="url(#arrL)" marker-end="url(#arrR)"/>
+  <text x="360" y="45" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#888">2.00 m</text>
+  <!-- Cocina 3x3.5 -->
+  <rect x="480" y="60" width="210" height="245" fill="#fef9e7" stroke="#bbb" stroke-width="2"/>
+  <text x="585" y="320" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#666">Cocina</text>
+  <text x="585" y="335" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#999">3.00 × 3.50 m</text>
+  <rect x="485" y="65" width="200" height="30" rx="3" fill="#d4c9b8" stroke="#bbb" stroke-width="1"/>
+  <text x="585" y="84" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#888">mesada</text>
+  <rect x="510" y="100" width="40" height="40" rx="3" fill="#d4d4d4" stroke="#bbb" stroke-width="1"/>
+  <text x="530" y="123" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#888">helad.</text>
+  <rect x="600" y="100" width="50" height="40" rx="3" fill="#d4d4d4" stroke="#bbb" stroke-width="1"/>
+  <text x="625" y="123" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#888">cocina</text>
+  <path d="M 480 60 L 480 50 L 690 50 L 690 60" fill="none" stroke="#888" stroke-width="1" marker-start="url(#arrL)" marker-end="url(#arrR)"/>
+  <text x="585" y="45" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#888">3.00 m</text>
+  <defs>
+    <marker id="arrL" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 10 0 L 0 5 L 10 10" fill="none" stroke="#888" stroke-width="1"/></marker>
+    <marker id="arrR" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10" fill="none" stroke="#888" stroke-width="1"/></marker>
+  </defs>
+</svg>

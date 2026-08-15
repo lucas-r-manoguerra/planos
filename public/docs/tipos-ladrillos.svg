@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <rect width="800" height="600" fill="#FAF9F6" rx="8"/>
+  <text x="400" y="30" text-anchor="middle" font-family="system-ui" font-size="16" font-weight="bold" fill="#1A1A1A">Tipos de Ladrillos</text>
+
+  <!-- ============================================ -->
+  <!-- CARD 1: Cerámico Hueco -->
+  <!-- ============================================ -->
+  <rect x="25" y="55" width="240" height="220" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="1.5" rx="6"/>
+  <text x="145" y="80" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="bold" fill="#1A1A1A">Cerámico Hueco</text>
+
+  <!-- Isometric brick -->
+  <!-- Top face -->
+  <polygon points="60,100 220,100 240,115 80,115" fill="#D4896A" stroke="#2D2D2D" stroke-width="1.5"/>
+  <!-- Holes on top face -->
+  <rect x="95" y="103" width="12" height="10" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="1" rx="1"/>
+  <rect x="120" y="103" width="12" height="10" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="1" rx="1"/>
+  <rect x="145" y="103" width="12" height="10" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="1" rx="1"/>
+  <rect x="170" y="103" width="12" height="10" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="1" rx="1"/>
+  <!-- Front face -->
+  <rect x="60" y="115" width="180" height="40" fill="#C17A57" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <!-- Right side -->
+  <polygon points="240,115 260,130 260,170 240,155" fill="#A85D3A" stroke="#2D2D2D" stroke-width="1.5"/>
+
+  <text x="145" y="180" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">29 × 14 × 9 cm</text>
+  <text x="145" y="198" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Muros divisorios</text>
+  <text x="145" y="214" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Carga ligera</text>
+
+  <!-- ============================================ -->
+  <!-- CARD 2: Cerámico Macizo -->
+  <!-- ============================================ -->
+  <rect x="280" y="55" width="240" height="220" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="1.5" rx="6"/>
+  <text x="400" y="80" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="bold" fill="#1A1A1A">Cerámico Macizo</text>
+
+  <!-- Top face (solid, no holes) -->
+  <polygon points="315,100 475,100 495,115 335,115" fill="#C17A57" stroke="#2D2D2D" stroke-width="1.5"/>
+  <!-- Front face -->
+  <rect x="315" y="115" width="180" height="40" fill="#B86545" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <!-- Right side -->
+  <polygon points="495,115 515,130 515,170 495,155" fill="#9C4A2E" stroke="#2D2D2D" stroke-width="1.5"/>
+
+  <text x="400" y="180" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">29 × 14 × 5 cm</text>
+  <text x="400" y="198" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Muros de carga</text>
+
+  <!-- ============================================ -->
+  <!-- CARD 3: Bloque Hormigón -->
+  <!-- ============================================ -->
+  <rect x="535" y="55" width="240" height="220" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="1.5" rx="6"/>
+  <text x="655" y="80" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="bold" fill="#1A1A1A">Bloque Hormigón</text>
+
+  <!-- Top face -->
+  <polygon points="570,100 760,100 780,115 590,115" fill="#A09A91" stroke="#2D2D2D" stroke-width="1.5"/>
+  <!-- Large holes on top -->
+  <rect x="605" y="103" width="25" height="10" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="1" rx="1"/>
+  <rect x="660" y="103" width="25" height="10" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="1" rx="1"/>
+  <rect x="715" y="103" width="25" height="10" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="1" rx="1"/>
+  <!-- Front face -->
+  <rect x="570" y="115" width="210" height="45" fill="#9C8E7B" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <!-- Right side -->
+  <polygon points="780,115 800,130 800,175 780,160" fill="#7A6D5C" stroke="#2D2D2D" stroke-width="1.5"/>
+
+  <text x="655" y="185" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">39 × 19 × 14 cm</text>
+  <text x="655" y="203" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Muros estructurales</text>
+
+  <!-- ============================================ -->
+  <!-- CARD 4: Ladrillo Visto -->
+  <!-- ============================================ -->
+  <rect x="25" y="310" width="240" height="220" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="1.5" rx="6"/>
+  <text x="145" y="335" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="bold" fill="#1A1A1A">Ladrillo Visto</text>
+
+  <!-- Top face -->
+  <polygon points="60,355 220,355 240,370 80,370" fill="#DBA37E" stroke="#2D2D2D" stroke-width="1.5"/>
+  <!-- Holes similar to hueco -->
+  <rect x="95" y="358" width="12" height="10" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="1" rx="1"/>
+  <rect x="120" y="358" width="12" height="10" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="1" rx="1"/>
+  <rect x="145" y="358" width="12" height="10" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="1" rx="1"/>
+  <rect x="170" y="358" width="12" height="10" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="1" rx="1"/>
+  <!-- Front face with texture dots -->
+  <rect x="60" y="370" width="180" height="40" fill="#D4896A" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <circle cx="90" cy="380" r="1.5" fill="#B86545" opacity="0.5"/>
+  <circle cx="110" cy="385" r="1" fill="#B86545" opacity="0.5"/>
+  <circle cx="140" cy="378" r="1.5" fill="#B86545" opacity="0.5"/>
+  <circle cx="170" cy="390" r="1" fill="#B86545" opacity="0.5"/>
+  <circle cx="200" cy="382" r="1.5" fill="#B86545" opacity="0.5"/>
+  <circle cx="120" cy="395" r="1" fill="#B86545" opacity="0.5"/>
+  <circle cx="180" cy="398" r="1.5" fill="#B86545" opacity="0.5"/>
+  <circle cx="80" cy="400" r="1" fill="#B86545" opacity="0.5"/>
+  <circle cx="220" cy="392" r="1" fill="#B86545" opacity="0.5"/>
+  <!-- Right side -->
+  <polygon points="240,370 260,385 260,425 240,410" fill="#B86545" stroke="#2D2D2D" stroke-width="1.5"/>
+
+  <text x="145" y="435" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">29 × 14 × 9 cm</text>
+  <text x="145" y="453" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Fachadas sin revoque</text>
+
+  <!-- ============================================ -->
+  <!-- CARD 5: Ladrillo Refractario -->
+  <!-- ============================================ -->
+  <rect x="280" y="310" width="240" height="220" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="1.5" rx="6"/>
+  <text x="400" y="335" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="bold" fill="#1A1A1A">Ladrillo Refractario</text>
+
+  <!-- Top face -->
+  <polygon points="315,355 475,355 495,370 335,370" fill="#F0D898" stroke="#2D2D2D" stroke-width="1.5"/>
+  <!-- Small impression / texture -->
+  <rect x="360" y="358" width="20" height="10" fill="#E8C87A" stroke="none" rx="1"/>
+  <rect x="410" y="358" width="20" height="10" fill="#E8C87A" stroke="none" rx="1"/>
+  <!-- Front face -->
+  <rect x="315" y="370" width="180" height="35" fill="#E8C87A" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <!-- Right side -->
+  <polygon points="495,370 515,385 515,420 495,405" fill="#D4B050" stroke="#2D2D2D" stroke-width="1.5"/>
+
+  <text x="400" y="430" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">23 × 11 × 6 cm</text>
+  <text x="400" y="448" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Hornos, parrillas</text>
+  <text x="400" y="464" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Chimeneas</text>
+
+  <!-- ============================================ -->
+  <!-- CARD 6: Bloque Vidrio -->
+  <!-- ============================================ -->
+  <rect x="535" y="310" width="240" height="220" fill="#F5F3EF" stroke="#2D2D2D" stroke-width="1.5" rx="6"/>
+  <text x="655" y="335" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="bold" fill="#1A1A1A">Bloque Vidrio</text>
+
+  <!-- Top face (square-ish) -->
+  <polygon points="580,355 720,355 740,370 600,370" fill="#C8E8F0" stroke="#2D2D2D" stroke-width="1.5"/>
+  <!-- Front face (square) -->
+  <rect x="580" y="370" width="140" height="40" fill="#A8D8E8" stroke="#2D2D2D" stroke-width="1.5" rx="1"/>
+  <!-- Reinforcement lines -->
+  <line x1="595" y1="370" x2="595" y2="410" stroke="#7BA4DB" stroke-width="1.5"/>
+  <line x1="705" y1="370" x2="705" y2="410" stroke="#7BA4DB" stroke-width="1.5"/>
+  <line x1="580" y1="385" x2="720" y2="385" stroke="#7BA4DB" stroke-width="1.5"/>
+  <line x1="580" y1="395" x2="720" y2="395" stroke="#7BA4DB" stroke-width="1.5"/>
+  <!-- Right side -->
+  <polygon points="720,370 740,385 740,425 720,410" fill="#7BA4DB" stroke="#2D2D2D" stroke-width="1.5"/>
+
+  <text x="655" y="435" text-anchor="middle" font-family="system-ui" font-size="10" fill="#2D2D2D">19 × 19 × 8 cm</text>
+  <text x="655" y="453" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Iluminación natural</text>
+
+  <!-- Footer note -->
+  <text x="400" y="555" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Vista isométrica simplificada — cara superior, frontal y lateral</text>
+  <text x="400" y="572" text-anchor="middle" font-family="system-ui" font-size="10" fill="#6B6B6B">Dimensiones medidas ≈ Largo × Ancho × Alto</text>
+</svg>

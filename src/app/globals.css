@@ -244,3 +244,25 @@ button, a, [role="button"], input, select {
 .dark .docs-container .hljs-selector-id,
 .dark .docs-container .hljs-selector-class,
 .dark .docs-container .hljs-meta { color: #e58a8a; }
+
+/* ========== Skip link (a11y) ==========
+   Enlace "Saltar al contenido principal": fuera de pantalla hasta recibir
+   foco por teclado (tab). Luego de saltar, #main-content recibe el foco y
+   se puede seguir navegando sin repetir la navegación. */
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 1rem;
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 0 0 6px 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: top 0.15s ease-in-out;
+}
+
+.skip-link:focus-visible {
+  top: 0;
+}

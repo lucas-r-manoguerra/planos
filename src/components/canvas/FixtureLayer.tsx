@@ -14,7 +14,7 @@ import { useFixtureStore } from "@/stores/fixtures.store";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useSelectionStore } from "@/stores/selection.store";
 import { useContextMenuStore } from "@/stores/context-menu.store";
-import { usePanelStore } from "@/stores/panel.store";
+import { usePanelStore, type PanelType } from "@/stores/panel.store";
 import { useHistoryStore } from "@/stores/history.store";
 import Konva from "konva";
 import { Fixture } from "@/types/plan";
@@ -73,11 +73,18 @@ const FixtureRect = memo(function FixtureRect({ fixture }: { fixture: Fixture })
     e.evt.stopPropagation();
     select(fixture.id);
 
+    const panelType: PanelType =
+      fixture.category === "door" || fixture.category === "window"
+        ? "opening"
+        : fixture.category === "stair"
+          ? "stair"
+          : "fixture";
+
     show(e.evt.clientX, e.evt.clientY, [
       {
         label: "Propiedades",
         icon: "⚙️",
-        action: () => openPanel(fixture.id, e.evt.clientX + 10, e.evt.clientY + 10, "fixture"),
+        action: () => openPanel(panelType, fixture.id),
       },
       { label: "", divider: true },
       {

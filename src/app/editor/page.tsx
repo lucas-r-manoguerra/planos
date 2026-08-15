@@ -45,20 +45,12 @@ export default function EditorPage() {
         { label: `${room.label}`, disabled: true },
         {
           label: "Propiedades",
-          action: () => {
-            const panelStore = usePanelStore.getState();
-            panelStore.openPanel(room.id, clientX + 10, clientY + 10);
-          },
+          action: () => usePanelStore.getState().openPanel("room", room.id),
         },
         { label: "", divider: true },
         {
           label: "Renombrar",
-          action: () => {
-            const { floors, activeFloorId } = useFloorsStore.getState();
-            const floor = floors.find((f) => f.id === activeFloorId);
-            const roomData = floor?.rooms.find((r) => r.id === room.id);
-            usePanelStore.getState().openPanel(room.id, roomData?.x ?? 100, roomData?.y ?? 100);
-          },
+          action: () => usePanelStore.getState().openPanel("room", room.id),
         },
         {
           label: "Cambiar color",
@@ -81,12 +73,7 @@ export default function EditorPage() {
         { label: "", divider: true },
         {
           label: "Editar dimensiones",
-          action: () => {
-            const { floors, activeFloorId } = useFloorsStore.getState();
-            const floor = floors.find((f) => f.id === activeFloorId);
-            const roomData = floor?.rooms.find((r) => r.id === room.id);
-            usePanelStore.getState().openPanel(room.id, roomData?.x ?? 100, roomData?.y ?? 100);
-          },
+          action: () => usePanelStore.getState().openPanel("room", room.id),
         },
         { label: "", divider: true },
         {
@@ -189,7 +176,7 @@ export default function EditorPage() {
 
   return (
     <ErrorBoundary label="Editor">
-      <div className="flex flex-col h-screen">
+      <div id="main-content" tabIndex={-1} className="flex flex-col h-screen outline-none focus:outline-none">
         <FirstRunHint />
         <Toolbar />
         <div className="flex flex-1 overflow-hidden">

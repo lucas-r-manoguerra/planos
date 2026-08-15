@@ -30,6 +30,9 @@ export default function RootLayout({
     <html lang="es" suppressHydrationWarning>
       <body style={{ background: "var(--background)", color: "var(--foreground)" }}>
         <script dangerouslySetInnerHTML={{ __html: noFlashScript }} />
+        <a href="#main-content" className="skip-link">
+          Saltar al contenido principal
+        </a>
         <ThemeProvider>
           <ContextMenuProvider>
             {children}

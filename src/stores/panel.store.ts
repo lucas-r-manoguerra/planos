@@ -1,45 +1,39 @@
 /**
- * Tienda de estado para el panel flotante de propiedades
+ * Tienda de estado para el panel modal de propiedades
  *
- * Maneja: visibilidad, posición, dimensiones, y el elemento seleccionado
- * Soporta habitaciones (roomId) y fixtures (fixtureId)
+ * Maneja visibilidad y el elemento seleccionado. El panel es un modal
+ * centrado (accesibilidad a11y-4): ya no es un panel flotante arrastrable.
+ * Los tipos se derivan del elemento:
+ *   - "room": habitación
+ *   - "fixture": muebles, plantas, baño, vehículos
+ *   - "opening": puertas y ventanas
+ *   - "stair": escaleras
  */
 
 import { create } from "zustand";
 
+export type PanelType = "room" | "fixture" | "opening" | "stair";
+
 interface PanelStore {
   isOpen: boolean;
-  roomId: string | null;
-  fixtureId: string | null;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+  type: PanelType | null;
+  elementId: string | null;
 
-  openPanel: (id: string, x?: number, y?: number, type?: "room" | "fixture") => void;
+  openPanel: (type: PanelType, id: string) => void;
   closePanel: () => void;
-  setPosition: (x: number, y: number) => void;
 }
 
 export const usePanelStore = create<PanelStore>((set) => ({
   isOpen: false,
-  roomId: null,
-  fixtureId: null,
-  x: 300,
-  y: 100,
-  width: 320,
-  height: 400,
+  type: null,
+  elementId: null,
 
-  openPanel: (id, x, y, type = "room") =>
+  openPanel: (type, id) =>
     set({
       isOpen: true,
-      roomId: type === "room" ? id : null,
-      fixtureId: type === "fixture" ? id : null,
-      x: x ?? 300,
-      y: y ?? 100,
+      type,
+      elementId: id,
     }),
 
-  closePanel: () => set({ isOpen: false, roomId: null, fixtureId: null }),
-
-  setPosition: (x, y) => set({ x, y }),
+  closePanel: () => set({ isOpen: false, type: null, elementId: null }),
 }));

@@ -19,7 +19,11 @@ export default function DocsLayout({
   return (
     <div className="flex h-screen">
       <DocsSidebar categories={categories} allDocs={allDocs} />
-      <main className="flex-1 overflow-y-auto docs-container">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="flex-1 overflow-y-auto docs-container outline-none focus:outline-none"
+      >
         <div className="max-w-4xl mx-auto px-8 py-10">
           <ErrorBoundary label="Documentación">{children}</ErrorBoundary>
         </div>

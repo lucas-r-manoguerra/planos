@@ -48,9 +48,10 @@ export function DocsSidebar({ categories, allDocs }: DocsSidebarProps) {
             <ThemeToggle />
           </div>
       </div>
-      <nav className="flex-1 overflow-y-auto py-2">
+      <nav className="flex-1 overflow-y-auto py-2" aria-label="Documentación">
         <Link
           href="/docs"
+          aria-current={pathname === "/docs" ? "page" : undefined}
           className={`block px-4 py-2 text-sm transition-colors ${
             pathname === "/docs"
               ? "font-medium border-r-2"
@@ -78,6 +79,7 @@ export function DocsSidebar({ categories, allDocs }: DocsSidebarProps) {
                 <Link
                   key={doc.slug}
                   href={href}
+                  aria-current={isActive ? "page" : undefined}
                   className={`block px-4 py-2 text-sm transition-colors ${isActive ? "font-medium border-r-2" : "hover:opacity-80"}`}
                   style={{
                     color: isActive ? "var(--accent)" : "var(--foreground)",

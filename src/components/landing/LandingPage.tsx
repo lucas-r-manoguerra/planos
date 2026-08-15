@@ -32,7 +32,11 @@ const FEATURES = [
 
 export function LandingPage() {
   return (
-    <main className="min-h-screen flex flex-col bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100">
+    <main
+      id="main-content"
+      tabIndex={-1}
+      className="min-h-screen flex flex-col bg-white outline-none focus:outline-none dark:bg-gray-950 text-gray-900 dark:text-gray-100"
+    >
       {/* Header */}
       <header className="border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">

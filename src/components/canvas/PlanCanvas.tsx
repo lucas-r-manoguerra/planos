@@ -54,6 +54,12 @@ export function PlanCanvas() {
     return () => window.removeEventListener("resize", updateSize);
   }, []);
 
+  // Exponer el Stage de Konva al store para la exportación PNG
+  useEffect(() => {
+    useCanvasStore.setState({ stageRef: stageRef.current });
+    return () => useCanvasStore.setState({ stageRef: null });
+  }, []);
+
   // Cancelar modo colocación con Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

@@ -6,6 +6,7 @@
  */
 
 import { create } from "zustand";
+import type Konva from "konva";
 import { CanvasState } from "@/types/plan";
 import { DEFAULT_GRID_SIZE, ZOOM_MIN, ZOOM_MAX } from "@/lib/constants";
 import { clamp } from "@/lib/utils";
@@ -22,6 +23,9 @@ const initialState: CanvasState = {
 
 // Interfaz de la tienda con acciones
 interface CanvasStore extends CanvasState {
+  /** Referencia al Stage de Konva montado (lo setea PlanCanvas); se usa para exportar PNG */
+  stageRef: Konva.Stage | null;
+  setStageRef: (stage: Konva.Stage | null) => void;
   setZoom: (zoom: number) => void;
   smoothZoom: (targetZoom: number) => void;
   setPan: (x: number, y: number) => void;
@@ -35,6 +39,10 @@ let zoomAnimationId: number | null = null;
 // Crear tienda de Zustand
 export const useCanvasStore = create<CanvasStore>((set, get) => ({
   ...initialState,
+  stageRef: null,
+
+  // Registrar el Stage de Konva (null al desmontar)
+  setStageRef: (stageRef) => set({ stageRef }),
 
   // Actualizar nivel de zoom (limitado entre ZOOM_MIN y ZOOM_MAX)
   setZoom: (zoom) =>

@@ -4,11 +4,12 @@ import { useCallback, useRef } from "react";
 import { useSunStore } from "@/stores/sun.store";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { useHistoryStore } from "@/stores/history.store";
+import { COMPASS_SIZE, COMPASS_ROSE_RADIUS } from "@/lib/compass";
 import { useCanvasColors } from "./canvas-colors";
 
-const SIZE = 120;
+const SIZE = COMPASS_SIZE;
 const CENTER = SIZE / 2;
-const ROSE_RADIUS = 42;
+const ROSE_RADIUS = COMPASS_ROSE_RADIUS;
 
 export function CompassOverlay() {
   const { enabled } = useSunStore();

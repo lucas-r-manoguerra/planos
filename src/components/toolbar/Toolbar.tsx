@@ -6,12 +6,14 @@
 
 "use client";
 
+import { useState } from "react";
 import { useCanvasStore } from "@/stores/canvas.store";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { useSelectionStore } from "@/stores/selection.store";
 import { useHistoryStore } from "@/stores/history.store";
 import { useRulerStore } from "@/stores/ruler.store";
 import { applyHistoryEntry } from "@/hooks/useEditorShortcuts";
+import { ExportDialog } from "@/components/panel/ExportDialog";
 import { ZOOM_MIN, ZOOM_MAX } from "@/lib/constants";
 import {
   ZoomIn,
@@ -33,6 +35,8 @@ export function Toolbar() {
   const { undo, redo, canUndo, canRedo } = useHistoryStore();
   const { active: rulerActive, activate, deactivate, clearMeasurements, measurements } = useRulerStore();
   const { enabled: sunEnabled, setEnabled: setSunEnabled } = useSunStore();
+
+  const [showExport, setShowExport] = useState(false);
 
   const handleZoomIn = () => setZoom(Math.min(zoom * 1.2, ZOOM_MAX));
   const handleZoomOut = () => setZoom(Math.max(zoom / 1.2, ZOOM_MIN));
@@ -57,13 +61,7 @@ export function Toolbar() {
   };
 
   const handleExportPNG = () => {
-    const stage = document.querySelector("canvas");
-    if (stage) {
-      const link = document.createElement("a");
-      link.download = "plano.png";
-      link.href = stage.toDataURL();
-      link.click();
-    }
+    setShowExport(true);
   };
 
   return (
@@ -171,6 +169,9 @@ export function Toolbar() {
           <span className="text-xs">PNG</span>
         </button>
       </div>
+
+      {/* Diálogo de exportación */}
+      {showExport && <ExportDialog open={showExport} onClose={() => setShowExport(false)} />}
     </div>
   );
 }

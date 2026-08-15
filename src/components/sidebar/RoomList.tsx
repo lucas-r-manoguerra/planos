@@ -86,7 +86,7 @@ export function RoomList() {
                   e.stopPropagation();
                   removeRoom(room.id);
                 }}
-                className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-opacity"
+                className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 aria-label={`Eliminar habitación ${room.label}`}
               >
                 <Trash2 size={14} />

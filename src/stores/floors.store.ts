@@ -84,6 +84,7 @@ interface FloorStore {
   setRoomSnap: (id: string, enabled: boolean) => void;
   duplicateRoom: (id: string) => void;
   updateRoomDimensions: (id: string, width: number, height: number) => void;
+  updateRoomGeometry: (id: string, x: number, y: number, width: number, height: number) => void;
   setRoomWallWidth: (id: string, width: number) => void;
   setRoomEnclosed: (id: string, enclosed: boolean) => void;
 
@@ -387,6 +388,23 @@ export const useFloorsStore = create<FloorStore>((set, get) => {
                   ...f,
                   rooms: f.rooms.map((r) =>
                     r.id === id ? { ...r, width, height } : r
+                  ),
+                }
+              : f
+          ),
+        };
+      }),
+
+    updateRoomGeometry: (id, x, y, width, height) =>
+      set((state) => {
+        recordHistory();
+        return {
+          floors: state.floors.map((f) =>
+            f.id === state.activeFloorId
+              ? {
+                  ...f,
+                  rooms: f.rooms.map((r) =>
+                    r.id === id ? { ...r, x, y, width, height } : r
                   ),
                 }
               : f

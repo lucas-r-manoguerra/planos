@@ -13,6 +13,7 @@ import { useSunStore } from "@/stores/sun.store";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 export function SunSettings() {
   const [isOpen, setIsOpen] = useState(true);
@@ -65,28 +66,21 @@ export function SunSettings() {
 
       {isOpen && (
         <div className="space-y-4">
-          {/* Botón activar/desactivar */}
-          <button
-            onClick={() => setEnabled(!enabled)}
-            className={`w-full flex items-center justify-between px-3 py-2 rounded-md border transition-colors ${
+          {/* Activar/desactivar simulación */}
+          <div
+            className={`flex w-full items-center justify-between px-3 py-2 rounded-md border transition-colors ${
               enabled
                 ? "bg-amber-50 border-amber-200 text-amber-700"
                 : "bg-gray-50 border-gray-200 text-gray-500"
             }`}
           >
             <span className="text-sm">{enabled ? "Activo" : "Inactivo"}</span>
-            <div
-              className={`w-9 h-5 rounded-full transition-colors relative ${
-                enabled ? "bg-amber-500" : "bg-gray-300"
-              }`}
-            >
-              <div
-                className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${
-                  enabled ? "translate-x-4" : "translate-x-0.5"
-                }`}
-              />
-            </div>
-          </button>
+            <Switch
+              checked={enabled}
+              onCheckedChange={setEnabled}
+              label="Activar simulación solar"
+            />
+          </div>
 
           {enabled && (
             <>

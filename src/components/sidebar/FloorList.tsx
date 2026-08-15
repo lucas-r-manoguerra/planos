@@ -205,20 +205,18 @@ export function FloorList() {
                 {floors.length > 1 && (
                   <div className="flex flex-col -space-y-0.5">
                     <button
-                      onMouseDown={(e) => handleMoveUp(e, floor.id)}
+                      onClick={(e) => handleMoveUp(e, floor.id)}
                       disabled={index === 0}
                       className={`p-0.5 rounded ${index === 0 ? "text-gray-200 cursor-not-allowed" : "text-gray-400 hover:text-gray-600 hover:bg-gray-100"}`}
                       aria-label={`Mover ${floor.name} arriba`}
-                      tabIndex={-1}
                     >
                       <ChevronUp size={12} />
                     </button>
                     <button
-                      onMouseDown={(e) => handleMoveDown(e, floor.id)}
+                      onClick={(e) => handleMoveDown(e, floor.id)}
                       disabled={index === floors.length - 1}
                       className={`p-0.5 rounded ${index === floors.length - 1 ? "text-gray-200 cursor-not-allowed" : "text-gray-400 hover:text-gray-600 hover:bg-gray-100"}`}
                       aria-label={`Mover ${floor.name} abajo`}
-                      tabIndex={-1}
                     >
                       <ChevronDown size={12} />
                     </button>
@@ -228,10 +226,9 @@ export function FloorList() {
                 {/* Eliminar */}
                 {floors.length > 1 && (
                   <button
-                    onMouseDown={(e) => handleDelete(e, floor.id)}
+                    onClick={(e) => handleDelete(e, floor.id)}
                     className="p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
                     aria-label={`Eliminar planta ${floor.name}`}
-                    tabIndex={-1}
                   >
                     <Trash2 size={13} />
                   </button>

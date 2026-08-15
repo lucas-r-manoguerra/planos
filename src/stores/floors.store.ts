@@ -9,6 +9,7 @@ import { create } from "zustand";
 import { Floor, Room } from "@/types/plan";
 import { generateId, snapToGrid, clampPosition, applyWallMergeSnap } from "@/lib/utils";
 import { SNAP_THRESHOLD } from "@/lib/constants";
+import { cascadeOpenings } from "@/lib/walls";
 import { useHistoryStore } from "@/stores/history.store";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { useFixtureStore } from "@/stores/fixtures.store";
@@ -209,17 +210,39 @@ export const useFloorsStore = create<FloorStore>((set, get) => {
         };
       }),
 
-    removeRoom: (id) =>
-      set((state) => {
-        recordHistory();
-        return {
-          floors: state.floors.map((f) =>
-            f.id === state.activeFloorId
-              ? { ...f, rooms: f.rooms.filter((r) => r.id !== id) }
-              : f
-          ),
-        };
-      }),
+    removeRoom: (id) => {
+      const state = get();
+      const activeFloor = state.floors.find(
+        (f) => f.id === state.activeFloorId
+      );
+      if (!activeFloor) return;
+      const removed = activeFloor.rooms.find((r) => r.id === id);
+      if (!removed) return;
+
+      const remainingRooms = activeFloor.rooms.filter((r) => r.id !== id);
+
+      // Historial ANTES de mutar: deshacer debe restaurar la habitación
+      // con sus aberturas originales.
+      recordHistory();
+
+      // Cascada de aberturas ancladas a las paredes de la habitación
+      // eliminada: se reasignan a la habitación vecina que comparte la
+      // pared, o se descartan si quedan huérfanas (spec cascade-1/2).
+      const { fixtures } = useFixtureStore.getState();
+      const { fixtures: updatedFixtures } = cascadeOpenings(
+        removed,
+        id,
+        fixtures,
+        remainingRooms
+      );
+      useFixtureStore.setState({ fixtures: updatedFixtures });
+
+      set({
+        floors: state.floors.map((f) =>
+          f.id === state.activeFloorId ? { ...f, rooms: remainingRooms } : f
+        ),
+      });
+    },
 
     moveRoom: (id, x, y) =>
       set((state) => {

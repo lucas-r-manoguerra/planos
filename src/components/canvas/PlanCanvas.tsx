@@ -260,7 +260,7 @@ export function PlanCanvas() {
       >
         {/* Una Layer por dominio: cada capa redibuja solo lo que le corresponde */}
         <Layer>
-          <GridLayer />
+          <GridLayer viewportWidth={size.width} viewportHeight={size.height} />
         </Layer>
         <Layer>
           <TerrainLayer />

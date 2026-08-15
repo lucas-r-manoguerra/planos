@@ -93,7 +93,7 @@ export async function MDXContent({ source }: { source: string }) {
     options: {
       mdxOptions: {
         remarkPlugins: [remarkGfm],
-        rehypePlugins: [rehypeHighlight({ detect: true }), rehypeDocHeadings],
+        rehypePlugins: [[rehypeHighlight, { detect: true }], rehypeDocHeadings],
       },
     },
   });

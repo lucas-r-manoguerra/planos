@@ -9,6 +9,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ContextMenuProvider } from "@/components/context-menu/ContextMenuProvider";
 import { PanelProvider } from "@/components/panel/PanelProvider";
+import { Toaster } from "@/components/feedback/Toaster";
 import { THEME_STORAGE_KEY } from "@/lib/theme";
 
 export const metadata: Metadata = {
@@ -33,6 +34,7 @@ export default function RootLayout({
           <ContextMenuProvider>
             {children}
             <PanelProvider />
+            <Toaster />
           </ContextMenuProvider>
         </ThemeProvider>
       </body>

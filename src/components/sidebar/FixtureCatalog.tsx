@@ -9,7 +9,9 @@
 
 import { useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import { useShallow } from "zustand/react/shallow";
 import { useFixtureStore } from "@/stores/fixtures.store";
+import { useFloorsStore } from "@/stores/floors.store";
 import { getCatalogByCategory } from "@/lib/fixtures-catalog";
 import { FixtureCategory, FixtureSubtype } from "@/types/plan";
 
@@ -45,6 +47,10 @@ const ALL_CATEGORIES: FixtureCategory[] = [
 
 export function FixtureCatalog() {
   const { placingFixture, setPlacingFixture } = useFixtureStore();
+  const activeFloorId = useFloorsStore((s) => s.activeFloorId);
+  const placedFixtures = useFixtureStore(
+    useShallow((s) => s.getFixturesForFloor(activeFloorId))
+  );
   const [openCategories, setOpenCategories] = useState<
     Record<FixtureCategory, boolean>
   >({
@@ -71,6 +77,15 @@ export function FixtureCatalog() {
 
   return (
     <div className="space-y-1">
+      {placedFixtures.length === 0 && (
+        <div className="mx-1 mb-2 rounded-md border border-dashed border-gray-300 bg-gray-50 p-2 text-center dark:border-gray-700 dark:bg-gray-800">
+          <p className="text-[10px] leading-relaxed text-gray-500 dark:text-gray-400">
+            Aún no hay muebles en esta planta. Elija un elemento del catálogo
+            para colocarlo en el plano.
+          </p>
+        </div>
+      )}
+
       {ALL_CATEGORIES.map((cat) => {
         const items = getCatalogByCategory(cat);
         const isOpen = openCategories[cat];

@@ -18,6 +18,8 @@ import { usePanelStore } from "@/stores/panel.store";
 import { useCanvasStore } from "@/stores/canvas.store";
 import { useEditorShortcuts } from "@/hooks/useEditorShortcuts";
 import { useEditorLifecycle } from "@/hooks/useEditorLifecycle";
+import { ErrorBoundary } from "@/components/feedback/ErrorBoundary";
+import { FirstRunHint } from "@/components/feedback/FirstRunHint";
 import { Room } from "@/types/plan";
 
 export default function EditorPage() {
@@ -186,12 +188,15 @@ export default function EditorPage() {
   }, [show]);
 
   return (
-    <div className="flex flex-col h-screen">
-      <Toolbar />
-      <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
-        <PlanCanvas />
+    <ErrorBoundary label="Editor">
+      <div className="flex flex-col h-screen">
+        <FirstRunHint />
+        <Toolbar />
+        <div className="flex flex-1 overflow-hidden">
+          <Sidebar />
+          <PlanCanvas />
+        </div>
       </div>
-    </div>
+    </ErrorBoundary>
   );
 }

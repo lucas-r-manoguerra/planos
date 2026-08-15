@@ -13,6 +13,7 @@ import { exportPlanPNG, ExportScale } from "@/lib/export";
 import { useCanvasStore } from "@/stores/canvas.store";
 import { useSunStore } from "@/stores/sun.store";
 import { useTerrainStore } from "@/stores/rooms.store";
+import { useToastStore } from "@/stores/toast.store";
 import { useCanvasColors } from "@/components/canvas/canvas-colors";
 
 const SCALES: ExportScale[] = [1, 2, 4];
@@ -23,6 +24,7 @@ export function ExportDialog({ open, onClose }: { open: boolean; onClose: () => 
   const { enabled: sunEnabled } = useSunStore();
   const { terrain } = useTerrainStore();
   const colors = useCanvasColors();
+  const push = useToastStore((s) => s.push);
 
   if (!open) return null;
 
@@ -41,6 +43,7 @@ export function ExportDialog({ open, onClose }: { open: boolean; onClose: () => 
         north: "#e74c3c",
       },
     });
+    push("success", "Plano exportado como PNG");
     onClose();
   };
 

@@ -30,6 +30,12 @@ export function RoomList() {
         <p className="text-xs text-gray-400 italic py-2">
           No hay habitaciones en esta planta
         </p>
+        <button
+          onClick={() => document.getElementById("room-label")?.focus()}
+          className="rounded border border-gray-300 px-2 py-1 text-[11px] text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
+        >
+          Agregar habitación
+        </button>
       </div>
     );
   }

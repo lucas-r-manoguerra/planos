@@ -12,10 +12,12 @@
 import { Line } from "react-konva";
 import { useCanvasStore } from "@/stores/canvas.store";
 import { useTerrainStore } from "@/stores/rooms.store";
+import { useCanvasColors } from "./canvas-colors";
 
 export function GridLayer() {
   const { gridVisible, gridSize } = useCanvasStore();
   const { terrain } = useTerrainStore();
+  const { grid } = useCanvasColors();
 
   if (!gridVisible) return null;
 
@@ -30,7 +32,7 @@ export function GridLayer() {
         <Line
           key={`grid-v-${i}`}
           points={[i * gridSize, 0, i * gridSize, terrain.height]}
-          stroke="#e0e0e0"
+          stroke={grid}
           strokeWidth={1}
           opacity={0.3}
         />
@@ -41,7 +43,7 @@ export function GridLayer() {
         <Line
           key={`grid-h-${i}`}
           points={[0, i * gridSize, terrain.width, i * gridSize]}
-          stroke="#e0e0e0"
+          stroke={grid}
           strokeWidth={1}
           opacity={0.3}
         />

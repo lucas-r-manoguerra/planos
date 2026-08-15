@@ -3,6 +3,7 @@
 import { useCallback, useRef } from "react";
 import { useSunStore } from "@/stores/sun.store";
 import { useTerrainStore } from "@/stores/rooms.store";
+import { useCanvasColors } from "./canvas-colors";
 
 const SIZE = 120;
 const CENTER = SIZE / 2;
@@ -11,6 +12,7 @@ const ROSE_RADIUS = 42;
 export function CompassOverlay() {
   const { enabled } = useSunStore();
   const { terrain, setTerrainAngle } = useTerrainStore();
+  const { compassBg, compassStroke, textMuted } = useCanvasColors();
   const isDragging = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -46,9 +48,9 @@ export function CompassOverlay() {
   // Líneas cardinales
   const cardinals = [
     { label: "N", color: "#e74c3c", bold: true },
-    { label: "E", color: "#555", bold: false },
-    { label: "S", color: "#555", bold: false },
-    { label: "O", color: "#555", bold: false },
+    { label: "E", color: textMuted, bold: false },
+    { label: "S", color: textMuted, bold: false },
+    { label: "O", color: textMuted, bold: false },
   ];
 
   return (
@@ -70,8 +72,8 @@ export function CompassOverlay() {
         {/* Círculo de fondo */}
         <circle
           r={ROSE_RADIUS + 6}
-          fill="rgba(255,255,255,0.92)"
-          stroke="#ccc"
+          fill={compassBg}
+          stroke={compassStroke}
           strokeWidth={1}
         />
 
@@ -134,7 +136,7 @@ export function CompassOverlay() {
           y={ROSE_RADIUS + 18}
           textAnchor="middle"
           fontSize={10}
-          fill="#999"
+          fill={textMuted}
           fontFamily="monospace"
         >
           {angle}°

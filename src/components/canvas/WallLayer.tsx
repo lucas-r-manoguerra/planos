@@ -10,8 +10,8 @@
 import { Rect } from "react-konva";
 import { useFloorsStore } from "@/stores/floors.store";
 import { Room } from "@/types/plan";
+import { useCanvasColors } from "./canvas-colors";
 
-const WALL_COLOR = "#4a4a4a";
 const MERGE_THRESHOLD = 5; // cm — distance to consider rooms adjacent for merging
 
 interface WallSegment {
@@ -156,6 +156,7 @@ export function WallLayer() {
   const { floors, activeFloorId } = useFloorsStore();
   const activeFloor = floors.find((f) => f.id === activeFloorId);
   const rooms = activeFloor?.rooms || [];
+  const { wall: wallColor } = useCanvasColors();
 
   // Phase 1: Find all merged wall segments
   const mergedSegments: WallSegment[] = [];
@@ -176,7 +177,7 @@ export function WallLayer() {
           y={seg.y}
           width={seg.width}
           height={seg.height}
-          fill={WALL_COLOR}
+          fill={wallColor}
         />
       ))}
 
@@ -194,7 +195,7 @@ export function WallLayer() {
               y={room.y + wall.y}
               width={wall.width}
               height={wall.height}
-              fill={WALL_COLOR}
+              fill={wallColor}
             />
           );
         });

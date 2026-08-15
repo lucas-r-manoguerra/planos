@@ -4,9 +4,11 @@ import { Rect, Text, Image as KonvaImage, Line } from "react-konva";
 import { useEffect, useState } from "react";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { cmToDisplay } from "@/lib/utils";
+import { useCanvasColors } from "./canvas-colors";
 
 export function TerrainLayer() {
   const { terrain } = useTerrainStore();
+  const { terrainStroke, textMuted } = useCanvasColors();
   const [image, setImage] = useState<HTMLImageElement | null>(null);
 
   useEffect(() => {
@@ -43,7 +45,7 @@ export function TerrainLayer() {
         width={terrain.width}
         height={terrain.height}
         fill={terrain.backgroundImage ? undefined : terrain.color}
-        stroke="#333333"
+        stroke={terrainStroke}
         strokeWidth={2}
         onContextMenu={(e) => {
           e.evt.preventDefault();
@@ -85,7 +87,7 @@ export function TerrainLayer() {
         y={-30}
         text={cmToDisplay(terrain.width)}
         fontSize={14}
-        fill="#333333"
+        fill={textMuted}
         width={100}
         align="center"
       />
@@ -95,7 +97,7 @@ export function TerrainLayer() {
         y={terrain.height / 2 - 10}
         text={cmToDisplay(terrain.height)}
         fontSize={14}
-        fill="#333333"
+        fill={textMuted}
         width={50}
         align="center"
       />

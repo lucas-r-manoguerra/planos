@@ -15,12 +15,14 @@ import { useSelectionStore } from "@/stores/selection.store";
 import { Room } from "@/types/plan";
 import { formatDimensions } from "@/lib/utils";
 import { ROOM_COLORS } from "@/lib/constants";
+import { useCanvasColors } from "./canvas-colors";
 
 const draggedRoomIdRef = { current: null as string | null };
 
 function RoomRect({ room }: { room: Room }) {
   const { moveRoom } = useFloorsStore();
   const { selectedId, select } = useSelectionStore();
+  const { roomStroke, roomLabel, roomDim } = useCanvasColors();
   const isSelected = selectedId === room.id;
 
   const handleDragStart = (e: Konva.KonvaEventObject<DragEvent>) => {
@@ -77,13 +79,13 @@ function RoomRect({ room }: { room: Room }) {
         height={room.height}
         fill={room.color || ROOM_COLORS[room.type]}
         opacity={room.opacity ?? 1}
-        stroke={isSelected ? "#2563eb" : "#666666"}
+        stroke={isSelected ? "#2563eb" : roomStroke}
         strokeWidth={isSelected ? 3 : 1}
       />
       <Text
         text={room.label}
         fontSize={12}
-        fill="#333333"
+        fill={roomLabel}
         width={room.width}
         align="center"
         y={room.height / 2 - 20}
@@ -91,7 +93,7 @@ function RoomRect({ room }: { room: Room }) {
       <Text
         text={formatDimensions(room.width, room.height)}
         fontSize={10}
-        fill="#666666"
+        fill={roomDim}
         width={room.width}
         align="center"
         y={room.height / 2}

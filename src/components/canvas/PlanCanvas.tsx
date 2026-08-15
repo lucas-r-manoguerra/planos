@@ -249,7 +249,7 @@ export function PlanCanvas() {
   );
 
   return (
-    <div ref={containerRef} className="flex-1 bg-gray-100 overflow-hidden relative">
+    <div ref={containerRef} className="flex-1 bg-gray-100 overflow-hidden relative dark:bg-[#16171a]">
       <Stage
         ref={stageRef}
         width={size.width}

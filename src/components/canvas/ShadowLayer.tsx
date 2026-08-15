@@ -5,8 +5,8 @@ import { useSunStore } from "@/stores/sun.store";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { computeShadowVector, computeShadowPolygon } from "@/lib/shadow";
+import { useCanvasColors } from "./canvas-colors";
 
-const SHADOW_COLOR = "rgba(0, 0, 0, 0.15)";
 const MIN_ELEVATION = 2;
 const MAX_SHADOW_LENGTH = 5000;
 
@@ -14,6 +14,7 @@ export function ShadowLayer() {
   const { enabled, floorHeight, getSunPosition } = useSunStore();
   const { floors, activeFloorId } = useFloorsStore();
   const { terrain } = useTerrainStore();
+  const { shadow, textMuted } = useCanvasColors();
 
   if (!enabled) return null;
 
@@ -85,7 +86,7 @@ export function ShadowLayer() {
           <Line
             key={`shadow-${room.id}`}
             points={points}
-            fill={SHADOW_COLOR}
+            fill={shadow}
             closed
           />
         );
@@ -97,7 +98,7 @@ export function ShadowLayer() {
         x={10}
         y={-25}
         fontSize={11}
-        fill="#666"
+        fill={textMuted}
         fontFamily="monospace"
       />
     </>

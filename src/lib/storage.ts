@@ -6,6 +6,7 @@
 
 import { Floor, Fixture, SunSettings, Terrain } from "@/types/plan";
 import { DEFAULT_SUN_SETTINGS } from "@/lib/constants";
+import { migrateProjectData } from "@/lib/migrate";
 
 interface ProjectData {
   version: number;
@@ -19,7 +20,7 @@ interface ProjectData {
 }
 
 const STORAGE_KEY = "planos-project";
-const CURRENT_VERSION = 2;
+const CURRENT_VERSION = 3;
 
 // Guardar proyecto en localStorage
 export function saveProject(
@@ -60,7 +61,8 @@ export function loadProject(): ProjectData | null {
       }
     }
 
-    return data;
+    // Migración v2 → v3: fixtures legados sin floorId → primera planta
+    return migrateProjectData(data);
   } catch {
     return null;
   }

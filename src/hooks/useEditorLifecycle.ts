@@ -16,7 +16,12 @@ import { useTerrainStore } from "@/stores/rooms.store";
 import { useSunStore } from "@/stores/sun.store";
 import { useFixtureStore } from "@/stores/fixtures.store";
 import { useHistoryStore } from "@/stores/history.store";
-import { loadProject, saveProject, ProjectData } from "@/lib/storage";
+import {
+  ensureActiveProject,
+  loadActiveProject,
+  saveActiveProject,
+  ProjectData,
+} from "@/lib/storage";
 
 const DEFAULT_SAVE_INTERVAL_MS = 30000;
 
@@ -78,16 +83,17 @@ export function useEditorLifecycle(options?: {
 }): void {
   const saveIntervalMs = options?.saveIntervalMs ?? DEFAULT_SAVE_INTERVAL_MS;
 
-  // Cargar proyecto al montar
+  // Cargar proyecto activo al montar
   useEffect(() => {
-    const saved = loadProject();
+    ensureActiveProject();
+    const saved = loadActiveProject();
     if (saved) applyProjectData(saved);
   }, []);
 
   // Autosave periódico + al cerrar la pestaña
   useEffect(() => {
     const persist = () => {
-      saveProject({ name: "Mi Plano", ...collectEditorState() });
+      saveActiveProject(collectEditorState());
     };
 
     const interval = setInterval(persist, saveIntervalMs);

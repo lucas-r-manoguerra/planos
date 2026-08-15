@@ -12,6 +12,9 @@ export const DEFAULT_TERRAIN = {
   height: 800,  // 8 metros en centímetros
 } as const;
 
+// Nombre por defecto de un proyecto nuevo (persistencia v3)
+export const DEFAULT_PROJECT_NAME = "Mi Plano";
+
 // Configuración de la grilla
 export const DEFAULT_GRID_SIZE = 10; // 10 cm entre líneas de grilla
 export const SNAP_THRESHOLD = 25;    // Umbral de snapping en centímetros

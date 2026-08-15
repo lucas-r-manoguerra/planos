@@ -9,7 +9,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ContextMenuProvider } from "@/components/context-menu/ContextMenuProvider";
 import { PanelProvider } from "@/components/panel/PanelProvider";
-import { THEME_STORAGE_KEY } from "@/lib/storage";
+import { THEME_STORAGE_KEY } from "@/lib/theme";
 
 export const metadata: Metadata = {
   title: "Planos - Editor de Planos de Construcción",

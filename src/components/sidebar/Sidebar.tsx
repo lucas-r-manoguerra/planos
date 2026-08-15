@@ -8,6 +8,7 @@
 "use client";
 
 import { FloorList } from "./FloorList";
+import { ProjectSection } from "./ProjectSection";
 import { TerrainSettings } from "./TerrainSettings";
 import { SunSettings } from "./SunSettings";
 import { TemplateList } from "./TemplateList";
@@ -38,6 +39,9 @@ export function Sidebar() {
 
       {/* Contenido con scroll */}
       <div className="flex-1 overflow-y-auto">
+        {/* Sección: Proyectos */}
+        <ProjectSection />
+
         {/* Sección: Plantas */}
         <div className="px-4 py-3 border-b border-gray-100">
           <FloorList />

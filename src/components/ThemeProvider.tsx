@@ -4,7 +4,7 @@ import { createContext, useCallback, useContext, useSyncExternalStore } from "re
 import {
   saveThemePreference,
   type ThemePreference,
-} from "@/lib/storage";
+} from "@/lib/theme";
 
 type Theme = ThemePreference;
 

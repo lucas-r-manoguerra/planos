@@ -9,6 +9,20 @@ import { Fixture, Room } from "@/types/plan";
 
 export type WallSide = NonNullable<Fixture["wallSide"]>;
 
+export interface WallSegment {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+/** Tamaño del vano: 30% del largo de la pared */
+export const GAP_RATIO = 0.3;
+/** Vano mínimo (cm) */
+export const GAP_MIN = 40;
+/** Vano máximo (cm) */
+export const GAP_MAX = 250;
+
 interface Seg {
   x1: number;
   y1: number;
@@ -134,4 +148,118 @@ export function cascadeOpenings(
     reassigned,
     removedIds,
   };
+}
+
+const ALL_SIDES: WallSide[] = ["top", "bottom", "left", "right"];
+
+function clamp(v: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, v));
+}
+
+/**
+ * ¿El lado de la habitación está completamente cubierto por una pared
+ * fusionada (compartida con una habitación adyacente)?
+ */
+function sideFullyCovered(
+  room: Room,
+  side: WallSide,
+  merged: WallSegment[]
+): boolean {
+  for (const m of merged) {
+    if (side === "top" || side === "bottom") {
+      const wallY = side === "top" ? room.y : room.y + room.height;
+      if (m.y <= wallY && wallY <= m.y + m.height) {
+        if (
+          m.x <= room.x + EPS &&
+          m.x + m.width >= room.x + room.width - EPS
+        ) {
+          return true;
+        }
+      }
+    } else {
+      const wallX = side === "left" ? room.x : room.x + room.width;
+      if (m.x <= wallX && wallX <= m.x + m.width) {
+        if (
+          m.y <= room.y + EPS &&
+          m.y + m.height >= room.y + room.height - EPS
+        ) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+/**
+ * Segmentos de pared de una habitación (coordenadas locales, cm).
+ *
+ * - Habitación encerrada: 4 paredes sólidas.
+ * - Habitación abierta (enclosed=false): cada pared libre lleva un vano
+ *   central de 30% del largo (clamp 40–250 cm) para puertas/ventanas.
+ *   Las paredes compartidas con otra habitación (fusionadas) quedan sólidas.
+ *   Si el vano excede el largo de la pared, esa pared queda totalmente abierta.
+ */
+export function getRoomWallSegments(
+  room: Room,
+  merged: WallSegment[],
+  enclosed: boolean
+): WallSegment[] {
+  const ww = room.wallWidth ?? 10;
+  if (ww <= 0) return [];
+
+  const gapSides: WallSide[] = enclosed
+    ? []
+    : ALL_SIDES.filter((side) => !sideFullyCovered(room, side, merged));
+
+  const walls: WallSegment[] = [];
+
+  for (const side of ALL_SIDES) {
+    if (gapSides.includes(side)) continue;
+
+    // Pared sólida
+    switch (side) {
+      case "top":
+        walls.push({ x: 0, y: 0, width: room.width, height: ww });
+        break;
+      case "bottom":
+        walls.push({ x: 0, y: room.height - ww, width: room.width, height: ww });
+        break;
+      case "left":
+        walls.push({ x: 0, y: 0, width: ww, height: room.height });
+        break;
+      case "right":
+        walls.push({ x: room.width - ww, y: 0, width: ww, height: room.height });
+        break;
+    }
+  }
+
+  for (const side of gapSides) {
+    const length = side === "top" || side === "bottom" ? room.width : room.height;
+    const gap = Math.min(clamp(length * GAP_RATIO, GAP_MIN, GAP_MAX), length);
+    if (gap >= length) continue; // pared totalmente abierta
+    const start = (length - gap) / 2;
+    const end = start + gap;
+
+    switch (side) {
+      case "top":
+        walls.push({ x: 0, y: 0, width: start, height: ww });
+        walls.push({ x: end, y: 0, width: length - end, height: ww });
+        break;
+      case "bottom":
+        walls.push({ x: 0, y: room.height - ww, width: start, height: ww });
+        walls.push({ x: end, y: room.height - ww, width: length - end, height: ww });
+        break;
+      case "left":
+        walls.push({ x: 0, y: 0, width: ww, height: start });
+        walls.push({ x: 0, y: end, width: ww, height: length - end });
+        break;
+      case "right":
+        walls.push({ x: room.width - ww, y: 0, width: ww, height: start });
+        walls.push({ x: room.width - ww, y: end, width: ww, height: length - end });
+        break;
+    }
+  }
+
+  return walls;
 }

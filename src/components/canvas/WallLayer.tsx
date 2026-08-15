@@ -11,6 +11,7 @@ import { memo } from "react";
 import { Rect, Line } from "react-konva";
 import { useFloorsStore } from "@/stores/floors.store";
 import { Room } from "@/types/plan";
+import { getRoomWallSegments, WallSegment } from "@/lib/walls";
 import { useCanvasColors } from "./canvas-colors";
 
 const MERGE_THRESHOLD = 5; // cm — distance to consider rooms adjacent for merging
@@ -22,13 +23,6 @@ export interface WallPreview {
   y: number;
   offset: number;
   wallLength: number;
-}
-
-interface WallSegment {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
 }
 
 /**
@@ -113,27 +107,6 @@ function findMergedWalls(roomA: Room, roomB: Room): WallSegment[] {
 }
 
 /**
- * Generates individual wall rectangles for a single room (non-merged walls).
- */
-function getRoomWalls(room: Room): WallSegment[] {
-  const ww = room.wallWidth ?? 10;
-  if (ww <= 0) return [];
-
-  const walls: WallSegment[] = [];
-
-  // Top wall
-  walls.push({ x: 0, y: 0, width: room.width, height: ww });
-  // Bottom wall
-  walls.push({ x: 0, y: room.height - ww, width: room.width, height: ww });
-  // Left wall
-  walls.push({ x: 0, y: 0, width: ww, height: room.height });
-  // Right wall
-  walls.push({ x: room.width - ww, y: 0, width: ww, height: room.height });
-
-  return walls;
-}
-
-/**
  * Checks if a wall segment is covered by a merged wall.
  */
 function isCovered(
@@ -198,7 +171,11 @@ export const WallLayer = memo(function WallLayer({
 
       {/* Individual room walls */}
       {rooms.map((room) => {
-        const walls = getRoomWalls(room);
+        const walls = getRoomWallSegments(
+          room,
+          mergedSegments,
+          room.enclosed !== false
+        );
         return walls.map((wall, wIdx) => {
           if (isCovered(wall, room.x, room.y, mergedSegments)) {
             return null; // Skip — covered by merged wall

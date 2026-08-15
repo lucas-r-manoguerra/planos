@@ -25,7 +25,10 @@ import {
   X,
   Ruler,
   Sun,
+  BookOpen,
 } from "lucide-react";
+import Link from "next/link";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { useSunStore } from "@/stores/sun.store";
 
 export function Toolbar() {
@@ -65,7 +68,7 @@ export function Toolbar() {
   };
 
   return (
-    <div className="h-10 border-b border-gray-200 bg-white flex items-center px-3 gap-1 text-sm">
+    <div className="h-10 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 flex items-center px-3 gap-1 text-sm flex-wrap dark:text-gray-200">
       {/* Controles de zoom */}
       <div className="flex items-center gap-0.5 border-r border-gray-200 pr-2">
         <button onClick={handleZoomOut} className="p-1.5 hover:bg-gray-100 rounded text-gray-600 hover:text-gray-900" title="Zoom alejar" aria-label="Zoom alejar">
@@ -161,6 +164,23 @@ export function Toolbar() {
           </button>
         </div>
       )}
+
+      {/* Documentación */}
+      <div className="border-l border-gray-200 pl-2">
+        <Link
+          href="/docs"
+          className="p-1.5 rounded hover:bg-gray-100 text-gray-600 hover:text-gray-900 transition-colors inline-flex"
+          title="Documentación"
+          aria-label="Abrir documentación de normativas"
+        >
+          <BookOpen size={16} />
+        </Link>
+      </div>
+
+      {/* Tema */}
+      <div className="border-l border-gray-200 pl-2">
+        <ThemeToggle />
+      </div>
 
       {/* Exportar */}
       <div className="ml-auto">

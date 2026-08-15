@@ -29,7 +29,7 @@ export function DocsSidebar({ categories, allDocs }: DocsSidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 border-r flex flex-col" style={{ borderColor: "var(--border-color)", background: "var(--sidebar-bg)" }}>
+    <aside className="w-56 lg:w-64 border-r flex flex-col" style={{ borderColor: "var(--border-color)", background: "var(--sidebar-bg)" }}>
       <div className="px-4 py-3 border-b relative" style={{ borderColor: "var(--border-color)" }}>
         <Link
           href="/"

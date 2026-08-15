@@ -251,7 +251,7 @@ export function PlanCanvas() {
     <div
       ref={containerRef}
       tabIndex={-1}
-      className="plan-canvas flex-1 bg-gray-100 overflow-hidden relative focus:outline-none dark:bg-[#16171a]"
+      className="plan-canvas flex-1 min-w-0 bg-gray-100 overflow-hidden relative focus:outline-none dark:bg-[#16171a]"
     >
       <Stage
         ref={stageRef}

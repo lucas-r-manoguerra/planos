@@ -14,6 +14,8 @@ interface HistoryEntry {
   fixtures?: Fixture[];
 }
 
+export type { HistoryEntry };
+
 interface HistoryStore {
   past: HistoryEntry[];
   future: HistoryEntry[];

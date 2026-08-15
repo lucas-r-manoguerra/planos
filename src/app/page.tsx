@@ -11,14 +11,13 @@ import { Toolbar } from "@/components/toolbar/Toolbar";
 import { Sidebar } from "@/components/sidebar/Sidebar";
 import { PlanCanvas } from "@/components/canvas/PlanCanvas";
 import { useFloorsStore } from "@/stores/floors.store";
-import { useHistoryStore } from "@/stores/history.store";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { useSunStore } from "@/stores/sun.store";
 import { useContextMenuStore } from "@/stores/context-menu.store";
 import { usePanelStore } from "@/stores/panel.store";
 import { useCanvasStore } from "@/stores/canvas.store";
-import { useSelectionStore } from "@/stores/selection.store";
 import { useFixtureStore } from "@/stores/fixtures.store";
+import { useEditorShortcuts } from "@/hooks/useEditorShortcuts";
 import { saveProject, loadProject } from "@/lib/storage";
 import { Room } from "@/types/plan";
 
@@ -106,54 +105,8 @@ export default function Home() {
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, []);
 
-  // Atajos de teclado
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "z" && !e.shiftKey) {
-        e.preventDefault();
-        const restored = useHistoryStore.getState().undo();
-        if (restored) {
-          useFloorsStore.setState({
-            floors: restored.floors,
-            activeFloorId: restored.activeFloorId,
-          });
-          if (restored.terrain) {
-            useTerrainStore.setState({ terrain: restored.terrain });
-          }
-          if (restored.fixtures) {
-            useFixtureStore.setState({ fixtures: restored.fixtures });
-          }
-        }
-      }
-      if ((e.ctrlKey || e.metaKey) && e.key === "z" && e.shiftKey) {
-        e.preventDefault();
-        const restored = useHistoryStore.getState().redo();
-        if (restored) {
-          useFloorsStore.setState({
-            floors: restored.floors,
-            activeFloorId: restored.activeFloorId,
-          });
-          if (restored.terrain) {
-            useTerrainStore.setState({ terrain: restored.terrain });
-          }
-          if (restored.fixtures) {
-            useFixtureStore.setState({ fixtures: restored.fixtures });
-          }
-        }
-      }
-      if (e.key === "Delete" || e.key === "Backspace") {
-        if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-        const { selectedId, clearSelection } = useSelectionStore.getState();
-        if (selectedId) {
-          useFloorsStore.getState().removeRoom(selectedId);
-          clearSelection();
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  // Atajos de teclado (undo/redo, eliminar selección)
+  useEditorShortcuts();
 
   // Context menu handlers
   useEffect(() => {

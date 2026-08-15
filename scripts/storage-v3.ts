@@ -177,7 +177,19 @@ check("save: versión 3", saved?.version, 3);
 check("save: terreno persistido", saved?.terrain.northAngle, 90);
 check("save: savedAt definido", typeof saved?.savedAt, "string");
 const after = listProjects().find((p) => p.id === created.id)?.updatedAt;
-check("save: updatedAt del índice se actualiza", after !== before, true);
+// Determinista: el índice refleja el savedAt del blob (invariante de storage.ts) y
+// nunca retrocede. ISO strings comparan lexicográficamente; el mismo milisegundo
+// (updatedAt === before) es válido cuando rename y save corren en el mismo tick.
+check(
+  "save: updatedAt del índice refleja el savedAt del blob",
+  typeof after === "string" && after === saved?.savedAt,
+  true
+);
+check(
+  "save: updatedAt del índice no retrocede",
+  typeof after === "string" && typeof before === "string" && after >= before,
+  true
+);
 
 // --- switchProject + loadProjectById ---
 resetStorage();

@@ -2,8 +2,7 @@
  * Página del editor de planos en `/editor`
  *
  * Compone la interfaz completa: toolbar, sidebar con herramientas y plantas, canvas interactivo.
- * Conserva todo el comportamiento previo (spec landing-page-2): autosave, atajos,
- * menú contextual. El autosave se refactoriza a `useEditorLifecycle` (S3.2).
+ * La persistencia (carga inicial + autosave) vive en `useEditorLifecycle` (spec landing-page-2).
  */
 
 "use client";
@@ -14,98 +13,18 @@ import { Sidebar } from "@/components/sidebar/Sidebar";
 import { PlanCanvas } from "@/components/canvas/PlanCanvas";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useTerrainStore } from "@/stores/rooms.store";
-import { useSunStore } from "@/stores/sun.store";
 import { useContextMenuStore } from "@/stores/context-menu.store";
 import { usePanelStore } from "@/stores/panel.store";
 import { useCanvasStore } from "@/stores/canvas.store";
-import { useFixtureStore } from "@/stores/fixtures.store";
 import { useEditorShortcuts } from "@/hooks/useEditorShortcuts";
-import { saveProject, loadProject } from "@/lib/storage";
+import { useEditorLifecycle } from "@/hooks/useEditorLifecycle";
 import { Room } from "@/types/plan";
 
 export default function EditorPage() {
   const show = useContextMenuStore((s) => s.show);
 
-  // Cargar proyecto al iniciar
-  useEffect(() => {
-    const saved = loadProject();
-    if (saved) {
-      useFloorsStore.setState({
-        floors: saved.floors,
-        activeFloorId: saved.activeFloorId,
-      });
-      useTerrainStore.setState({
-        terrain: saved.terrain,
-      });
-      if (saved.sunSettings) {
-        useSunStore.setState({
-          enabled: saved.sunSettings.enabled,
-          date: saved.sunSettings.date,
-          time: saved.sunSettings.time,
-          location: saved.sunSettings.location,
-          floorHeight: saved.sunSettings.floorHeight,
-        });
-      }
-      if (saved.fixtures) {
-        useFixtureStore.setState({
-          fixtures: saved.fixtures,
-        });
-      }
-    }
-  }, []);
-
-  // Auto-guardar cada 30 segundos
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const { floors, activeFloorId } = useFloorsStore.getState();
-      const { terrain } = useTerrainStore.getState();
-      const sunSettings = useSunStore.getState();
-      const { fixtures } = useFixtureStore.getState();
-      saveProject({
-        name: "Mi Plano",
-        terrain,
-        floors,
-        activeFloorId,
-        fixtures,
-        sunSettings: {
-          enabled: sunSettings.enabled,
-          date: sunSettings.date,
-          time: sunSettings.time,
-          location: sunSettings.location,
-          floorHeight: sunSettings.floorHeight,
-        },
-      });
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // Guardar antes de cerrar
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      const { floors, activeFloorId } = useFloorsStore.getState();
-      const { terrain } = useTerrainStore.getState();
-      const sunSettings = useSunStore.getState();
-      const { fixtures } = useFixtureStore.getState();
-      saveProject({
-        name: "Mi Plano",
-        terrain,
-        floors,
-        activeFloorId,
-        fixtures,
-        sunSettings: {
-          enabled: sunSettings.enabled,
-          date: sunSettings.date,
-          time: sunSettings.time,
-          location: sunSettings.location,
-          floorHeight: sunSettings.floorHeight,
-        },
-      });
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, []);
+  // Persistencia: carga inicial + autosave periódico + al cerrar
+  useEditorLifecycle();
 
   // Atajos de teclado (undo/redo, eliminar selección)
   useEditorShortcuts();

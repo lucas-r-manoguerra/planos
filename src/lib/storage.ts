@@ -8,7 +8,7 @@ import { Floor, Fixture, SunSettings, Terrain } from "@/types/plan";
 import { DEFAULT_SUN_SETTINGS } from "@/lib/constants";
 import { migrateProjectData } from "@/lib/migrate";
 
-interface ProjectData {
+export interface ProjectData {
   version: number;
   name: string;
   terrain: Terrain;

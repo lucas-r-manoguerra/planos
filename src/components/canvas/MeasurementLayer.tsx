@@ -6,6 +6,7 @@
 
 "use client";
 
+import { memo } from "react";
 import { Line, Text, Circle, Group } from "react-konva";
 import { useRulerStore } from "@/stores/ruler.store";
 
@@ -51,8 +52,11 @@ function MeasurementLine({ x1, y1, x2, y2 }: { x1: number; y1: number; x2: numbe
   );
 }
 
-export function MeasurementLayer() {
-  const { active, pointA, pointerPos, measurements } = useRulerStore();
+export const MeasurementLayer = memo(function MeasurementLayer() {
+  const active = useRulerStore((s) => s.active);
+  const pointA = useRulerStore((s) => s.pointA);
+  const pointerPos = useRulerStore((s) => s.pointerPos);
+  const measurements = useRulerStore((s) => s.measurements);
 
   const previewDx = pointerPos && pointA ? pointerPos.x - pointA.x : 0;
   const previewDy = pointerPos && pointA ? pointerPos.y - pointA.y : 0;
@@ -102,4 +106,4 @@ export function MeasurementLayer() {
       )}
     </>
   );
-}
+});

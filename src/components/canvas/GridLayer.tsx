@@ -9,14 +9,16 @@
 
 "use client";
 
+import { memo } from "react";
 import { Line } from "react-konva";
 import { useCanvasStore } from "@/stores/canvas.store";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { useCanvasColors } from "./canvas-colors";
 
-export function GridLayer() {
-  const { gridVisible, gridSize } = useCanvasStore();
-  const { terrain } = useTerrainStore();
+export const GridLayer = memo(function GridLayer() {
+  const gridVisible = useCanvasStore((s) => s.gridVisible);
+  const gridSize = useCanvasStore((s) => s.gridSize);
+  const terrain = useTerrainStore((s) => s.terrain);
   const { grid } = useCanvasColors();
 
   if (!gridVisible) return null;
@@ -50,4 +52,4 @@ export function GridLayer() {
       ))}
     </>
   );
-}
+});

@@ -7,12 +7,22 @@
 
 "use client";
 
-import { Rect } from "react-konva";
+import { memo } from "react";
+import { Rect, Line } from "react-konva";
 import { useFloorsStore } from "@/stores/floors.store";
 import { Room } from "@/types/plan";
 import { useCanvasColors } from "./canvas-colors";
 
 const MERGE_THRESHOLD = 5; // cm — distance to consider rooms adjacent for merging
+
+export interface WallPreview {
+  roomId: string;
+  side: "top" | "bottom" | "left" | "right";
+  x: number;
+  y: number;
+  offset: number;
+  wallLength: number;
+}
 
 interface WallSegment {
   x: number;
@@ -152,8 +162,13 @@ function isCovered(
   return false;
 }
 
-export function WallLayer() {
-  const { floors, activeFloorId } = useFloorsStore();
+export const WallLayer = memo(function WallLayer({
+  wallPreview,
+}: {
+  wallPreview: WallPreview | null;
+}) {
+  const floors = useFloorsStore((s) => s.floors);
+  const activeFloorId = useFloorsStore((s) => s.activeFloorId);
   const activeFloor = floors.find((f) => f.id === activeFloorId);
   const rooms = activeFloor?.rooms || [];
   const { wall: wallColor } = useCanvasColors();
@@ -200,6 +215,42 @@ export function WallLayer() {
           );
         });
       })}
+
+      {/* Línea de pared resaltada en modo colocación puerta/ventana */}
+      {wallPreview &&
+        (() => {
+          const room = rooms.find((r) => r.id === wallPreview.roomId);
+          if (!room) return null;
+
+          let x1: number;
+          let y1: number;
+          let x2: number;
+          let y2: number;
+          switch (wallPreview.side) {
+            case "top":
+              x1 = room.x; y1 = room.y; x2 = room.x + room.width; y2 = room.y;
+              break;
+            case "bottom":
+              x1 = room.x; y1 = room.y + room.height; x2 = room.x + room.width; y2 = room.y + room.height;
+              break;
+            case "left":
+              x1 = room.x; y1 = room.y; x2 = room.x; y2 = room.y + room.height;
+              break;
+            case "right":
+              x1 = room.x + room.width; y1 = room.y; x2 = room.x + room.width; y2 = room.y + room.height;
+              break;
+          }
+
+          return (
+            <Line
+              points={[x1, y1, x2, y2]}
+              stroke="#3b82f6"
+              strokeWidth={3}
+              dash={[6, 4]}
+              pointerEvents="none"
+            />
+          );
+        })()}
     </>
   );
-}
+});

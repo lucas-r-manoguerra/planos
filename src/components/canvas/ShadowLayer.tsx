@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { Line, Text } from "react-konva";
 import { useSunStore } from "@/stores/sun.store";
 import { useFloorsStore } from "@/stores/floors.store";
@@ -10,10 +11,13 @@ import { useCanvasColors } from "./canvas-colors";
 const MIN_ELEVATION = 2;
 const MAX_SHADOW_LENGTH = 5000;
 
-export function ShadowLayer() {
-  const { enabled, floorHeight, getSunPosition } = useSunStore();
-  const { floors, activeFloorId } = useFloorsStore();
-  const { terrain } = useTerrainStore();
+export const ShadowLayer = memo(function ShadowLayer() {
+  const enabled = useSunStore((s) => s.enabled);
+  const floorHeight = useSunStore((s) => s.floorHeight);
+  const getSunPosition = useSunStore((s) => s.getSunPosition);
+  const floors = useFloorsStore((s) => s.floors);
+  const activeFloorId = useFloorsStore((s) => s.activeFloorId);
+  const terrain = useTerrainStore((s) => s.terrain);
   const { shadow, textMuted } = useCanvasColors();
 
   if (!enabled) return null;
@@ -103,4 +107,4 @@ export function ShadowLayer() {
       />
     </>
   );
-}
+});

@@ -7,6 +7,7 @@
 
 "use client";
 
+import { memo } from "react";
 import { Group, Rect, Text, Line } from "react-konva";
 import { useFixtureStore } from "@/stores/fixtures.store";
 import { useSelectionStore } from "@/stores/selection.store";
@@ -29,11 +30,13 @@ function arcPoints(cx: number, cy: number, r: number, startDeg: number, endDeg: 
   return pts;
 }
 
-function FixtureRect({ fixture }: { fixture: Fixture }) {
-  const { moveFixture, removeFixture } = useFixtureStore();
-  const { selectedId, select } = useSelectionStore();
-  const { show } = useContextMenuStore();
-  const { openPanel } = usePanelStore();
+const FixtureRect = memo(function FixtureRect({ fixture }: { fixture: Fixture }) {
+  const moveFixture = useFixtureStore((s) => s.moveFixture);
+  const removeFixture = useFixtureStore((s) => s.removeFixture);
+  const selectedId = useSelectionStore((s) => s.selectedId);
+  const select = useSelectionStore((s) => s.select);
+  const show = useContextMenuStore((s) => s.show);
+  const openPanel = usePanelStore((s) => s.openPanel);
   const { fixtureStroke, fixtureLabel } = useCanvasColors();
   const isSelected = selectedId === fixture.id;
 
@@ -444,10 +447,10 @@ function FixtureRect({ fixture }: { fixture: Fixture }) {
     default:
       return null;
   }
-}
+});
 
-export function FixtureLayer() {
-  const { fixtures } = useFixtureStore();
+export const FixtureLayer = memo(function FixtureLayer() {
+  const fixtures = useFixtureStore((s) => s.fixtures);
 
   return (
     <Group>
@@ -456,4 +459,4 @@ export function FixtureLayer() {
       ))}
     </Group>
   );
-}
+});

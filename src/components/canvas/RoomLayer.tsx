@@ -8,6 +8,7 @@
 
 "use client";
 
+import { memo } from "react";
 import { Group, Rect, Text } from "react-konva";
 import Konva from "konva";
 import { useFloorsStore } from "@/stores/floors.store";
@@ -19,9 +20,10 @@ import { useCanvasColors } from "./canvas-colors";
 
 const draggedRoomIdRef = { current: null as string | null };
 
-function RoomRect({ room }: { room: Room }) {
-  const { moveRoom } = useFloorsStore();
-  const { selectedId, select } = useSelectionStore();
+const RoomRect = memo(function RoomRect({ room }: { room: Room }) {
+  const moveRoom = useFloorsStore((s) => s.moveRoom);
+  const selectedId = useSelectionStore((s) => s.selectedId);
+  const select = useSelectionStore((s) => s.select);
   const { roomStroke, roomLabel, roomDim } = useCanvasColors();
   const isSelected = selectedId === room.id;
 
@@ -100,10 +102,11 @@ function RoomRect({ room }: { room: Room }) {
       />
     </Group>
   );
-}
+});
 
-export function RoomLayer() {
-  const { floors, activeFloorId } = useFloorsStore();
+export const RoomLayer = memo(function RoomLayer() {
+  const floors = useFloorsStore((s) => s.floors);
+  const activeFloorId = useFloorsStore((s) => s.activeFloorId);
   const activeFloor = floors.find((f) => f.id === activeFloorId);
   const rooms = activeFloor?.rooms || [];
 
@@ -114,4 +117,4 @@ export function RoomLayer() {
       ))}
     </>
   );
-}
+});

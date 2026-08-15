@@ -8,19 +8,25 @@
 
 "use client";
 
+import { memo } from "react";
 import { Line, Circle, Text } from "react-konva";
 import { useSunStore } from "@/stores/sun.store";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { getSunPosition } from "@/lib/solar";
+import { useCanvasColors } from "./canvas-colors";
 
 const ARC_COLOR = "#f39c12";
 const SUN_COLOR = "#f1c40f";
 const MARKER_RADIUS = 8;
 const ARC_SAMPLES = 48; // muestras para dibujar el arco
 
-export function SunArcLayer() {
-  const { enabled, date, location, getSunPosition: getPos } = useSunStore();
-  const { terrain } = useTerrainStore();
+export const SunArcLayer = memo(function SunArcLayer() {
+  const enabled = useSunStore((s) => s.enabled);
+  const date = useSunStore((s) => s.date);
+  const location = useSunStore((s) => s.location);
+  const getPos = useSunStore((s) => s.getSunPosition);
+  const terrain = useTerrainStore((s) => s.terrain);
+  const { textMuted } = useCanvasColors();
 
   if (!enabled) return null;
 
@@ -97,10 +103,10 @@ export function SunArcLayer() {
             x={sunX + 12}
             y={sunY - 8}
             fontSize={10}
-            fill="#666"
+            fill={textMuted}
           />
         </>
       )}
     </>
   );
-}
+});

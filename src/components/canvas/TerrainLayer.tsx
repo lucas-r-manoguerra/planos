@@ -1,13 +1,14 @@
 "use client";
 
+import { memo } from "react";
 import { Rect, Text, Image as KonvaImage, Line } from "react-konva";
 import { useEffect, useState } from "react";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { cmToDisplay } from "@/lib/utils";
 import { useCanvasColors } from "./canvas-colors";
 
-export function TerrainLayer() {
-  const { terrain } = useTerrainStore();
+export const TerrainLayer = memo(function TerrainLayer() {
+  const terrain = useTerrainStore((s) => s.terrain);
   const { terrainStroke, textMuted } = useCanvasColors();
   const [image, setImage] = useState<HTMLImageElement | null>(null);
 
@@ -103,4 +104,4 @@ export function TerrainLayer() {
       />
     </>
   );
-}
+});

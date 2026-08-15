@@ -10,7 +10,7 @@
 
 import { useRef, useEffect, useState, useCallback } from "react";
 import Konva from "konva";
-import { Stage, Layer, Line } from "react-konva";
+import { Stage, Layer } from "react-konva";
 import { useCanvasStore } from "@/stores/canvas.store";
 import { useRulerStore } from "@/stores/ruler.store";
 import { GridLayer } from "./GridLayer";
@@ -18,7 +18,7 @@ import { TerrainLayer } from "./TerrainLayer";
 import { ShadowLayer } from "./ShadowLayer";
 import { RoomLayer } from "./RoomLayer";
 import { FixtureLayer } from "./FixtureLayer";
-import { WallLayer } from "./WallLayer";
+import { WallLayer, WallPreview } from "./WallLayer";
 import { MeasurementLayer } from "./MeasurementLayer";
 import { SunArcLayer } from "./SunArcLayer";
 import { CompassOverlay } from "./CompassOverlay";
@@ -33,14 +33,7 @@ export function PlanCanvas() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ width: 800, height: 600 });
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
-  const [wallPreview, setWallPreview] = useState<{
-    roomId: string;
-    side: "top" | "bottom" | "left" | "right";
-    x: number;
-    y: number;
-    offset: number;
-    wallLength: number;
-  } | null>(null);
+  const [wallPreview, setWallPreview] = useState<WallPreview | null>(null);
 
   const { zoom, panX, panY, smoothZoom, setPan } = useCanvasStore();
   const { active: rulerActive, pointA, setPointA, setPointerPos, addMeasurement, deactivate } = useRulerStore();
@@ -265,48 +258,30 @@ export function PlanCanvas() {
         onMouseMove={handleMouseMove}
         onContextMenu={handleContextMenu}
       >
+        {/* Una Layer por dominio: cada capa redibuja solo lo que le corresponde */}
         <Layer>
           <GridLayer />
+        </Layer>
+        <Layer>
           <TerrainLayer />
+        </Layer>
+        <Layer>
           <ShadowLayer />
+        </Layer>
+        <Layer>
           <RoomLayer />
+        </Layer>
+        <Layer>
           <FixtureLayer />
-          <WallLayer />
+        </Layer>
+        <Layer>
+          <WallLayer wallPreview={wallPreview} />
+        </Layer>
+        <Layer>
           <MeasurementLayer />
+        </Layer>
+        <Layer>
           <SunArcLayer />
-
-          {/* Línea de pared resaltada en modo colocación puerta/ventana */}
-          {wallPreview && (() => {
-            const rooms = useFloorsStore.getState().getActiveRooms();
-            const room = rooms.find(r => r.id === wallPreview.roomId);
-            if (!room) return null;
-
-            let x1: number, y1: number, x2: number, y2: number;
-            switch (wallPreview.side) {
-              case "top":
-                x1 = room.x; y1 = room.y; x2 = room.x + room.width; y2 = room.y;
-                break;
-              case "bottom":
-                x1 = room.x; y1 = room.y + room.height; x2 = room.x + room.width; y2 = room.y + room.height;
-                break;
-              case "left":
-                x1 = room.x; y1 = room.y; x2 = room.x; y2 = room.y + room.height;
-                break;
-              case "right":
-                x1 = room.x + room.width; y1 = room.y; x2 = room.x + room.width; y2 = room.y + room.height;
-                break;
-            }
-
-            return (
-              <Line
-                points={[x1, y1, x2, y2]}
-                stroke="#3b82f6"
-                strokeWidth={3}
-                dash={[6, 4]}
-                pointerEvents="none"
-              />
-            );
-          })()}
         </Layer>
       </Stage>
       <CompassOverlay />

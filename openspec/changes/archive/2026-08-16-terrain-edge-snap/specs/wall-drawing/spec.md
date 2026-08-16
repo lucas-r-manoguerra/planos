@@ -1,45 +1,60 @@
-# Wall Drawing Specification
+# Delta for Wall Drawing
 
-## Purpose
+## ADDED Requirements
 
-First-class free-form `Wall` entities per floor: a draw tool, edit operations
-with snapping, and undo coverage. Walls become the single source of truth for
-wall geometry, replacing render-time derivation from room rects
-(`getRoomWallSegments`, `src/lib/walls.ts`).
+### Requirement: wall-drawing-8: Terrain-edge snap
 
-## Requirements
+The system MUST snap free walls (no `roomId`) to the axis-aligned terrain boundary during DRAW, MOVE, and RESIZE, only when effective magnetism is ON. De-punta: when the stroke/wall is perpendicular to an edge and the endpoint's perpendicular distance to the edge is within `SNAP_THRESHOLD` (25 cm), the endpoint MUST snap onto the edge (draw/resize end; on move, the end nearest the edge). Parallel: when the stroke/wall is parallel to an edge and its center line is within `SNAP_THRESHOLD` of the snap position, the center line MUST snap to `edge ∓ thickness/2` so the band sits INSIDE the terrain (outer face at the edge). Terrain snap MUST resolve after point/angle snap, before raw, MUST NOT override a point/angle result, and MUST NOT clamp: geometry beyond `SNAP_THRESHOLD` stays untouched — walls outside the terrain remain allowed. Terrain edges are axis-aligned in world space (`y=0`, `y=height`, `x=0`, `x=width`); `northAngle` is display-only and MUST NOT affect snapping. Non-goals: T-junction onto a wall's LINE (endpoints only), miter corner joins, room-derived walls.
 
-### Requirement: wall-drawing-1: Wall entity model
+#### Scenario: De-punta draw ends on the edge
 
-The system MUST model a wall as an entity with `id`, `x1`, `y1`, `x2`, `y2`
-(cm, same coordinate system as `Room`), `thickness` (cm), `floorId`, and an
-optional `height` (cm). Wall endpoints MUST be absolute positions in the terrain
-coordinate system (origin `(0,0)`, 1 unit = 1 cm, rule 03). The default
-`thickness` MUST be 10 cm, matching `Room.wallWidth` (`plan.ts:50`).
+- GIVEN magnetism ON, horizontal stroke ending 10 cm inside the right edge
+- WHEN released
+- THEN the endpoint commits exactly at the edge (`x = width`), `y` preserved
 
-#### Scenario: Wall stores absolute segment geometry
+#### Scenario: Parallel draw sits inside at thickness/2
 
-- GIVEN the user draws a wall from (100, 100) to (300, 100)
-- WHEN the wall is committed
-- THEN the wall records x1=100, y1=100, x2=300, y2=100, thickness 10, and its floorId
+- GIVEN magnetism ON, vertical stroke 15 cm from the right edge
+- WHEN released
+- THEN the center line commits at `width − thickness/2`, band inside
 
-#### Scenario: Zero-length wall is rejected
+#### Scenario: Move locks de-punta onto the edge
 
-- GIVEN the user ends a draw at the same point where it started
-- WHEN the draw is committed
-- THEN no wall is created
+- GIVEN a horizontal free wall, magnetism ON
+- WHEN dragged so its right end lands 12 cm from the right edge
+- THEN the end locks onto the edge
 
-### Requirement: wall-drawing-2: Walls scoped per floor
+#### Scenario: Move locks parallel at thickness/2
 
-Every wall MUST record the `floorId` of the floor it belongs to. The editor MUST
-render only the walls of the active floor, and drawing MUST assign the active
-floor (same pattern as fixtures-1 in `fixtures.store.ts`).
+- GIVEN a vertical free wall 20 cm from the right edge, magnetism ON
+- WHEN dragged toward the edge
+- THEN the center line locks at `width − thickness/2`
 
-#### Scenario: Floor switch filters walls
+#### Scenario: Resize endpoint snaps onto the edge
 
-- GIVEN two floors each containing walls
-- WHEN the user switches to floor A
-- THEN only floor A's walls render on the canvas
+- GIVEN a selected horizontal wall, magnetism ON
+- WHEN the right endpoint is dragged to 8 cm inside the right edge
+- THEN the endpoint commits at the edge
+
+#### Scenario: Beyond threshold is never clamped
+
+- GIVEN a free wall whose center line is 60 cm from the right edge
+- WHEN drawn or moved
+- THEN it stays where it is — no snap, no clamp
+
+#### Scenario: Diagonal stroke near an edge does not terrain-snap
+
+- GIVEN a ~45° stroke ending 10 cm from the right edge
+- WHEN released
+- THEN no terrain snap (neither case); point/angle results still win, else raw
+
+#### Scenario: Magnetism OFF disables terrain snap
+
+- GIVEN magnetism OFF (toggle or Shift held)
+- WHEN drawing or moving near an edge
+- THEN the geometry commits at the raw position
+
+## MODIFIED Requirements
 
 ### Requirement: wall-drawing-3: Free-form draw tool
 
@@ -139,25 +154,6 @@ The user MUST select a wall, move it (translate both endpoints), resize it (drag
 - WHEN a wall is dragged near a wall endpoint or a terrain edge
 - THEN both endpoints translate by the raw delta — no point snap, no terrain lock
 
-### Requirement: wall-drawing-5: Undo covers wall operations
-
-Wall creation, move, resize, and delete MUST be recorded in the undo history as
-single steps, and undo/redo MUST restore the wall geometry (extending the
-snapshot pattern in `history.store.ts`, which currently captures
-floors/terrain/fixtures).
-
-#### Scenario: Undo removes a drawn wall
-
-- GIVEN a wall was just drawn
-- WHEN the user triggers undo
-- THEN the wall disappears
-
-#### Scenario: Undo restores a deleted wall
-
-- GIVEN a wall was deleted
-- WHEN the user triggers undo
-- THEN the wall reappears with its endpoints intact
-
 ### Requirement: wall-drawing-6: Magnetism toggle
 
 The system MUST expose a toolbar magnetism toggle (`aria-pressed`, default ON) as session-only canvas-store state, not persisted. OFF MUST disable ALL snapping — no point snap, angle snap, terrain-edge snap, or move snap — raw pointer only. Holding `Shift` during a draw, move, or resize gesture MUST invert the toggle for that gesture.
@@ -217,55 +213,3 @@ When a free-form wall (no `roomId`) is ADDED (`addWall`), MOVED (`moveWall`), or
 - GIVEN a free-form wall that becomes collinear and contiguous with another after a resize
 - WHEN the resize commits
 - THEN one merged wall exists, openings re-anchor, and one undo restores both source walls
-
-### Requirement: wall-drawing-8: Terrain-edge snap
-
-The system MUST snap free walls (no `roomId`) to the axis-aligned terrain boundary during DRAW, MOVE, and RESIZE, only when effective magnetism is ON. De-punta: when the stroke/wall is perpendicular to an edge and the endpoint's perpendicular distance to the edge is within `SNAP_THRESHOLD` (25 cm), the endpoint MUST snap onto the edge (draw/resize end; on move, the end nearest the edge). Parallel: when the stroke/wall is parallel to an edge and its center line is within `SNAP_THRESHOLD` of the snap position, the center line MUST snap to `edge ∓ thickness/2` so the band sits INSIDE the terrain (outer face at the edge). Terrain snap MUST resolve after point/angle snap, before raw, MUST NOT override a point/angle result, and MUST NOT clamp: geometry beyond `SNAP_THRESHOLD` stays untouched — walls outside the terrain remain allowed. Terrain edges are axis-aligned in world space (`y=0`, `y=height`, `x=0`, `x=width`); `northAngle` is display-only and MUST NOT affect snapping. Non-goals: T-junction onto a wall's LINE (endpoints only), miter corner joins, room-derived walls.
-
-#### Scenario: De-punta draw ends on the edge
-
-- GIVEN magnetism ON, horizontal stroke ending 10 cm inside the right edge
-- WHEN released
-- THEN the endpoint commits exactly at the edge (`x = width`), `y` preserved
-
-#### Scenario: Parallel draw sits inside at thickness/2
-
-- GIVEN magnetism ON, vertical stroke 15 cm from the right edge
-- WHEN released
-- THEN the center line commits at `width − thickness/2`, band inside
-
-#### Scenario: Move locks de-punta onto the edge
-
-- GIVEN a horizontal free wall, magnetism ON
-- WHEN dragged so its right end lands 12 cm from the right edge
-- THEN the end locks onto the edge
-
-#### Scenario: Move locks parallel at thickness/2
-
-- GIVEN a vertical free wall 20 cm from the right edge, magnetism ON
-- WHEN dragged toward the edge
-- THEN the center line locks at `width − thickness/2`
-
-#### Scenario: Resize endpoint snaps onto the edge
-
-- GIVEN a selected horizontal wall, magnetism ON
-- WHEN the right endpoint is dragged to 8 cm inside the right edge
-- THEN the endpoint commits at the edge
-
-#### Scenario: Beyond threshold is never clamped
-
-- GIVEN a free wall whose center line is 60 cm from the right edge
-- WHEN drawn or moved
-- THEN it stays where it is — no snap, no clamp
-
-#### Scenario: Diagonal stroke near an edge does not terrain-snap
-
-- GIVEN a ~45° stroke ending 10 cm from the right edge
-- WHEN released
-- THEN no terrain snap (neither case); point/angle results still win, else raw
-
-#### Scenario: Magnetism OFF disables terrain snap
-
-- GIVEN magnetism OFF (toggle or Shift held)
-- WHEN drawing or moving near an edge
-- THEN the geometry commits at the raw position

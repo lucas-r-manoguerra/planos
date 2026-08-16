@@ -1,47 +1,8 @@
-# Wall Drawing Specification
+# Delta for wall-drawing
 
-## Purpose
+## MODIFIED Requirements
 
-First-class free-form `Wall` entities per floor: a draw tool, edit operations
-with snapping, and undo coverage. Walls become the single source of truth for
-wall geometry, replacing render-time derivation from room rects
-(`getRoomWallSegments`, `src/lib/walls.ts`).
-
-## Requirements
-
-### Requirement: wall-drawing-1: Wall entity model
-
-The system MUST model a wall as an entity with `id`, `x1`, `y1`, `x2`, `y2`
-(cm, same coordinate system as `Room`), `thickness` (cm), `floorId`, and an
-optional `height` (cm). Wall endpoints MUST be absolute positions in the terrain
-coordinate system (origin `(0,0)`, 1 unit = 1 cm, rule 03). The default
-`thickness` MUST be 10 cm, matching `Room.wallWidth` (`plan.ts:50`).
-
-#### Scenario: Wall stores absolute segment geometry
-
-- GIVEN the user draws a wall from (100, 100) to (300, 100)
-- WHEN the wall is committed
-- THEN the wall records x1=100, y1=100, x2=300, y2=100, thickness 10, and its floorId
-
-#### Scenario: Zero-length wall is rejected
-
-- GIVEN the user ends a draw at the same point where it started
-- WHEN the draw is committed
-- THEN no wall is created
-
-### Requirement: wall-drawing-2: Walls scoped per floor
-
-Every wall MUST record the `floorId` of the floor it belongs to. The editor MUST
-render only the walls of the active floor, and drawing MUST assign the active
-floor (same pattern as fixtures-1 in `fixtures.store.ts`).
-
-#### Scenario: Floor switch filters walls
-
-- GIVEN two floors each containing walls
-- WHEN the user switches to floor A
-- THEN only floor A's walls render on the canvas
-
-### Requirement: wall-drawing-3: Free-form draw tool
+### Requirement: wall-drawing-3: Free-form draw tool [CHANGED]
 
 The system MUST extend the `activeTool` union (`plan.ts:95`) with a `wall` value. A click-and-drag with the tool active MUST create a wall from start to end, with a live preview. With magnetism ON, the draw end MUST resolve in priority order: (1) direction-aware point snap — room corners and same-orientation wall endpoints within `SNAP_THRESHOLD` (25 cm), skipping candidates that would collapse the stroke to near-zero length; (2) angle snap — nearest target in {0, 45, 90, 120, 135} degrees normalized to [0, 180) within strict 4° tolerance, adjusting the end along the target ray, drawn length preserved; (3) raw pointer. Point snap MUST win over angle snap. `Escape` MUST cancel the draw.
 
@@ -95,7 +56,7 @@ The system MUST extend the `activeTool` union (`plan.ts:95`) with a `wall` value
 - WHEN the user releases the draw
 - THEN the wall stays horizontal (dominant axis preserved) and does not collapse
 
-### Requirement: wall-drawing-4: Edit operations
+### Requirement: wall-drawing-4: Edit operations [CHANGED]
 
 The user MUST select a wall, move it (translate both endpoints), resize it (drag one endpoint), and delete it with `Delete`/`Backspace` when the canvas has focus (mirroring `fixtures-management-2`). Move MUST apply point snap only. With magnetism ON, resize MUST resolve the dragged endpoint like drawing: point snap, then angle snap to the nearest target within 4° from the stationary endpoint, then raw.
 
@@ -125,26 +86,9 @@ The user MUST select a wall, move it (translate both endpoints), resize it (drag
 - WHEN the user drags an endpoint to ~46° from the stationary endpoint
 - THEN the endpoint commits on the 45° ray and the length updates
 
-### Requirement: wall-drawing-5: Undo covers wall operations
+## ADDED Requirements
 
-Wall creation, move, resize, and delete MUST be recorded in the undo history as
-single steps, and undo/redo MUST restore the wall geometry (extending the
-snapshot pattern in `history.store.ts`, which currently captures
-floors/terrain/fixtures).
-
-#### Scenario: Undo removes a drawn wall
-
-- GIVEN a wall was just drawn
-- WHEN the user triggers undo
-- THEN the wall disappears
-
-#### Scenario: Undo restores a deleted wall
-
-- GIVEN a wall was deleted
-- WHEN the user triggers undo
-- THEN the wall reappears with its endpoints intact
-
-### Requirement: wall-drawing-6: Magnetism toggle
+### Requirement: wall-drawing-6: Magnetism toggle [ADDED]
 
 The system MUST expose a toolbar magnetism toggle (`aria-pressed`, default ON) as session-only canvas-store state, not persisted. OFF MUST disable all snapping — no point snap, no angle snap — raw pointer only. Holding `Shift` during a draw or resize gesture MUST invert the toggle for that gesture.
 
@@ -166,7 +110,7 @@ The system MUST expose a toolbar magnetism toggle (`aria-pressed`, default ON) a
 - WHEN the session reloads
 - THEN magnetism is ON again
 
-### Requirement: wall-drawing-7: Collinear merge of free-form walls
+### Requirement: wall-drawing-7: Collinear merge of free-form walls [ADDED]
 
 When `addWall` adds a free-form wall (no `roomId`) that is collinear (same orientation), contiguous or overlapping, and same thickness as an existing free-form wall on the same floor, the system MUST merge them into one entity spanning the union. Add+merge MUST record a single undo step, MUST re-anchor openings that referenced the merged-away wall, and MUST NOT merge room-derived walls (`roomId` set).
 

@@ -100,3 +100,36 @@ export function tryMergeCollinearWalls(walls: Wall[], newWall: Wall): Wall[] | n
 
   return null;
 }
+
+/**
+ * Fixpoint merge for a single target wall (spec wall-drawing-7, slice U3).
+ *
+ * Repeatedly merges the target wall (the wall just moved/resized) with any
+ * qualifying free wall via `tryMergeCollinearWalls` until no further merge
+ * applies. This resolves sandwiched unions (A…W…B): W merges with A first,
+ * then the union wall merges with B, leaving ONE wall spanning the whole
+ * range. Each union carries a fresh id (D4 semantics preserved).
+ *
+ * Returns a fresh array when at least one merge happened, or null when the
+ * target cannot merge (caller keeps the original array — same reference).
+ * Room-derived walls never merge (wd-7): guarded here and inside
+ * `tryMergeCollinearWalls`.
+ */
+export function mergeWallToFixpoint(walls: Wall[], targetId: string): Wall[] | null {
+  const target = walls.find((w) => w.id === targetId);
+  if (!target || target.roomId) return null;
+
+  let working = walls;
+  let current = target;
+
+  for (;;) {
+    const rest = working.filter((w) => w.id !== current.id);
+    const merged = tryMergeCollinearWalls(rest, current);
+    if (!merged) break;
+    working = merged;
+    // tryMergeCollinearWalls appends the union wall at the end (fresh id)
+    current = merged[merged.length - 1];
+  }
+
+  return working === walls ? null : working;
+}

@@ -4,7 +4,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { Wall } from "@/types/plan";
-import { tryMergeCollinearWalls } from "@/lib/wall-merge";
+import { mergeWallToFixpoint, tryMergeCollinearWalls } from "@/lib/wall-merge";
 
 function freeWall(partial: Partial<Wall> = {}): Wall {
   return {
@@ -168,5 +168,80 @@ describe("tryMergeCollinearWalls (wd-7)", () => {
     expect(result).toHaveLength(2); // merged + perpendicular
     expect(result!.some((w) => w.id === "p")).toBe(true);
     expect(result!.find((w) => w.id !== "p")).toMatchObject({ x1: 0, x2: 700 });
+  });
+});
+
+describe("mergeWallToFixpoint (wd-7, U3)", () => {
+  it("merges the target wall with one collinear contiguous wall (single merge)", () => {
+    const a = freeWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100 });
+    const w = freeWall({ id: "w", x1: 400, y1: 100, x2: 700, y2: 100 });
+
+    const result = mergeWallToFixpoint([a, w], "w");
+
+    expect(result).not.toBeNull();
+    expect(result).toHaveLength(1);
+    const merged = result![0];
+    expect(merged).toMatchObject({ x1: 0, y1: 100, x2: 700, y2: 100, thickness: 10 });
+    expect(merged.roomId).toBeUndefined();
+    // D4: the union is a new entity with a fresh id; both sources disappear
+    expect(merged.id).not.toBe("a");
+    expect(merged.id).not.toBe("w");
+  });
+
+  it("resolves a sandwiched A…W…B union with two sequential merges", () => {
+    const a = freeWall({ id: "a", x1: 0, y1: 0, x2: 0, y2: 100 });
+    const w = freeWall({ id: "w", x1: 0, y1: 100, x2: 0, y2: 150 });
+    const b = freeWall({ id: "b", x1: 0, y1: 150, x2: 0, y2: 250 });
+
+    const result = mergeWallToFixpoint([a, w, b], "w");
+
+    expect(result).not.toBeNull();
+    expect(result).toHaveLength(1);
+    const merged = result![0];
+    expect(merged).toMatchObject({ x1: 0, y1: 0, x2: 0, y2: 250 });
+    expect(merged.id).not.toBe("a");
+    expect(merged.id).not.toBe("w");
+    expect(merged.id).not.toBe("b");
+  });
+
+  it("keeps a fresh id on the merged wall across the cascade (D4)", () => {
+    const a = freeWall({ id: "a", x1: 0, y1: 0, x2: 0, y2: 100 });
+    const w = freeWall({ id: "w", x1: 0, y1: 100, x2: 0, y2: 150 });
+    const b = freeWall({ id: "b", x1: 0, y1: 150, x2: 0, y2: 250 });
+
+    const merged = mergeWallToFixpoint([a, w, b], "w")![0];
+
+    // The final union id is fresh — never the moved wall's id nor any absorbed id
+    expect(merged.id).toBeTruthy();
+    expect(merged.id).not.toBe("w");
+    expect(merged.id).not.toBe("a");
+    expect(merged.id).not.toBe("b");
+  });
+
+  it("returns null when no merge applies (same reference preserved)", () => {
+    const a = freeWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100 });
+    const w = freeWall({ id: "w", x1: 405, y1: 100, x2: 700, y2: 100 }); // 5 cm gap > EPS
+
+    expect(mergeWallToFixpoint([a, w], "w")).toBeNull();
+  });
+
+  it("returns null for an unknown target id", () => {
+    const a = freeWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100 });
+
+    expect(mergeWallToFixpoint([a], "ghost")).toBeNull();
+  });
+
+  it("never merges a room-derived target wall (wd-7)", () => {
+    const a = freeWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100 });
+    const w = freeWall({ id: "w", x1: 400, y1: 100, x2: 700, y2: 100, roomId: "r1" });
+
+    expect(mergeWallToFixpoint([a, w], "w")).toBeNull();
+  });
+
+  it("never merges a room-derived neighbor wall (wd-7)", () => {
+    const a = freeWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100, roomId: "r1" });
+    const w = freeWall({ id: "w", x1: 400, y1: 100, x2: 700, y2: 100 });
+
+    expect(mergeWallToFixpoint([a, w], "w")).toBeNull();
   });
 });

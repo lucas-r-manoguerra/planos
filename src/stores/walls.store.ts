@@ -15,7 +15,7 @@ import { create } from "zustand";
 import { Wall } from "@/types/plan";
 import { generateId } from "@/lib/utils";
 import { materializeFloorWalls, reanchorOpenings } from "@/lib/wall-utils";
-import { tryMergeCollinearWalls } from "@/lib/wall-merge";
+import { mergeWallToFixpoint, tryMergeCollinearWalls } from "@/lib/wall-merge";
 import { useHistoryStore } from "@/stores/history.store";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useTerrainStore } from "@/stores/rooms.store";
@@ -86,12 +86,18 @@ export const useWallsStore = create<WallsStore>((set, get) => {
       // Longitud cero: rechazar (punto sin dirección)
       if (Math.abs(x1 - x2) <= 0 && Math.abs(y1 - y2) <= 0) return;
       recordHistory();
-      set((state) => ({
-        walls: state.walls.map((w) =>
+      set((state) => {
+        const mapped = state.walls.map((w) =>
           w.id === id ? { ...w, x1, y1, x2, y2 } : w
-        ),
-      }));
-      // Las aberturas ancladas siguen a la pared (design D7)
+        );
+        // Collinear merge fixpoint (wd-7, U3): free walls only, within the
+        // same action so the undo history records ONE step for the
+        // move+merge transaction. null keeps the mapped array (no merge).
+        const merged = mergeWallToFixpoint(mapped, id);
+        return { walls: merged ?? mapped };
+      });
+      // Las aberturas ancladas siguen a la pared (design D7); tras un merge,
+      // las de la pared absorbida se re-anclan a la fusionada (wd-7)
       get().reanchorOpenings();
     },
 
@@ -101,12 +107,16 @@ export const useWallsStore = create<WallsStore>((set, get) => {
       // Longitud cero: rechazar (punto sin dirección)
       if (Math.abs(x1 - x2) <= 0 && Math.abs(y1 - y2) <= 0) return;
       recordHistory();
-      set((state) => ({
-        walls: state.walls.map((w) =>
+      set((state) => {
+        const mapped = state.walls.map((w) =>
           w.id === id ? { ...w, x1, y1, x2, y2 } : w
-        ),
-      }));
-      // Las aberturas ancladas siguen a la pared (design D7)
+        );
+        // Collinear merge fixpoint (wd-7, U3) — same transaction as the move
+        const merged = mergeWallToFixpoint(mapped, id);
+        return { walls: merged ?? mapped };
+      });
+      // Las aberturas ancladas siguen a la pared (design D7); tras un merge,
+      // las de la pared absorbida se re-anclan a la fusionada (wd-7)
       get().reanchorOpenings();
     },
 

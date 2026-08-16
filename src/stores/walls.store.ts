@@ -15,6 +15,7 @@ import { create } from "zustand";
 import { Wall } from "@/types/plan";
 import { generateId } from "@/lib/utils";
 import { materializeFloorWalls, reanchorOpenings } from "@/lib/wall-utils";
+import { tryMergeCollinearWalls } from "@/lib/wall-merge";
 import { useHistoryStore } from "@/stores/history.store";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useTerrainStore } from "@/stores/rooms.store";
@@ -67,7 +68,16 @@ export const useWallsStore = create<WallsStore>((set, get) => {
 
     addWall: (wall) => {
       recordHistory();
-      set((state) => ({ walls: [...state.walls, { ...wall, id: generateId() }] }));
+      const wallWithId: Wall = { ...wall, id: generateId() };
+      const merged = tryMergeCollinearWalls(get().walls, wallWithId);
+      if (merged) {
+        // Fusión colineal (spec wall-drawing-7): una pared nueva + un solo paso
+        // de undo; las aberturas de la pared absorbida siguen a la fusionada (D4)
+        set({ walls: merged });
+        get().reanchorOpenings();
+      } else {
+        set((state) => ({ walls: [...state.walls, wallWithId] }));
+      }
     },
 
     moveWall: (id, x1, y1, x2, y2) => {

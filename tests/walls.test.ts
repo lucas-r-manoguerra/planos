@@ -2,7 +2,7 @@
  * Tests de paredes v4 (lib/wall-utils.ts + lib/walls.ts).
  * Coordenadas en cm: 1 unidad = 1 centímetro.
  */
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { Room, RoomType, Wall, Fixture } from "@/types/plan";
 import {
   materializeFloorWalls,
@@ -20,6 +20,11 @@ import {
   DEFAULT_WALL_THICKNESS,
 } from "@/lib/wall-utils";
 import { getRoomWallSegments } from "@/lib/walls";
+import { useWallsStore } from "@/stores/walls.store";
+import { useFixtureStore } from "@/stores/fixtures.store";
+import { useFloorsStore } from "@/stores/floors.store";
+import { useHistoryStore } from "@/stores/history.store";
+import { applyHistoryEntry } from "@/hooks/useEditorShortcuts";
 
 function makeRoom(partial: Partial<Room> & { id: string }): Room {
   return {
@@ -336,5 +341,113 @@ describe("wallBandPoints (banda de pared, v4-fix)", () => {
     const pts = wallBandPoints(50, 50, 50, 50, 10);
     expect(pts.every((v) => Number.isFinite(v))).toBe(true);
     expect(pts).toHaveLength(4);
+  });
+});
+
+describe("addWall merge (wd-7, P2)", () => {
+  beforeEach(() => {
+    useFloorsStore.setState({ floors: [], activeFloorId: "f1" });
+    useFixtureStore.setState({ fixtures: [] });
+    useWallsStore.setState({ walls: [] });
+    useHistoryStore.setState({ past: [], future: [] });
+  });
+
+  it("merges a contiguous free-form wall into ONE wall with ONE undo step (wd-7)", () => {
+    useWallsStore.setState({
+      walls: [topWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100 })],
+    });
+
+    useWallsStore.getState().addWall({
+      floorId: "f1",
+      x1: 400,
+      y1: 100,
+      x2: 700,
+      y2: 100,
+      thickness: 10,
+    });
+
+    const walls = useWallsStore.getState().walls;
+    expect(walls).toHaveLength(1);
+    const merged = walls[0];
+    expect(merged).toMatchObject({ x1: 0, y1: 100, x2: 700, y2: 100, thickness: 10 });
+    expect(merged.roomId).toBeUndefined();
+    expect(merged.id).not.toBe("a");
+
+    // ONE undo restores the pre-merge wall (spec: "one undo restores both segments")
+    const restored = useHistoryStore.getState().undo();
+    expect(restored).not.toBeNull();
+    if (restored) applyHistoryEntry(restored);
+    const afterUndo = useWallsStore.getState().walls;
+    expect(afterUndo).toHaveLength(1);
+    expect(afterUndo[0]).toMatchObject({ id: "a", x1: 0, x2: 400 });
+    expect(useHistoryStore.getState().canUndo()).toBe(false);
+  });
+
+  it("re-anchors openings of the absorbed wall to the merged wall (wd-7)", () => {
+    useWallsStore.setState({
+      walls: [topWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100 })],
+    });
+    // Puerta anclada a la pared "a" en offset 200 (centro visual en x=200)
+    useFixtureStore.setState({
+      fixtures: [
+        door({ id: "d1", x: 160, y: 95, wallId: "a", wallSide: "top", wallOffset: 200 }),
+      ],
+    });
+
+    useWallsStore.getState().addWall({
+      floorId: "f1",
+      x1: 400,
+      y1: 100,
+      x2: 700,
+      y2: 100,
+      thickness: 10,
+    });
+
+    const merged = useWallsStore.getState().walls[0];
+    expect(merged).toMatchObject({ x1: 0, x2: 700 });
+    expect(merged.id).not.toBe("a");
+
+    const fixture = useFixtureStore.getState().fixtures[0];
+    expect(fixture.wallId).toBe(merged.id);
+    expect(fixture.wallOffset).toBe(200); // offset equivalente (centro visual intacto)
+    expect(fixture.x).toBe(160);
+    expect(fixture.y).toBe(95);
+  });
+
+  it("appends when no merge applies (gap exceeds EPS) (wd-7)", () => {
+    useWallsStore.setState({
+      walls: [topWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100 })],
+    });
+
+    useWallsStore.getState().addWall({
+      floorId: "f1",
+      x1: 405,
+      y1: 100,
+      x2: 700,
+      y2: 100,
+      thickness: 10,
+    });
+
+    expect(useWallsStore.getState().walls).toHaveLength(2);
+  });
+
+  it("never merges room-derived walls (wd-7)", () => {
+    useWallsStore.setState({
+      walls: [topWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100, roomId: "r1" })],
+    });
+
+    useWallsStore.getState().addWall({
+      floorId: "f1",
+      x1: 400,
+      y1: 100,
+      x2: 700,
+      y2: 100,
+      thickness: 10,
+    });
+
+    const walls = useWallsStore.getState().walls;
+    expect(walls).toHaveLength(2);
+    expect(walls.find((w) => w.roomId === "r1")).toMatchObject({ id: "a", x1: 0, x2: 400 });
+    expect(walls.find((w) => !w.roomId)).toMatchObject({ x1: 400, x2: 700 });
   });
 });

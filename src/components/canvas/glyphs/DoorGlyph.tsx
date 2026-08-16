@@ -44,6 +44,7 @@ export const DoorGlyph = memo(function DoorGlyph({
   const isDoorOpen = fixture.props.isOpen !== false;
   const isSliding = !!fixture.props.sliding;
   const isDouble = !!fixture.props.double;
+  const catalogId = fixture.catalogId;
   const openingSide = (fixture.props.openingSide as OpeningSide | undefined) ?? "right";
   const openingAngle = (fixture.props.openingAngle as number | undefined) ?? 90;
   const doorColor = fixture.color;
@@ -161,12 +162,69 @@ export const DoorGlyph = memo(function DoorGlyph({
     <Rect width={fixture.width} height={fixture.height} fill="transparent" stroke="none" />
   );
 
-  // ---- Doble hoja (puerta-doble): dos hojas espejadas, cada una con su arco ----
+  // ---- Puerta de garaje: portón seccional (panel sólido + costillas) ----
+  if (catalogId === "puerta-garage") {
+    return (
+      <>
+        <Rect
+          width={fixture.width}
+          height={fixture.height}
+          fill={doorColor}
+          stroke={stroke}
+          strokeWidth={1.5}
+        />
+        {/* Costillas horizontales del portón (seccional) */}
+        <Line
+          points={[0, fixture.height / 4, fixture.width, fixture.height / 4]}
+          stroke={DOOR_PANEL}
+          strokeWidth={0.75}
+          pointerEvents="none"
+        />
+        <Line
+          points={[0, fixture.height / 2, fixture.width, fixture.height / 2]}
+          stroke={DOOR_PANEL}
+          strokeWidth={0.75}
+          pointerEvents="none"
+        />
+        <Line
+          points={[0, (3 * fixture.height) / 4, fixture.width, (3 * fixture.height) / 4]}
+          stroke={DOOR_PANEL}
+          strokeWidth={0.75}
+          pointerEvents="none"
+        />
+        {/* Montante central */}
+        <Line
+          points={[fixture.width / 2, 0, fixture.width / 2, fixture.height]}
+          stroke={DOOR_PANEL}
+          strokeWidth={0.75}
+          pointerEvents="none"
+        />
+        {anchor}
+        {label}
+      </>
+    );
+  }
+
+  // ---- Doble hoja (puerta-doble): marco + dos hojas espejadas, cada una con su arco ----
   if (isDouble) {
     const [leftLeaf, rightLeaf] = doubleDoorLeafGeometry(fixture.width, openingAngle);
     return (
       <>
         {transparentHitRect}
+        <Rect
+          width={fixture.width}
+          height={fixture.height}
+          fill={doorColor}
+          stroke={stroke}
+          strokeWidth={1.5}
+        />
+        {/* Línea de encuentro de las hojas en el centro del vano */}
+        <Line
+          points={[fixture.width / 2, 0, fixture.width / 2, fixture.height]}
+          stroke={DOOR_PANEL}
+          strokeWidth={0.75}
+          pointerEvents="none"
+        />
         <Line
           points={[leftLeaf.hingeX, 0, leftLeaf.tipX, leftLeaf.tipY]}
           stroke={doorColor}

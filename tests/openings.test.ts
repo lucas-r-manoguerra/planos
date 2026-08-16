@@ -19,6 +19,7 @@ import {
   doorLeafGeometry,
   doubleDoorLeafGeometry,
   openingExtrusion,
+  windowGridDividers,
   windowPaneGeometry,
 } from "@/lib/openings";
 import { DoorSubtype, WindowSubtype } from "@/types/plan";
@@ -240,5 +241,27 @@ describe("openingExtrusion (constantes 3D, fuente única S4)", () => {
       windowHeight: 120,
       windowSill: 90,
     });
+  });
+});
+
+describe("windowGridDividers (parteluces, S4-fix)", () => {
+  it("1×2: una línea horizontal al medio (guillotina doble)", () => {
+    expect(windowGridDividers(120, 10, 1, 2)).toEqual([0, 5, 120, 5]);
+  });
+
+  it("2×1: una línea vertical al centro (dos paños)", () => {
+    expect(windowGridDividers(120, 10, 2, 1)).toEqual([60, 0, 60, 10]);
+  });
+
+  it("3×1: dos líneas verticales (marco fijo)", () => {
+    expect(windowGridDividers(120, 10, 3, 1)).toEqual([40, 0, 40, 10, 80, 0, 80, 10]);
+  });
+
+  it("2×2: una vertical + una horizontal (ventanal)", () => {
+    expect(windowGridDividers(200, 10, 2, 2)).toEqual([100, 0, 100, 10, 0, 5, 200, 5]);
+  });
+
+  it("1×1 (sin divisiones): array vacío", () => {
+    expect(windowGridDividers(120, 10, 1, 1)).toEqual([]);
   });
 });

@@ -159,6 +159,33 @@ export function arcPoints(
 }
 
 /**
+ * Divisiones de vidrio de una ventana (travesaños/parteluces): líneas
+ * verticales entre columnas y horizontales entre filas, en formato Konva
+ * Line (x1,y1,x2,y2,...). Coordenadas locales del vano (0..width, 0..height).
+ * - (2, 1): una línea vertical al centro (ventana standard, dos paños).
+ * - (1, 2): una línea horizontal al medio (hoja de guillotina doble).
+ * - (2, 2): una línea vertical + una horizontal (ventanal de 2×2).
+ * - (1, 1) o dimensiones sin divisiones → array vacío.
+ */
+export function windowGridDividers(
+  width: number,
+  height: number,
+  columns: number,
+  rows: number
+): number[] {
+  const pts: number[] = [];
+  for (let c = 1; c < columns; c++) {
+    const x = (width * c) / columns;
+    pts.push(x, 0, x, height);
+  }
+  for (let r = 1; r < rows; r++) {
+    const y = (height * r) / rows;
+    pts.push(0, y, width, y);
+  }
+  return pts;
+}
+
+/**
  * Extrusión 3D de una abertura por categoría (cm): puerta desde el piso
  * (zStart 0, height 200); ventana sobre el alféizar (zStart 90, height 120).
  */

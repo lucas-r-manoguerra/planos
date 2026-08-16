@@ -28,7 +28,7 @@ import { useFixtureStore } from "@/stores/fixtures.store";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useWallsStore } from "@/stores/walls.store";
 import { getCatalogItem, calculateStairs } from "@/lib/fixtures-catalog";
-import { findNearestWallEntity, snapWallPoint } from "@/lib/wall-snap";
+import { findNearestWallEntity, snapWallPoint, snapWallPointDirectional } from "@/lib/wall-snap";
 import { Point } from "@/types/plan";
 
 export function PlanCanvas() {
@@ -83,6 +83,18 @@ export function PlanCanvas() {
     return snapWallPoint(p, rooms, walls);
   }, []);
 
+  /**
+   * Snap direccional para el EXTREMO del trazo: evita que una pared
+   * perpendicular cercana colapse la pared a un segmento vertical/horizontal
+   * de longitud ~0 (fix "las paredes solo se extienden en vertical").
+   */
+  const snapToCanvasPointDirectional = useCallback((p: Point, start: Point): Point => {
+    const { activeFloorId } = useFloorsStore.getState();
+    const rooms = useFloorsStore.getState().getActiveRooms();
+    const walls = useWallsStore.getState().getWallsForFloor(activeFloorId);
+    return snapWallPointDirectional(p, start, rooms, walls);
+  }, []);
+
   /** Quita el listener de window mouseup del trazo (si quedó registrado) */
   const finishWindowListeners = useCallback(() => {
     if (windowMouseUpRef.current) {
@@ -103,7 +115,7 @@ export function PlanCanvas() {
     if (!stage) return;
     const p = pointerToCanvas(stage);
     if (!p) return;
-    const end = snapToCanvasPoint(p);
+    const end = snapToCanvasPointDirectional(p, start);
 
     // En modo isométrico no se crea geometría (viewMode es display-only): cancelar
     if (useCanvasStore.getState().viewMode !== "2d") return;
@@ -119,7 +131,7 @@ export function PlanCanvas() {
       y2: end.y,
       thickness: 10, // espesor por defecto (cm)
     });
-  }, [pointerToCanvas, snapToCanvasPoint, finishWindowListeners]);
+  }, [pointerToCanvas, snapToCanvasPointDirectional, finishWindowListeners]);
 
   const handleWindowMouseUp = useCallback(() => {
     if (!drawStartRef.current) return;
@@ -206,8 +218,8 @@ export function PlanCanvas() {
 
         // Actualizar preview de trazo de pared en curso (wall tool)
         if (drawStartRef.current) {
-          const end = snapToCanvasPoint({ x, y });
           const start = drawStartRef.current;
+          const end = snapToCanvasPointDirectional({ x, y }, start);
           setDrawPreview({ x1: start.x, y1: start.y, x2: end.x, y2: end.y });
         }
 
@@ -240,7 +252,7 @@ export function PlanCanvas() {
         }
       }
     },
-    [panX, panY, zoom, rulerActive, setPointerPos, placingFixture, snapToCanvasPoint, viewMode],
+    [panX, panY, zoom, rulerActive, setPointerPos, placingFixture, snapToCanvasPointDirectional, viewMode],
   );
 
   const handleContextMenu = useCallback(

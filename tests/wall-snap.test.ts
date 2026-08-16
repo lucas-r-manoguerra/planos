@@ -4,7 +4,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { Room, RoomType, Wall } from "@/types/plan";
-import { snapWallPoint, findNearestWallEntity } from "@/lib/wall-snap";
+import { snapWallPoint, snapWallPointDirectional, findNearestWallEntity } from "@/lib/wall-snap";
 
 function makeRoom(partial: Partial<Room> & { id: string }): Room {
   return {
@@ -73,6 +73,90 @@ describe("snapWallPoint", () => {
     const room = makeRoom({ id: "r1", x: 100, y: 100, width: 100, height: 100 });
     const p = { x: 300, y: 300 };
     expect(snapWallPoint(p, [room], [])).toEqual(p);
+  });
+});
+
+describe("snapWallPointDirectional (extremo del trazo)", () => {
+  it("trazo horizontal no colapsa contra un extremo de pared vertical", () => {
+    // Pared vertical con extremo (295,0) a 4.2cm del extremo del trazo (292,3)
+    const v = wall({ id: "v", x1: 295, y1: 0, x2: 295, y2: 200 });
+    const snapped = snapWallPointDirectional(
+      { x: 292, y: 3 },
+      { x: 100, y: 100 },
+      [],
+      [v]
+    );
+    expect(snapped).toEqual({ x: 292, y: 3 });
+  });
+
+  it("el inicio snapeado a una esquina se conserva (snap normal no cambia)", () => {
+    // El inicio usa snapWallPoint (corner priority) — no se ve afectado
+    const room = makeRoom({ id: "r1", x: 100, y: 100, width: 200, height: 150 });
+    const snapped = snapWallPoint({ x: 98, y: 102 }, [room], []);
+    expect(snapped).toEqual({ x: 100, y: 100 });
+  });
+
+  it("trazo horizontal termina en una esquina de habitación", () => {
+    const room = makeRoom({ id: "r1", x: 300, y: 0, width: 100, height: 100 });
+    const snapped = snapWallPointDirectional(
+      { x: 398, y: 2 },
+      { x: 100, y: 100 },
+      [room],
+      []
+    );
+    expect(snapped).toEqual({ x: 400, y: 0 });
+  });
+
+  it("trazo horizontal une un extremo de pared horizontal", () => {
+    const h = wall({ id: "h", x1: 0, y1: 50, x2: 300, y2: 50 });
+    const snapped = snapWallPointDirectional(
+      { x: 304, y: 53 },
+      { x: 100, y: 100 },
+      [],
+      [h]
+    );
+    expect(snapped).toEqual({ x: 300, y: 50 });
+  });
+
+  it("trazo desde una esquina no vuelve a esa esquina (anti-colapso)", () => {
+    // Caso real del bug: inicio en la esquina (300,0); extremo a la derecha
+    // (320,3). Un snap completo iría a (300,0) (20.2cm) o al extremo de la
+    // pared del techo (300,5) — ambos colapsarían la pared a vertical.
+    const room = makeRoom({ id: "r1", x: 0, y: 0, width: 300, height: 200 });
+    const h = wall({ id: "h", x1: 0, y1: 5, x2: 300, y2: 5 });
+    const snapped = snapWallPointDirectional(
+      { x: 320, y: 3 },
+      { x: 300, y: 0 },
+      [room],
+      [h]
+    );
+    expect(snapped).toEqual({ x: 320, y: 3 });
+  });
+
+  it("trazo vertical desde una esquina sigue recto hasta la esquina opuesta", () => {
+    const room = makeRoom({ id: "r1", x: 0, y: 0, width: 300, height: 200 });
+    const snapped = snapWallPointDirectional(
+      { x: 300, y: 200 },
+      { x: 300, y: 0 },
+      [room],
+      []
+    );
+    expect(snapped).toEqual({ x: 300, y: 200 });
+  });
+
+  it("trazo vertical no colapsa contra un extremo de pared horizontal", () => {
+    // Pared horizontal (0,50)-(300,50); trazo vertical (150,100)→(150,-40):
+    // el extremo (150,50) de la pared está a 10cm, pero alineado en y con el
+    // inicio no (100 ≠ 50)... el anti-colapso lo descarta solo si comparte
+    // y con el inicio; acá el filtro de orientación lo excluye igual.
+    const h = wall({ id: "h", x1: 0, y1: 50, x2: 300, y2: 50 });
+    const snapped = snapWallPointDirectional(
+      { x: 150, y: -40 },
+      { x: 150, y: 100 },
+      [],
+      [h]
+    );
+    expect(snapped).toEqual({ x: 150, y: -40 });
   });
 });
 

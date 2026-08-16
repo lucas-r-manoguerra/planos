@@ -86,6 +86,86 @@ export function snapWallPoint(
 }
 
 /**
+ * Snap direccional para el EXTREMO de un trazo de pared nueva (S2 fix).
+ *
+ * Mismo contrato que snapWallPoint (esquinas con prioridad, comparación
+ * estricta) pero respeta el eje dominante del trazo para que el snap no
+ * colapse la pared a un segmento perpendicular:
+ *
+ * - Se calcula el eje dominante a partir del inicio del trazo (ya snapeado).
+ * - Las esquinas de habitaciones y los extremos de paredes que COMPARTEN la
+ *   coordenada del eje dominante con el inicio se descartan: snapear ahí
+ *   produciría una pared vertical/horizontal de longitud ~0.
+ * - Además, un trazo horizontal ignora los extremos de paredes verticales
+ *   (y viceversa), para que una pared perpendicular cercana no "capture" el
+ *   trazo y lo desvíe de su dirección.
+ *
+ * Causa raíz del bug "las paredes solo se extienden en vertical": con el snap
+ * completo, el extremo podía caer en un extremo de pared (o esquina) alineado
+ * en x con el inicio — p. ej. arrancar de la esquina (300,0) y que el extremo
+ * vaya a (300,5) → pared vertical de 5 cm en un trazo horizontal.
+ */
+export function snapWallPointDirectional(
+  p: Point,
+  start: Point,
+  rooms: Room[],
+  walls: Wall[],
+  threshold: number = SNAP_THRESHOLD
+): Point {
+  // Eje dominante del trazo: |dx| >= |dy| → trazo horizontal
+  const horizontal = Math.abs(p.x - start.x) >= Math.abs(p.y - start.y);
+  const collides = (point: Point): boolean =>
+    horizontal ? point.x === start.x : point.y === start.y;
+
+  // 1) Esquinas de habitaciones (prioridad), salvo las que colapsarían el trazo
+  let bestCorner: Point | null = null;
+  let bestCornerDist = threshold;
+  for (const room of rooms) {
+    const corners: Point[] = [
+      { x: room.x, y: room.y },
+      { x: room.x + room.width, y: room.y },
+      { x: room.x, y: room.y + room.height },
+      { x: room.x + room.width, y: room.y + room.height },
+    ];
+    for (const corner of corners) {
+      if (collides(corner)) continue;
+      const dist = Math.hypot(corner.x - p.x, corner.y - p.y);
+      if (dist < bestCornerDist) {
+        bestCornerDist = dist;
+        bestCorner = corner;
+      }
+    }
+  }
+  if (bestCorner) return bestCorner;
+
+  // 2) Extremos de paredes de la MISMA orientación que el trazo (las paredes
+  //    diagonales participan en ambos casos) y que no colapsen el trazo.
+  let bestEnd: Point | null = null;
+  let bestEndDist = threshold;
+  for (const wall of walls) {
+    const wallHorizontal = wall.y1 === wall.y2;
+    const wallVertical = wall.x1 === wall.x2;
+    if (wallHorizontal && !horizontal) continue;
+    if (wallVertical && horizontal) continue;
+    const ends: Point[] = [
+      { x: wall.x1, y: wall.y1 },
+      { x: wall.x2, y: wall.y2 },
+    ];
+    for (const end of ends) {
+      if (collides(end)) continue;
+      const dist = Math.hypot(end.x - p.x, end.y - p.y);
+      if (dist < bestEndDist) {
+        bestEndDist = dist;
+        bestEnd = end;
+      }
+    }
+  }
+  if (bestEnd) return bestEnd;
+
+  return { x: p.x, y: p.y };
+}
+
+/**
  * Pared más cercana a un punto, sobre su línea central (proyección).
  * Devuelve null si ninguna pared está dentro del umbral. La abertura se
  * ancla a la pared ganadora: wallId = wall.id, wallOffset = offset.

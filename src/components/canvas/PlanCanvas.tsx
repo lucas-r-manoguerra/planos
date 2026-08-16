@@ -27,9 +27,12 @@ import { CoordinateDisplay } from "./CoordinateDisplay";
 import { useFixtureStore } from "@/stores/fixtures.store";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useWallsStore } from "@/stores/walls.store";
+import { useTerrainStore } from "@/stores/rooms.store";
 import { getCatalogItem, calculateStairs } from "@/lib/fixtures-catalog";
-import { findNearestWallEntity, snapWallPoint } from "@/lib/wall-snap";
+import { findNearestWallEntity } from "@/lib/wall-snap";
 import { resolveWallEnd, effectiveMagnetism, isSnapped } from "@/lib/wall-angle-snap";
+import { snapWallStart } from "@/lib/terrain-snap";
+import { DEFAULT_WALL_THICKNESS } from "@/lib/wall-utils";
 import { Point } from "@/types/plan";
 
 export function PlanCanvas() {
@@ -81,19 +84,22 @@ export function PlanCanvas() {
     const { activeFloorId } = useFloorsStore.getState();
     const rooms = useFloorsStore.getState().getActiveRooms();
     const walls = useWallsStore.getState().getWallsForFloor(activeFloorId);
-    return snapWallPoint(p, rooms, walls);
+    const terrain = useTerrainStore.getState().terrain;
+    return snapWallStart(p, rooms, walls, terrain);
   }, []);
 
   /**
    * Resuelve el EXTREMO del trazo (dibujo y resize): cadena única del diseño
-   * (D3) — snap direccional de puntos → snap de ángulo → puntero crudo,
-   * gobernada por el magnetismo efectivo (flag del store XOR Shift).
+   * (D3) — snap direccional de puntos → snap de ángulo → snap al terreno
+   * (wall-drawing-8, banda a espesor/2) → puntero crudo, gobernada por el
+   * magnetismo efectivo (flag del store XOR Shift).
    */
   const resolveCanvasWallEnd = useCallback((p: Point, start: Point, magnetize: boolean): Point => {
     const { activeFloorId } = useFloorsStore.getState();
     const rooms = useFloorsStore.getState().getActiveRooms();
     const walls = useWallsStore.getState().getWallsForFloor(activeFloorId);
-    return resolveWallEnd(p, start, rooms, walls, magnetize);
+    const terrain = useTerrainStore.getState().terrain;
+    return resolveWallEnd(p, start, rooms, walls, magnetize, terrain, DEFAULT_WALL_THICKNESS);
   }, []);
 
   /** Quita el listener de window mouseup del trazo (si quedó registrado) */

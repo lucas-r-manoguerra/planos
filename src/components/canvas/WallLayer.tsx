@@ -22,9 +22,11 @@ import { useWallsStore } from "@/stores/walls.store";
 import { useSelectionStore } from "@/stores/selection.store";
 import { useCanvasStore } from "@/stores/canvas.store";
 import { useHistoryStore } from "@/stores/history.store";
+import { useTerrainStore } from "@/stores/rooms.store";
 import { Wall } from "@/types/plan";
 import { snapWallPoint } from "@/lib/wall-snap";
-import { resolveWallEnd, effectiveMagnetism } from "@/lib/wall-angle-snap";
+import { resolveWallEnd, effectiveMagnetism, isSnapped } from "@/lib/wall-angle-snap";
+import { snapWallToTerrain } from "@/lib/terrain-snap";
 import { wallBandPoints, DEFAULT_WALL_THICKNESS } from "@/lib/wall-utils";
 import { useCanvasColors } from "./canvas-colors";
 import { WallPreviewReadout } from "./WallPreviewReadout";
@@ -116,6 +118,7 @@ function WallEntity({ wall }: { wall: Wall }) {
   const selectedId = useSelectionStore((s) => s.selectedId);
   const select = useSelectionStore((s) => s.select);
   const activeTool = useCanvasStore((s) => s.activeTool);
+  const terrain = useTerrainStore((s) => s.terrain);
   const { wall: wallColor } = useCanvasColors();
   const isSelected = selectedId === wall.id;
 
@@ -158,18 +161,36 @@ function WallEntity({ wall }: { wall: Wall }) {
         .walls.filter((w) => w.id !== wall.id && w.floorId === wall.floorId);
 
       if (mode === "move") {
-        // Mover: SOLO snap de puntos; ambos extremos se desplazan por el mismo
-        // delta (wall-drawing-4 — el ángulo de la pared no cambia).
-        const snapped = snapWallPoint(p, rooms, others);
-        const dx = snapped.x - start.x;
-        const dy = snapped.y - start.y;
+        // Mover: gate por magnetismo efectivo (flag XOR Shift, wall-drawing-6/4
+        // — OFF o Shift = traslación cruda, sin snap de ningún tipo).
+        // ON: snap de puntos (ambos extremos se desplazan por el mismo delta)
+        // y, SOLO si el snap de punto no cambió el pointer y la pared es libre
+        // (sin roomId), lock al terreno (wall-drawing-8, D3): la pared libre
+        // se ancla al borde más cercano (de-punta o paralelo a espesor/2).
+        const magnetize = effectiveMagnetism(useCanvasStore.getState().magnetismEnabled, e.evt.shiftKey);
+        let dx = p.x - start.x;
+        let dy = p.y - start.y;
+        if (magnetize) {
+          const snapped = snapWallPoint(p, rooms, others);
+          dx = snapped.x - start.x;
+          dy = snapped.y - start.y;
+          if (!isSnapped(p, snapped) && !wall.roomId) {
+            const translated = { ...wall, x1: base.x1 + dx, y1: base.y1 + dy, x2: base.x2 + dx, y2: base.y2 + dy };
+            const locked = snapWallToTerrain(translated, terrain);
+            if (locked !== translated) {
+              dx = locked.x1 - base.x1;
+              dy = locked.y1 - base.y1;
+            }
+          }
+        }
         moveWall(wall.id, base.x1 + dx, base.y1 + dy, base.x2 + dx, base.y2 + dy);
         return;
       }
 
       // Resize: el extremo arrastrado se resuelve como en dibujo — snap de
-      // puntos, luego ángulo (pivote = extremo fijo), luego crudo; el
-      // magnetismo efectivo es flag XOR Shift del evento (wall-drawing-4/6).
+      // puntos, luego ángulo (pivote = extremo fijo), luego terreno (banda a
+      // espesor/2 con el espesor VIVO de la pared), luego crudo; el
+      // magnetismo efectivo es flag XOR Shift del evento (wall-drawing-4/6/8).
       // Leer la pared viva (el closure guarda la versión del mousedown).
       const live = useWallsStore.getState().walls.find((w) => w.id === wall.id);
       if (!live) return;
@@ -178,7 +199,7 @@ function WallEntity({ wall }: { wall: Wall }) {
         mode === "start"
           ? { x: live.x2, y: live.y2 }
           : { x: live.x1, y: live.y1 };
-      const resolved = resolveWallEnd(p, pivot, rooms, others, magnetize);
+      const resolved = resolveWallEnd(p, pivot, rooms, others, magnetize, terrain, live.thickness);
       const next =
         mode === "start"
           ? { x1: resolved.x, y1: resolved.y, x2: live.x2, y2: live.y2 }

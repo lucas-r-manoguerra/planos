@@ -29,16 +29,13 @@ import {
   isoRect,
   isoWallFaces,
 } from "@/lib/isometric";
+import { openingExtrusion } from "@/lib/openings";
 import { ROOM_COLORS } from "@/lib/constants";
 import { Fixture, Room, Terrain, Wall } from "@/types/plan";
 import { useCanvasColors } from "./canvas-colors";
 
 /** Altura de piso por defecto en cm (constants.ts:68) — seguro ante 0 */
 const DEFAULT_FLOOR_HEIGHT = 280;
-/** Alturas de aberturas en cm */
-const DOOR_HEIGHT = 200; // puerta: desde el piso
-const WINDOW_HEIGHT = 120; // ventana: sobre el alféizar
-const WINDOW_SILL = 90; // alféizar en cm
 
 /** Oscurece/clarifica un color #rrggbb (factor < 1 oscurece, > 1 aclara) */
 function shade(hex: string, factor: number): string {
@@ -109,9 +106,9 @@ function buildIsoScene(
       const faces = isoWallFaces(wall, floorHeight);
       if (!faces) return null;
       const wallOpenings = (openingsByWall.get(wall.id) ?? []).map((opening) => {
-        const isDoor = opening.category === "door";
-        const height = isDoor ? DOOR_HEIGHT : WINDOW_HEIGHT;
-        const zStart = isDoor ? 0 : WINDOW_SILL;
+        // Alturas por categoría (fuente única S4): puerta en piso (200 cm),
+        // ventana sobre alféizar (90→120 cm). Subtipos S4 se alinean solos.
+        const { height, zStart } = openingExtrusion(opening.category);
         const points =
           isoOpeningQuad(wall, opening.wallOffset ?? 0, opening.width, height, zStart) ?? [];
         return {

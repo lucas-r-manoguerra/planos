@@ -283,6 +283,16 @@ export const FIXTURE_CATALOG: FixtureCatalogItem[] = [
     icon: "🚪",
     props: { isOpen: true, openingAngle: 90, openingSide: "right" },
   },
+  {
+    id: "puerta-doble",
+    label: "Puerta Doble",
+    category: "door",
+    width: 160,
+    height: 10,
+    color: "#7c5a33",
+    icon: "🚪",
+    props: { isOpen: true, openingAngle: 90, openingSide: "right", double: true },
+  },
 
   // ==================== VENTANAS ====================
   {
@@ -324,6 +334,26 @@ export const FIXTURE_CATALOG: FixtureCatalogItem[] = [
     color: "#b0e0e6",
     icon: "🪟",
     props: { isOpen: true, openingAngle: 90, openingSide: "right" },
+  },
+  {
+    id: "ventana-fija",
+    label: "Ventana Fija",
+    category: "window",
+    width: 120,
+    height: 10,
+    color: "#d8eef5",
+    icon: "🪟",
+    props: { isOpen: false },
+  },
+  {
+    id: "ventana-oscilobatiente",
+    label: "Ventana Oscilobatiente",
+    category: "window",
+    width: 100,
+    height: 10,
+    color: "#6fa8c8",
+    icon: "🪟",
+    props: { isOpen: true, openingAngle: 45, openingSide: "right" },
   },
 
   // ==================== ESCALERAS ====================

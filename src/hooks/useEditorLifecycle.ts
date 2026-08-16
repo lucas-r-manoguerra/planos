@@ -10,11 +10,12 @@
  */
 
 import { useEffect } from "react";
-import { Floor, Fixture, SunSettings, Terrain } from "@/types/plan";
+import { Floor, Fixture, SunSettings, Terrain, Wall } from "@/types/plan";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { useSunStore } from "@/stores/sun.store";
 import { useFixtureStore } from "@/stores/fixtures.store";
+import { useWallsStore } from "@/stores/walls.store";
 import { useHistoryStore } from "@/stores/history.store";
 import {
   ensureActiveProject,
@@ -32,6 +33,7 @@ export interface EditorSnapshot {
   activeFloorId: string;
   sunSettings: SunSettings;
   fixtures: Fixture[];
+  walls: Wall[];
 }
 
 /** Lee el estado actual de los stores en un snapshot persistible */
@@ -39,6 +41,7 @@ export function collectEditorState(): EditorSnapshot {
   const { floors, activeFloorId } = useFloorsStore.getState();
   const { terrain } = useTerrainStore.getState();
   const { fixtures } = useFixtureStore.getState();
+  const { walls } = useWallsStore.getState();
   const sunSettings = useSunStore.getState();
 
   return {
@@ -46,6 +49,7 @@ export function collectEditorState(): EditorSnapshot {
     floors,
     activeFloorId,
     fixtures,
+    walls,
     sunSettings,
   };
 }
@@ -68,6 +72,9 @@ export function applyProjectData(saved: ProjectData): void {
   }
   if (saved.fixtures) {
     useFixtureStore.setState({ fixtures: saved.fixtures });
+  }
+  if (saved.walls) {
+    useWallsStore.setState({ walls: saved.walls });
   }
   // El historial de undo pertenece al proyecto anterior: no cruzar proyectos.
   useHistoryStore.getState().clear();

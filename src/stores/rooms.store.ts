@@ -10,6 +10,7 @@ import { DEFAULT_TERRAIN } from "@/lib/constants";
 import { useHistoryStore } from "@/stores/history.store";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useFixtureStore } from "@/stores/fixtures.store";
+import { useWallsStore } from "@/stores/walls.store";
 
 interface TerrainStore {
   terrain: Terrain;
@@ -29,6 +30,7 @@ export const useTerrainStore = create<TerrainStore>((set, get) => {
       activeFloorId,
       terrain: current.terrain,
       fixtures: useFixtureStore.getState().fixtures,
+      walls: useWallsStore.getState().walls,
     });
   };
 

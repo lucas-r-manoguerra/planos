@@ -22,6 +22,7 @@ import { useHistoryStore } from "@/stores/history.store";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { useFixtureStore } from "@/stores/fixtures.store";
+import { useWallsStore } from "@/stores/walls.store";
 import { useSelectionStore } from "@/stores/selection.store";
 import { useCanvasStore } from "@/stores/canvas.store";
 import type { HistoryEntry } from "@/stores/history.store";
@@ -38,6 +39,9 @@ export function applyHistoryEntry(entry: HistoryEntry): void {
   }
   if (entry.fixtures) {
     useFixtureStore.setState({ fixtures: entry.fixtures });
+  }
+  if (entry.walls) {
+    useWallsStore.setState({ walls: entry.walls });
   }
 }
 

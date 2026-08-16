@@ -31,7 +31,7 @@ interface CanvasStore extends CanvasState {
   setPan: (x: number, y: number) => void;
   toggleGrid: () => void;
   setGridSize: (size: number) => void;
-  setActiveTool: (tool: "select" | "pan") => void;
+  setActiveTool: (tool: "select" | "pan" | "wall") => void;
 }
 
 let zoomAnimationId: number | null = null;

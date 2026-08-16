@@ -1,5 +1,5 @@
 /**
- * Verificación de la persistencia v3 (multi-proyecto) en memoria.
+ * Verificación de la persistencia actual (v4) en memoria.
  *
  * Uso: bunx tsx scripts/storage-v3.ts
  * Ejecuta los flujos CRUD + migración legada contra un localStorage fake.
@@ -112,7 +112,7 @@ function legacyProject(name: string): ProjectData {
 
 // ==================== Checks ====================
 
-console.log("storage v3");
+console.log("storage v4");
 
 // --- Arranque sin datos ---
 resetStorage();
@@ -132,12 +132,13 @@ const migrated = ensureActiveProject();
 check("legado: migrado como proyecto por defecto", migrated.name, DEFAULT_PROJECT_NAME);
 check("legado: clave legada intacta", memory.getItem(LEGACY_KEY) !== null, true);
 const migratedData = loadActiveProject();
-check("legado: datos migrados a v3", migratedData?.version, 3);
+check("legado: datos migrados a v4", migratedData?.version, 4);
 check(
   "legado: fixtures reasignados a primera planta",
   migratedData?.fixtures?.[0]?.floorId,
   "f1"
 );
+check("legado: paredes materializadas (v4)", Array.isArray(migratedData?.walls), true);
 
 // --- buildInitialProjectIndex (puro) ---
 const built = buildInitialProjectIndex(legacyProject("L"), "p1");
@@ -157,6 +158,7 @@ check("create: blob con frente por defecto", createdData?.terrain.front, "bottom
 check("create: blob con 1 planta", createdData?.floors.length, 1);
 check("create: blob con planta 'Planta Baja'", createdData?.floors[0]?.name, "Planta Baja");
 check("create: blob sin fixtures", createdData?.fixtures?.length, 0);
+check("create: blob con walls vacío", createdData?.walls?.length, 0);
 
 // --- renameProject ---
 renameProject(created.id, "Casa Reformada");
@@ -173,7 +175,7 @@ saveActiveProject({
 });
 const saved = loadActiveProject();
 check("save: nombre del índice", saved?.name, "Casa Reformada");
-check("save: versión 3", saved?.version, 3);
+check("save: versión 4", saved?.version, 4);
 check("save: terreno persistido", saved?.terrain.northAngle, 90);
 check("save: savedAt definido", typeof saved?.savedAt, "string");
 const after = listProjects().find((p) => p.id === created.id)?.updatedAt;

@@ -10,16 +10,18 @@
  */
 
 import { create } from "zustand";
-import { Floor, Fixture, Terrain } from "@/types/plan";
+import { Floor, Fixture, Terrain, Wall } from "@/types/plan";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { useFixtureStore } from "@/stores/fixtures.store";
+import { useWallsStore } from "@/stores/walls.store";
 
 interface HistoryEntry {
   floors: Floor[];
   activeFloorId: string;
   terrain: Terrain;
   fixtures?: Fixture[];
+  walls?: Wall[];
 }
 
 export type { HistoryEntry };
@@ -61,7 +63,8 @@ export const useHistoryStore = create<HistoryStore>((set, get) => {
     const { floors, activeFloorId } = useFloorsStore.getState();
     const terrain = useTerrainStore.getState().terrain;
     const fixtures = useFixtureStore.getState().fixtures;
-    return { floors, activeFloorId, terrain, fixtures };
+    const walls = useWallsStore.getState().walls;
+    return { floors, activeFloorId, terrain, fixtures, walls };
   };
 
   return {

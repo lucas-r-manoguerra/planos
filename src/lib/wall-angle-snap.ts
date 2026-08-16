@@ -14,12 +14,16 @@
  *   target of the array; zero-length strokes are returned unchanged.
  * - resolveWallEnd: the draw/resize endpoint chain. Directional point snap
  *   (wall-snap S2) wins; if it does not change the point, angle snap; if
- *   that does not change it either, the raw point. magnetize=false skips
- *   both snaps (wall-drawing-6: Shift inverts the toggle).
+ *   that does not change it either, the terrain-edge stage (only when a
+ *   `terrain` is passed); otherwise the raw point. Each stage wins by
+ *   VALUE — terrain never overrides a point/angle result (wall-drawing-8).
+ *   magnetize=false skips every snap including terrain (wall-drawing-6:
+ *   Shift inverts the toggle).
  */
 
-import { Point, Room, Wall } from "@/types/plan";
+import { Point, Room, Terrain, Wall } from "@/types/plan";
 import { snapWallPointDirectional } from "@/lib/wall-snap";
+import { snapWallEndToTerrain } from "@/lib/terrain-snap";
 import { EPS } from "@/lib/walls";
 
 /** Angles (degrees) that attract a stroke within tolerance */
@@ -93,16 +97,25 @@ export function snapWallAngle(
 /**
  * Resolve the free endpoint of a wall draw/resize stroke.
  *
- * Priority (wall-drawing-3): directional point snap wins; if it does not
- * change the point, angle snap; otherwise the raw point. When `magnetize`
- * is false both snaps are skipped and the raw point is returned.
+ * Priority (wall-drawing-3/8): directional point snap wins; if it does not
+ * change the point, angle snap; if that does not change it either, the
+ * terrain-edge stage (wall-drawing-8, only when `terrain` is given);
+ * otherwise the raw point. Each stage wins by VALUE, so terrain never
+ * overrides a point/angle result. When `magnetize` is false every snap is
+ * skipped — including terrain (wall-drawing-6) — and the raw point is
+ * returned.
+ *
+ * `terrain`/`thickness` are optional and backward compatible: callers that
+ * omit them get the exact previous behavior (no terrain stage).
  */
 export function resolveWallEnd(
   p: Point,
   start: Point,
   rooms: Room[],
   walls: Wall[],
-  magnetize: boolean
+  magnetize: boolean,
+  terrain?: Terrain,
+  thickness?: number
 ): Point {
   if (!magnetize) return p;
 
@@ -111,7 +124,13 @@ export function resolveWallEnd(
   const snapped = snapWallPointDirectional(p, start, rooms, walls);
   if (snapped.x !== p.x || snapped.y !== p.y) return snapped;
 
-  return snapWallAngle(p, start);
+  const angled = snapWallAngle(p, start);
+  if (angled.x !== p.x || angled.y !== p.y) return angled;
+
+  // Terrain stage (wall-drawing-8): runs only when neither point nor angle
+  // snapped; skipped entirely when no terrain is given (backward compat).
+  if (!terrain) return angled;
+  return snapWallEndToTerrain(angled, start, terrain, thickness);
 }
 
 /**

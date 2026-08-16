@@ -77,8 +77,9 @@ describe("snapWallPoint", () => {
 });
 
 describe("snapWallPointDirectional (extremo del trazo)", () => {
-  it("trazo horizontal no colapsa contra un extremo de pared vertical", () => {
-    // Pared vertical con extremo (295,0) a 4.2cm del extremo del trazo (292,3)
+  it("trazo horizontal magnetiza al extremo de una pared vertical (L, decisión 4)", () => {
+    // Pared vertical con extremo (295,0) a 4.2cm del extremo del trazo (292,3):
+    // la unión L/T ahora magnetiza — ya no hay filtro de orientación.
     const v = wall({ id: "v", x1: 295, y1: 0, x2: 295, y2: 200 });
     const snapped = snapWallPointDirectional(
       { x: 292, y: 3 },
@@ -86,7 +87,30 @@ describe("snapWallPointDirectional (extremo del trazo)", () => {
       [],
       [v]
     );
-    expect(snapped).toEqual({ x: 292, y: 3 });
+    expect(snapped).toEqual({ x: 295, y: 0 });
+  });
+
+  it("trazo vertical magnetiza al extremo de una pared horizontal (L)", () => {
+    // Pared horizontal con extremo (400,300); trazo vertical (200,100)→(398,302):
+    // el extremo del trazo cae a 2.8cm del extremo de la pared → unión L.
+    const h = wall({ id: "h", x1: 0, y1: 300, x2: 400, y2: 300 });
+    const snapped = snapWallPointDirectional(
+      { x: 398, y: 302 },
+      { x: 200, y: 100 },
+      [],
+      [h]
+    );
+    expect(snapped).toEqual({ x: 400, y: 300 });
+  });
+
+  it("T contra el MEDIO de una pared no magnetiza (solo extremo-a-extremo)", () => {
+    // Pared vertical (500,0)-(500,400): el extremo del trazo horizontal cae
+    // sobre la línea central a 2cm, pero a ~200cm de AMBOS extremos — la unión
+    // en T contra el cuerpo de la pared NO magnetiza (non-goal wd-3).
+    const v = wall({ id: "v", x1: 500, y1: 0, x2: 500, y2: 400 });
+    const p = { x: 498, y: 200 };
+    const snapped = snapWallPointDirectional(p, { x: 100, y: 200 }, [], [v]);
+    expect(snapped).toEqual(p);
   });
 
   it("el inicio snapeado a una esquina se conserva (snap normal no cambia)", () => {
@@ -146,9 +170,9 @@ describe("snapWallPointDirectional (extremo del trazo)", () => {
 
   it("trazo vertical no colapsa contra un extremo de pared horizontal", () => {
     // Pared horizontal (0,50)-(300,50); trazo vertical (150,100)→(150,-40):
-    // el extremo (150,50) de la pared está a 10cm, pero alineado en y con el
-    // inicio no (100 ≠ 50)... el anti-colapso lo descarta solo si comparte
-    // y con el inicio; acá el filtro de orientación lo excluye igual.
+    // sin filtro de orientación ambos extremos (0,50) y (300,50) son
+    // candidatos, pero están a ~175cm del extremo del trazo — fuera del
+    // umbral (25cm) → sin snap (raw).
     const h = wall({ id: "h", x1: 0, y1: 50, x2: 300, y2: 50 });
     const snapped = snapWallPointDirectional(
       { x: 150, y: -40 },

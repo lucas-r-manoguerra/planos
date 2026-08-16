@@ -9,11 +9,12 @@
  * - snapWallAngle: nearest target with STRICT tolerance (< 4°), drawn length
  *   preserved along the target ray; tie -> first target in the array.
  * - resolveWallEnd: directional point snap wins by VALUE; if it does not
- *   change the point, angle snap; if that does not change it either, raw.
- *   magnetize=false -> fully raw (no point snap, no angle snap).
+ *   change the point, angle snap; if that does not change it either, the
+ *   terrain-edge stage (only when `terrain` is passed); otherwise raw.
+ *   magnetize=false -> fully raw (no point, angle, or terrain snap).
  */
 import { describe, expect, it } from "vitest";
-import { Wall } from "@/types/plan";
+import { Terrain, Wall } from "@/types/plan";
 import {
   wallAngleDeg,
   snapWallAngle,
@@ -139,11 +140,14 @@ describe("resolveWallEnd", () => {
     expect(r).not.toEqual({ x: ex, y: ey });
   });
 
-  it("anti-collapse (S2): a perpendicular wall endpoint cannot bend the stroke (wd-3)", () => {
-    const vertical = wall({ id: "v", x1: 295, y1: 0, x2: 295, y2: 200 });
+  it("L/T (wd-3, decision 4): a perpendicular wall endpoint magnetizes the stroke end", () => {
+    // Vertical wall ENDPOINT at (295, 100); the horizontal stroke's end lands
+    // 3 cm away and forms an L corner — the old same-orientation filter is
+    // gone (anti-collapse still rejects degenerate candidates elsewhere).
+    const vertical = wall({ id: "v", x1: 295, y1: 100, x2: 295, y2: 300 });
     const p = { x: 292, y: 100 }; // 3 cm from the vertical endpoint (295, 100)
     const r = resolveWallEnd(p, { x: 100, y: 100 }, [], [vertical], true);
-    expect(r.x).toBe(292);
+    expect(r.x).toBe(295);
     expect(r.y).toBe(100);
   });
 
@@ -162,6 +166,64 @@ describe("resolveWallEnd", () => {
     const angle = (Math.atan2(r.y - pivot.y, r.x - pivot.x) * 180) / Math.PI;
     expect(angle).toBeCloseTo(45, 9);
     expect(Math.hypot(r.x - pivot.x, r.y - pivot.y)).toBeCloseTo(100, 9);
+  });
+});
+
+describe("resolveWallEnd terrain stage (wall-drawing-8, U2)", () => {
+  const edgeTerrain: Terrain = {
+    width: 1000,
+    height: 800,
+    color: "#f0f0f0",
+    front: "top",
+    northAngle: 0,
+  };
+  // Vertical wall ending at (990, 300): the point-snap candidate.
+  const edgeWall = wall({ id: "e", x1: 990, y1: 0, x2: 990, y2: 300 });
+
+  it("point snap wins over terrain: an endpoint 5 cm away locks before the edge", () => {
+    // 5 cm from the endpoint (990,300), and also 5 cm from the edge x=1000 —
+    // the point stage must fire first and terrain must never override it.
+    const r = resolveWallEnd({ x: 995, y: 300 }, { x: 100, y: 300 }, [], [edgeWall], true, edgeTerrain);
+    expect(r).toEqual({ x: 990, y: 300 });
+  });
+
+  it("angle snap wins over terrain: a 2° stroke magnetizes to the 0° ray", () => {
+    // 8 cm stroke at 2°: the angle stage locks to the 0° ray -> (108, 100).
+    // Terrain WOULD de-punta x to the 110 edge (2 cm away); the value chain
+    // stops at the angle result.
+    const offset = at(8, 2);
+    const p = { x: 100 + offset.x, y: 100 + offset.y };
+    const r = resolveWallEnd(p, { x: 100, y: 100 }, [], [], true, edgeTerrain);
+    expect(r.y).toBe(100);
+    expect(r.x).toBeCloseTo(108, 4); // float: length * cos(0°) ≈ 107.999999
+    expect(r.x).not.toBe(110);
+  });
+
+  it("terrain runs when point and angle are value no-ops: de-punta anchors the edge", () => {
+    // Horizontal stroke ending 10 cm from the right edge. The angle stage is
+    // a value no-op (0° is a target, length preserved), so the chain
+    // continues and the endpoint anchors to x=1000.
+    const r = resolveWallEnd({ x: 990, y: 300 }, { x: 100, y: 300 }, [], [], true, edgeTerrain);
+    expect(r).toEqual({ x: 1000, y: 300 });
+  });
+
+  it("terrain parallel: a stroke near the bottom seats the centerline at t/2", () => {
+    // Horizontal stroke 5 cm from the bottom edge (parallel): the centerline
+    // locks to height - thickness/2 = 795, leaving the outer face on y=800.
+    const r = resolveWallEnd({ x: 300, y: 790 }, { x: 100, y: 790 }, [], [], true, edgeTerrain);
+    expect(r).toEqual({ x: 300, y: 795 });
+  });
+
+  it("magnetize OFF skips terrain: a near-edge pointer stays raw (wd-6)", () => {
+    const r = resolveWallEnd({ x: 990, y: 300 }, { x: 100, y: 300 }, [], [], false, edgeTerrain);
+    expect(r).toEqual({ x: 990, y: 300 });
+  });
+
+  it("no terrain passed = previous behavior (5-arg backward compat)", () => {
+    // Without terrain the near-edge horizontal stroke stays at the pointer
+    // (angle stage is a value no-op at 0°); with terrain it would go to 1000.
+    const r = resolveWallEnd({ x: 990, y: 300 }, { x: 100, y: 300 }, [], [], true);
+    expect(r).toEqual({ x: 990, y: 300 });
   });
 });
 

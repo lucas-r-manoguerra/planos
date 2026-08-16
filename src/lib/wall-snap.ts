@@ -95,10 +95,13 @@ export function snapWallPoint(
  * - Se calcula el eje dominante a partir del inicio del trazo (ya snapeado).
  * - Las esquinas de habitaciones y los extremos de paredes que COMPARTEN la
  *   coordenada del eje dominante con el inicio se descartan: snapear ahí
- *   produciría una pared vertical/horizontal de longitud ~0.
- * - Además, un trazo horizontal ignora los extremos de paredes verticales
- *   (y viceversa), para que una pared perpendicular cercana no "capture" el
- *   trazo y lo desvíe de su dirección.
+ *   produciría una pared vertical/horizontal de longitud ~0 (guardia
+ *   anti-colapso `collides()`, D6).
+ * - Los extremos de paredes PERPENDICULARES participan como candidatos
+ *   (decisión 4, wall-drawing-3): un extremo de pared vertical puede
+ *   magnetizar el extremo de un trazo horizontal — uniones L/T — siempre
+ *   que no colapse el trazo. La unión en T contra el MEDIO de una pared
+ *   sigue sin magnetizar: solo se consideran EXTREMOS de paredes.
  *
  * Causa raíz del bug "las paredes solo se extienden en vertical": con el snap
  * completo, el extremo podía caer en un extremo de pared (o esquina) alineado
@@ -138,15 +141,11 @@ export function snapWallPointDirectional(
   }
   if (bestCorner) return bestCorner;
 
-  // 2) Extremos de paredes de la MISMA orientación que el trazo (las paredes
-  //    diagonales participan en ambos casos) y que no colapsen el trazo.
+  // 2) Extremos de paredes (cualquier orientación — uniones L/T, decisión 4),
+  //    salvo los que colapsarían el trazo a longitud ~0 (anti-colapso).
   let bestEnd: Point | null = null;
   let bestEndDist = threshold;
   for (const wall of walls) {
-    const wallHorizontal = wall.y1 === wall.y2;
-    const wallVertical = wall.x1 === wall.x2;
-    if (wallHorizontal && !horizontal) continue;
-    if (wallVertical && horizontal) continue;
     const ends: Point[] = [
       { x: wall.x1, y: wall.y1 },
       { x: wall.x2, y: wall.y2 },

@@ -113,9 +113,14 @@ export const useHistoryStore = create<HistoryStore>((set, get) => {
       const previous = past[past.length - 1];
       const newPast = past.slice(0, -1);
 
+      // El estado VIVO actual (post-cambio) pasa al stack de redo: redo()
+      // debe restaurar el estado posterior al cambio, no el snapshot previo
+      // (spec wall-drawing-5 — undo/redo restauran la geometría de la pared).
+      const current = captureSnapshot();
+
       set({
         past: newPast,
-        future: [previous, ...future],
+        future: [current, ...future],
       });
 
       return previous;
@@ -128,8 +133,12 @@ export const useHistoryStore = create<HistoryStore>((set, get) => {
       const next = future[0];
       const newFuture = future.slice(1);
 
+      // El estado vivo actual (pre-redo) vuelve al stack de undo para que
+      // la alternancia undo→redo→undo recorra estados reales.
+      const current = captureSnapshot();
+
       set({
-        past: [...past, next],
+        past: [...past, current],
         future: newFuture,
       });
 

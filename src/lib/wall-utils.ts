@@ -21,10 +21,41 @@ import {
 } from "@/lib/walls";
 
 /** Espesor de pared por defecto (cm) — mismo default que Room.wallWidth */
-const DEFAULT_WALL_THICKNESS = 10;
+export const DEFAULT_WALL_THICKNESS = 10;
 
 function clamp(v: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, v));
+}
+
+/**
+ * Banda (polígono) de una pared alrededor de su línea central, en formato
+ * Konva Line (x1,y1,x2,y2,...). Soportada paredes DIAGONALES: a diferencia
+ * de un rect axis-aligned, la banda sigue la orientación real del segmento.
+ * Para paredes horizontales/verticales coincide exactamente con el rect de
+ * espesor `thickness` (mismo resultado que la versión anterior a v4-fix).
+ * Pared degenerada (longitud cero) → cuadrilátero de área nula.
+ */
+export function wallBandPoints(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  thickness: number = DEFAULT_WALL_THICKNESS
+): number[] {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const len = Math.hypot(dx, dy);
+  if (len <= EPS) return [x1, y1, x2, y2];
+  // Normal perpendicular a la línea central (gira 90°)
+  const nx = -dy / len;
+  const ny = dx / len;
+  const half = thickness / 2;
+  return [
+    x1 + nx * half, y1 + ny * half,
+    x2 + nx * half, y2 + ny * half,
+    x2 - nx * half, y2 - ny * half,
+    x1 - nx * half, y1 - ny * half,
+  ];
 }
 
 // ==================== Claves canónicas (reuso de IDs) ====================

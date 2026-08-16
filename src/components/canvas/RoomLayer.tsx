@@ -13,6 +13,7 @@ import { Group, Rect, Text } from "react-konva";
 import Konva from "konva";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useSelectionStore } from "@/stores/selection.store";
+import { useCanvasStore } from "@/stores/canvas.store";
 import { Room } from "@/types/plan";
 import { formatDimensions } from "@/lib/utils";
 import { ROOM_COLORS } from "@/lib/constants";
@@ -24,6 +25,7 @@ const RoomRect = memo(function RoomRect({ room }: { room: Room }) {
   const moveRoom = useFloorsStore((s) => s.moveRoom);
   const selectedId = useSelectionStore((s) => s.selectedId);
   const select = useSelectionStore((s) => s.select);
+  const activeTool = useCanvasStore((s) => s.activeTool);
   const { roomStroke, roomLabel, roomDim } = useCanvasColors();
   const isSelected = selectedId === room.id;
 
@@ -69,7 +71,7 @@ const RoomRect = memo(function RoomRect({ room }: { room: Room }) {
     <Group
       x={posX}
       y={posY}
-      draggable
+      draggable={activeTool === "select"}
       onDragStart={handleDragStart}
       onDragMove={handleDragMove}
       onDragEnd={handleDragEnd}

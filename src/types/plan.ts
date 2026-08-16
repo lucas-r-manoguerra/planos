@@ -112,6 +112,8 @@ export interface CanvasState {
   gridVisible: boolean; // Si la grilla está visible
   gridSize: number;     // Tamaño de la grilla en centímetros
   activeTool: "select" | "pan" | "wall"; // Herramienta activa
+  viewMode: ViewMode;   // Modo de visualización (regla 05: estado de display)
+  magnetismEnabled: boolean; // Magnetismo de paredes (snap punto + ángulo, wall-drawing-6)
 }
 
 // Interfaz para la tienda de habitaciones (Zustand store)
@@ -148,10 +150,12 @@ export type FurnitureSubtype =
 export type PlantSubtype = "maceta-chica" | "maceta-grande" | "planta-media" | "planta-grande";
 
 // Subtipos de puertas
-export type DoorSubtype = "puerta-standard" | "puerta-americana" | "puerta-garage" | "puerta-corrediza" | "puerta-balcon";
+// S4: puerta-doble = dos hojas espejadas (prop `double: true`, width 160)
+export type DoorSubtype = "puerta-standard" | "puerta-americana" | "puerta-garage" | "puerta-corrediza" | "puerta-balcon" | "puerta-doble";
 
 // Subtipos de ventanas
-export type WindowSubtype = "ventana-standard" | "ventana-corrediza" | "ventana-batiente" | "ventanal";
+// S4: ventana-fija (props `isOpen: false` → marco fijo); ventana-oscilobatiente (panel a 45°)
+export type WindowSubtype = "ventana-standard" | "ventana-corrediza" | "ventana-batiente" | "ventanal" | "ventana-fija" | "ventana-oscilobatiente";
 
 // Subtipos de escaleras
 export type StairSubtype = "tramo-unico" | "dos-tramos";

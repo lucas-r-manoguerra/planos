@@ -2,7 +2,7 @@
  * Tests de paredes v4 (lib/wall-utils.ts + lib/walls.ts).
  * Coordenadas en cm: 1 unidad = 1 centímetro.
  */
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { Room, RoomType, Wall, Fixture } from "@/types/plan";
 import {
   materializeFloorWalls,
@@ -16,8 +16,15 @@ import {
   edgeAnchor,
   findWallForAnchor,
   wallKey,
+  wallBandPoints,
+  DEFAULT_WALL_THICKNESS,
 } from "@/lib/wall-utils";
 import { getRoomWallSegments } from "@/lib/walls";
+import { useWallsStore } from "@/stores/walls.store";
+import { useFixtureStore } from "@/stores/fixtures.store";
+import { useFloorsStore } from "@/stores/floors.store";
+import { useHistoryStore } from "@/stores/history.store";
+import { applyHistoryEntry } from "@/hooks/useEditorShortcuts";
 
 function makeRoom(partial: Partial<Room> & { id: string }): Room {
   return {
@@ -296,5 +303,321 @@ describe("getRoomWallSegments (v3 intacto)", () => {
   it("sigue generando 4 segmentos sólidos en una habitación encerrada", () => {
     const room = makeRoom({ id: "r1" });
     expect(getRoomWallSegments(room, [], true)).toHaveLength(4);
+  });
+});
+
+describe("wallBandPoints (banda de pared, v4-fix)", () => {
+  it("pared horizontal: banda de espesor alrededor de la línea central", () => {
+    const pts = wallBandPoints(0, 5, 300, 5, 10);
+    // (0,10),(300,10),(300,0),(0,0) — Konva Line x1,y1,x2,y2,...
+    expect(pts).toEqual([0, 10, 300, 10, 300, 0, 0, 0]);
+  });
+
+  it("pared vertical: banda a la izquierda/derecha de la línea central", () => {
+    const pts = wallBandPoints(295, 0, 295, 200, 10);
+    expect(pts).toEqual([290, 0, 290, 200, 300, 200, 300, 0]);
+  });
+
+  it("pared diagonal: la banda sigue la orientación real del segmento", () => {
+    // 45°: normal perpendicular (−1,1)/√2 → offset por eje (thickness/2)/√2
+    const pts = wallBandPoints(0, 0, 100, 100, 10);
+    const o = (10 / 2) / Math.SQRT2;
+    expect(pts[0]).toBeCloseTo(-o, 6);
+    expect(pts[1]).toBeCloseTo(o, 6);
+    expect(pts[2]).toBeCloseTo(100 - o, 6);
+    expect(pts[3]).toBeCloseTo(100 + o, 6);
+    expect(pts[4]).toBeCloseTo(100 + o, 6);
+    expect(pts[5]).toBeCloseTo(100 - o, 6);
+    expect(pts[6]).toBeCloseTo(o, 6);
+    expect(pts[7]).toBeCloseTo(-o, 6);
+  });
+
+  it("espesor por defecto DEFAULT_WALL_THICKNESS (10)", () => {
+    expect(wallBandPoints(0, 5, 300, 5)).toEqual(wallBandPoints(0, 5, 300, 5, 10));
+    expect(DEFAULT_WALL_THICKNESS).toBe(10);
+  });
+
+  it("pared degenerada (longitud cero): banda de área nula, sin NaN", () => {
+    const pts = wallBandPoints(50, 50, 50, 50, 10);
+    expect(pts.every((v) => Number.isFinite(v))).toBe(true);
+    expect(pts).toHaveLength(4);
+  });
+});
+
+describe("addWall merge (wd-7, P2)", () => {
+  beforeEach(() => {
+    useFloorsStore.setState({ floors: [], activeFloorId: "f1" });
+    useFixtureStore.setState({ fixtures: [] });
+    useWallsStore.setState({ walls: [] });
+    useHistoryStore.setState({ past: [], future: [] });
+  });
+
+  it("merges a contiguous free-form wall into ONE wall with ONE undo step (wd-7)", () => {
+    useWallsStore.setState({
+      walls: [topWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100 })],
+    });
+
+    useWallsStore.getState().addWall({
+      floorId: "f1",
+      x1: 400,
+      y1: 100,
+      x2: 700,
+      y2: 100,
+      thickness: 10,
+    });
+
+    const walls = useWallsStore.getState().walls;
+    expect(walls).toHaveLength(1);
+    const merged = walls[0];
+    expect(merged).toMatchObject({ x1: 0, y1: 100, x2: 700, y2: 100, thickness: 10 });
+    expect(merged.roomId).toBeUndefined();
+    expect(merged.id).not.toBe("a");
+
+    // ONE undo restores the pre-merge wall (spec: "one undo restores both segments")
+    const restored = useHistoryStore.getState().undo();
+    expect(restored).not.toBeNull();
+    if (restored) applyHistoryEntry(restored);
+    const afterUndo = useWallsStore.getState().walls;
+    expect(afterUndo).toHaveLength(1);
+    expect(afterUndo[0]).toMatchObject({ id: "a", x1: 0, x2: 400 });
+    expect(useHistoryStore.getState().canUndo()).toBe(false);
+  });
+
+  it("re-anchors openings of the absorbed wall to the merged wall (wd-7)", () => {
+    useWallsStore.setState({
+      walls: [topWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100 })],
+    });
+    // Puerta anclada a la pared "a" en offset 200 (centro visual en x=200)
+    useFixtureStore.setState({
+      fixtures: [
+        door({ id: "d1", x: 160, y: 95, wallId: "a", wallSide: "top", wallOffset: 200 }),
+      ],
+    });
+
+    useWallsStore.getState().addWall({
+      floorId: "f1",
+      x1: 400,
+      y1: 100,
+      x2: 700,
+      y2: 100,
+      thickness: 10,
+    });
+
+    const merged = useWallsStore.getState().walls[0];
+    expect(merged).toMatchObject({ x1: 0, x2: 700 });
+    expect(merged.id).not.toBe("a");
+
+    const fixture = useFixtureStore.getState().fixtures[0];
+    expect(fixture.wallId).toBe(merged.id);
+    expect(fixture.wallOffset).toBe(200); // offset equivalente (centro visual intacto)
+    expect(fixture.x).toBe(160);
+    expect(fixture.y).toBe(95);
+  });
+
+  it("appends when no merge applies (gap exceeds EPS) (wd-7)", () => {
+    useWallsStore.setState({
+      walls: [topWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100 })],
+    });
+
+    useWallsStore.getState().addWall({
+      floorId: "f1",
+      x1: 405,
+      y1: 100,
+      x2: 700,
+      y2: 100,
+      thickness: 10,
+    });
+
+    expect(useWallsStore.getState().walls).toHaveLength(2);
+  });
+
+  it("never merges room-derived walls (wd-7)", () => {
+    useWallsStore.setState({
+      walls: [topWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100, roomId: "r1" })],
+    });
+
+    useWallsStore.getState().addWall({
+      floorId: "f1",
+      x1: 400,
+      y1: 100,
+      x2: 700,
+      y2: 100,
+      thickness: 10,
+    });
+
+    const walls = useWallsStore.getState().walls;
+    expect(walls).toHaveLength(2);
+    expect(walls.find((w) => w.roomId === "r1")).toMatchObject({ id: "a", x1: 0, x2: 400 });
+    expect(walls.find((w) => !w.roomId)).toMatchObject({ x1: 400, x2: 700 });
+  });
+});
+
+describe("move/resize merge (wd-7, U3)", () => {
+  beforeEach(() => {
+    useFloorsStore.setState({ floors: [], activeFloorId: "f1" });
+    useFixtureStore.setState({ fixtures: [] });
+    useWallsStore.setState({ walls: [] });
+    useHistoryStore.setState({ past: [], future: [] });
+  });
+
+  it("move that becomes collinear and contiguous merges into ONE wall with ONE undo step", () => {
+    useWallsStore.setState({
+      walls: [
+        topWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100 }),
+        topWall({ id: "w", x1: 500, y1: 200, x2: 700, y2: 200 }),
+      ],
+    });
+
+    useWallsStore.getState().moveWall("w", 400, 100, 700, 100);
+
+    const walls = useWallsStore.getState().walls;
+    expect(walls).toHaveLength(1);
+    const merged = walls[0];
+    expect(merged).toMatchObject({ x1: 0, y1: 100, x2: 700, y2: 100, thickness: 10 });
+    expect(merged.roomId).toBeUndefined();
+    expect(merged.id).not.toBe("a");
+    expect(merged.id).not.toBe("w");
+
+    // ONE undo restores both source walls (no intermediate merge state)
+    const restored = useHistoryStore.getState().undo();
+    expect(restored).not.toBeNull();
+    if (restored) applyHistoryEntry(restored);
+    const afterUndo = useWallsStore.getState().walls;
+    expect(afterUndo).toHaveLength(2);
+    expect(afterUndo.map((w) => w.id).sort()).toEqual(["a", "w"]);
+    expect(afterUndo.find((w) => w.id === "w")).toMatchObject({
+      x1: 500,
+      y1: 200,
+      x2: 700,
+      y2: 200,
+    });
+    expect(useHistoryStore.getState().canUndo()).toBe(false);
+  });
+
+  it("resize that becomes collinear and contiguous merges into ONE wall with ONE undo step", () => {
+    useWallsStore.setState({
+      walls: [
+        topWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100 }),
+        topWall({ id: "w", x1: 500, y1: 100, x2: 700, y2: 100 }),
+      ],
+    });
+
+    useWallsStore.getState().resizeWall("w", 400, 100, 700, 100);
+
+    const walls = useWallsStore.getState().walls;
+    expect(walls).toHaveLength(1);
+    expect(walls[0]).toMatchObject({ x1: 0, y1: 100, x2: 700, y2: 100 });
+    expect(walls[0].id).not.toBe("a");
+    expect(walls[0].id).not.toBe("w");
+
+    const restored = useHistoryStore.getState().undo();
+    expect(restored).not.toBeNull();
+    if (restored) applyHistoryEntry(restored);
+    const afterUndo = useWallsStore.getState().walls;
+    expect(afterUndo).toHaveLength(2);
+    expect(afterUndo.find((w) => w.id === "w")).toMatchObject({ x1: 500, y1: 100, x2: 700 });
+    expect(useHistoryStore.getState().canUndo()).toBe(false);
+  });
+
+  it("resolves a sandwiched A…W…B union when the moved wall lands between two walls", () => {
+    useWallsStore.setState({
+      walls: [
+        topWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100 }),
+        topWall({ id: "w", x1: 800, y1: 300, x2: 900, y2: 300 }),
+        topWall({ id: "b", x1: 700, y1: 100, x2: 1000, y2: 100 }),
+      ],
+    });
+
+    useWallsStore.getState().moveWall("w", 400, 100, 700, 100);
+
+    const walls = useWallsStore.getState().walls;
+    expect(walls).toHaveLength(1);
+    expect(walls[0]).toMatchObject({ x1: 0, y1: 100, x2: 1000, y2: 100 });
+  });
+
+  it("never merges a room-derived neighbor on move (wd-7)", () => {
+    useWallsStore.setState({
+      walls: [
+        topWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100, roomId: "r1" }),
+        topWall({ id: "w", x1: 500, y1: 200, x2: 700, y2: 200 }),
+      ],
+    });
+
+    useWallsStore.getState().moveWall("w", 400, 100, 700, 100);
+
+    const walls = useWallsStore.getState().walls;
+    expect(walls).toHaveLength(2);
+    expect(walls.find((w) => w.roomId === "r1")).toMatchObject({ id: "a", x1: 0, x2: 400 });
+    expect(walls.find((w) => !w.roomId)).toMatchObject({ id: "w", x1: 400, x2: 700 });
+  });
+
+  it("never merges a room-derived target on move (wd-7)", () => {
+    useWallsStore.setState({
+      walls: [
+        topWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100 }),
+        topWall({ id: "w", x1: 500, y1: 200, x2: 700, y2: 200, roomId: "r1" }),
+      ],
+    });
+
+    useWallsStore.getState().moveWall("w", 400, 100, 700, 100);
+
+    const walls = useWallsStore.getState().walls;
+    expect(walls).toHaveLength(2);
+    expect(walls.find((w) => w.id === "w")).toMatchObject({ x1: 400, x2: 700, roomId: "r1" });
+    expect(walls.find((w) => w.id === "a")).toMatchObject({ x1: 0, x2: 400 });
+  });
+
+  it("re-anchors openings to the surviving merged wall after a move", () => {
+    useWallsStore.setState({
+      walls: [
+        topWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100 }),
+        topWall({ id: "w", x1: 500, y1: 200, x2: 700, y2: 200 }),
+      ],
+    });
+    // Door anchored to "w" at offset 100 → visual center (600, 200)
+    useFixtureStore.setState({
+      fixtures: [
+        door({ id: "d1", x: 560, y: 195, wallId: "w", wallSide: "top", wallOffset: 100 }),
+      ],
+    });
+
+    useWallsStore.getState().moveWall("w", 400, 100, 700, 100);
+
+    const merged = useWallsStore.getState().walls[0];
+    expect(merged).toMatchObject({ x1: 0, x2: 700 });
+    expect(merged.id).not.toBe("w");
+
+    const fixture = useFixtureStore.getState().fixtures[0];
+    expect(fixture.wallId).toBe(merged.id);
+    // The opening follows the moved wall: x-center stays at 600 (offset
+    // recomputed on the merged wall), y-center rides the wall to y=100
+    expect(fixture.x + fixture.width / 2).toBe(600);
+    expect(fixture.y + fixture.height / 2).toBe(100);
+  });
+
+  it("re-anchors openings to the surviving merged wall after a resize", () => {
+    useWallsStore.setState({
+      walls: [
+        topWall({ id: "a", x1: 0, y1: 100, x2: 400, y2: 100 }),
+        topWall({ id: "w", x1: 500, y1: 100, x2: 700, y2: 100 }),
+      ],
+    });
+    // Door anchored to "a" at offset 200 → visual center (200, 100)
+    useFixtureStore.setState({
+      fixtures: [
+        door({ id: "d1", x: 160, y: 95, wallId: "a", wallSide: "top", wallOffset: 200 }),
+      ],
+    });
+
+    useWallsStore.getState().resizeWall("w", 400, 100, 700, 100);
+
+    const merged = useWallsStore.getState().walls[0];
+    expect(merged).toMatchObject({ x1: 0, x2: 700 });
+    expect(merged.id).not.toBe("a");
+
+    const fixture = useFixtureStore.getState().fixtures[0];
+    expect(fixture.wallId).toBe(merged.id);
+    expect(fixture.x + fixture.width / 2).toBe(200);
+    expect(fixture.y + fixture.height / 2).toBe(100);
   });
 });

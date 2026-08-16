@@ -18,15 +18,22 @@ import { TerrainLayer } from "./TerrainLayer";
 import { ShadowLayer } from "./ShadowLayer";
 import { RoomLayer } from "./RoomLayer";
 import { FixtureLayer } from "./FixtureLayer";
-import { WallLayer, WallPreview } from "./WallLayer";
+import { WallLayer, WallPreview, WallDrawPreview } from "./WallLayer";
+import { IsometricLayer } from "./IsometricLayer";
 import { MeasurementLayer } from "./MeasurementLayer";
 import { SunArcLayer } from "./SunArcLayer";
 import { CompassOverlay } from "./CompassOverlay";
 import { CoordinateDisplay } from "./CoordinateDisplay";
 import { useFixtureStore } from "@/stores/fixtures.store";
 import { useFloorsStore } from "@/stores/floors.store";
+import { useWallsStore } from "@/stores/walls.store";
+import { useTerrainStore } from "@/stores/rooms.store";
 import { getCatalogItem, calculateStairs } from "@/lib/fixtures-catalog";
-import { findNearestWall } from "@/lib/utils";
+import { findNearestWallEntity } from "@/lib/wall-snap";
+import { resolveWallEnd, effectiveMagnetism, isSnapped } from "@/lib/wall-angle-snap";
+import { snapWallStart } from "@/lib/terrain-snap";
+import { DEFAULT_WALL_THICKNESS } from "@/lib/wall-utils";
+import { Point } from "@/types/plan";
 
 export function PlanCanvas() {
   const stageRef = useRef<Konva.Stage>(null);
@@ -34,8 +41,12 @@ export function PlanCanvas() {
   const [size, setSize] = useState({ width: 800, height: 600 });
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [wallPreview, setWallPreview] = useState<WallPreview | null>(null);
+  const [drawPreview, setDrawPreview] = useState<WallDrawPreview | null>(null);
+  const drawStartRef = useRef<Point | null>(null);
+  /** Listener de window mouseup del trazo activo (identidad para removal) */
+  const windowMouseUpRef = useRef<((e: MouseEvent) => void) | null>(null);
 
-  const { zoom, panX, panY, smoothZoom, setPan } = useCanvasStore();
+  const { zoom, panX, panY, smoothZoom, setPan, activeTool, setActiveTool, viewMode } = useCanvasStore();
   const { active: rulerActive, pointA, setPointA, setPointerPos, addMeasurement, deactivate } = useRulerStore();
   const { placingFixture, addFixture, setPlacingFixture } = useFixtureStore();
 
@@ -60,17 +71,137 @@ export function PlanCanvas() {
     return () => useCanvasStore.setState({ stageRef: null });
   }, []);
 
-  // Cancelar modo colocación con Escape
+  /** Punto del cursor en coordenadas de canvas (cm) */
+  const pointerToCanvas = useCallback((stage: Konva.Stage): Point | null => {
+    const pointer = stage.getPointerPosition();
+    if (!pointer) return null;
+    const { zoom: z, panX: px, panY: py } = useCanvasStore.getState();
+    return { x: (pointer.x - px) / z, y: (pointer.y - py) / z };
+  }, []);
+
+  /** Convierte un punto snap en coords de canvas según el estado vivo */
+  const snapToCanvasPoint = useCallback((p: Point): Point => {
+    const { activeFloorId } = useFloorsStore.getState();
+    const rooms = useFloorsStore.getState().getActiveRooms();
+    const walls = useWallsStore.getState().getWallsForFloor(activeFloorId);
+    const terrain = useTerrainStore.getState().terrain;
+    return snapWallStart(p, rooms, walls, terrain);
+  }, []);
+
+  /**
+   * Resuelve el EXTREMO del trazo (dibujo y resize): cadena única del diseño
+   * (D3) — snap direccional de puntos → snap de ángulo → snap al terreno
+   * (wall-drawing-8, banda a espesor/2) → puntero crudo, gobernada por el
+   * magnetismo efectivo (flag del store XOR Shift).
+   */
+  const resolveCanvasWallEnd = useCallback((p: Point, start: Point, magnetize: boolean): Point => {
+    const { activeFloorId } = useFloorsStore.getState();
+    const rooms = useFloorsStore.getState().getActiveRooms();
+    const walls = useWallsStore.getState().getWallsForFloor(activeFloorId);
+    const terrain = useTerrainStore.getState().terrain;
+    return resolveWallEnd(p, start, rooms, walls, magnetize, terrain, DEFAULT_WALL_THICKNESS);
+  }, []);
+
+  /** Quita el listener de window mouseup del trazo (si quedó registrado) */
+  const finishWindowListeners = useCallback(() => {
+    if (windowMouseUpRef.current) {
+      window.removeEventListener("mouseup", windowMouseUpRef.current);
+      windowMouseUpRef.current = null;
+    }
+  }, []);
+
+  /** Finaliza el trazo: crea la pared si el trazo tiene longitud */
+  const completeDraw = useCallback((shiftKey: boolean) => {
+    const start = drawStartRef.current;
+    drawStartRef.current = null;
+    setDrawPreview(null);
+    finishWindowListeners();
+    if (!start) return;
+
+    const stage = stageRef.current;
+    if (!stage) return;
+    const p = pointerToCanvas(stage);
+    if (!p) return;
+    // Shift en el mouseup inyecta la inversión del magnetismo en el commit (D2)
+    const magnetize = effectiveMagnetism(useCanvasStore.getState().magnetismEnabled, shiftKey);
+    const end = resolveCanvasWallEnd(p, start, magnetize);
+
+    // En modo isométrico no se crea geometría (viewMode es display-only): cancelar
+    if (useCanvasStore.getState().viewMode !== "2d") return;
+
+    // Longitud cero: punto sin dirección, se descarta (wall-drawing-2)
+    if (Math.abs(end.x - start.x) <= 0 && Math.abs(end.y - start.y) <= 0) return;
+
+    useWallsStore.getState().addWall({
+      floorId: useFloorsStore.getState().activeFloorId,
+      x1: start.x,
+      y1: start.y,
+      x2: end.x,
+      y2: end.y,
+      thickness: 10, // espesor por defecto (cm)
+    });
+  }, [pointerToCanvas, resolveCanvasWallEnd, finishWindowListeners]);
+
+  const handleWindowMouseUp = useCallback((e: MouseEvent) => {
+    if (!drawStartRef.current) return;
+    completeDraw(e.shiftKey);
+  }, [completeDraw]);
+
+  // Cancelar modo colocación / trazo de pared / salir de la herramienta con Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && placingFixture) {
+      if (e.key !== "Escape") return;
+      if (placingFixture) {
         setPlacingFixture(null);
         setWallPreview(null);
+        return;
+      }
+      if (drawStartRef.current) {
+        // Prioridad 1: cancelar el trazo en curso (no crea pared)
+        finishWindowListeners();
+        drawStartRef.current = null;
+        setDrawPreview(null);
+        return;
+      }
+      if (activeTool === "wall") {
+        // Prioridad 2: salir de la herramienta pared
+        setActiveTool("select");
       }
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [placingFixture, setPlacingFixture]);
+  }, [placingFixture, setPlacingFixture, activeTool, setActiveTool, finishWindowListeners]);
+
+  const handleStageMouseDown = useCallback(
+    (e: Konva.KonvaEventObject<MouseEvent>) => {
+      const { activeTool: tool, viewMode: mode } = useCanvasStore.getState();
+      const { placingFixture: placing } = useFixtureStore.getState();
+      if (tool !== "wall" || placing || mode !== "2d") return;
+
+      const stage = e.target.getStage();
+      if (!stage) return;
+      const p = pointerToCanvas(stage);
+      if (!p) return;
+
+      // Inicio del trazo: magnetismo efectivo (flag XOR Shift en el mousedown).
+      // OFF = puntero crudo también para el inicio (wall-drawing-6, D3).
+      const magnetize = effectiveMagnetism(useCanvasStore.getState().magnetismEnabled, e.evt.shiftKey);
+      const start = magnetize ? snapToCanvasPoint(p) : p;
+      drawStartRef.current = start;
+      setDrawPreview({
+        x1: start.x,
+        y1: start.y,
+        x2: start.x,
+        y2: start.y,
+        snapped: isSnapped(p, start),
+      });
+      // El mouseup puede ocurrir fuera del Stage: safety en window
+      finishWindowListeners();
+      windowMouseUpRef.current = handleWindowMouseUp;
+      window.addEventListener("mouseup", windowMouseUpRef.current);
+    },
+    [pointerToCanvas, snapToCanvasPoint, handleWindowMouseUp, finishWindowListeners],
+  );
 
   const handleWheel = useCallback(
     (e: { evt: { deltaY: number; preventDefault: () => void } }) => {
@@ -103,13 +234,41 @@ export function PlanCanvas() {
           setPointerPos(x, y);
         }
 
-        // Detectar pared cercana al colocar puertas/ventanas
-        if (placingFixture) {
+        // Actualizar preview de trazo de pared en curso (wall tool)
+        if (drawStartRef.current) {
+          const start = drawStartRef.current;
+          const magnetize = effectiveMagnetism(useCanvasStore.getState().magnetismEnabled, e.evt.shiftKey);
+          const end = resolveCanvasWallEnd({ x, y }, start, magnetize);
+          setDrawPreview({
+            x1: start.x,
+            y1: start.y,
+            x2: end.x,
+            y2: end.y,
+            snapped: isSnapped({ x, y }, end),
+          });
+        }
+
+        // Detectar pared (entidad Wall) al colocar puertas/ventanas (solo 2D)
+        if (placingFixture && viewMode === "2d") {
           const catalogItem = getCatalogItem(placingFixture);
           if (catalogItem && (catalogItem.category === "door" || catalogItem.category === "window")) {
-            const rooms = useFloorsStore.getState().getActiveRooms();
-            const preview = findNearestWall(x, y, rooms);
-            setWallPreview(preview);
+            const { activeFloorId } = useFloorsStore.getState();
+            const walls = useWallsStore.getState().getWallsForFloor(activeFloorId);
+            const hit = findNearestWallEntity({ x, y }, walls);
+            setWallPreview(
+              hit
+                ? {
+                    wallId: hit.wall.id,
+                    x1: hit.wall.x1,
+                    y1: hit.wall.y1,
+                    x2: hit.wall.x2,
+                    y2: hit.wall.y2,
+                    x: hit.x,
+                    y: hit.y,
+                    offset: hit.offset,
+                  }
+                : null,
+            );
           } else {
             setWallPreview(null);
           }
@@ -118,7 +277,7 @@ export function PlanCanvas() {
         }
       }
     },
-    [panX, panY, zoom, rulerActive, setPointerPos, placingFixture],
+    [panX, panY, zoom, rulerActive, setPointerPos, placingFixture, resolveCanvasWallEnd, viewMode],
   );
 
   const handleContextMenu = useCallback(
@@ -141,6 +300,9 @@ export function PlanCanvas() {
 
   const handleStageClick = useCallback(
     (e: Konva.KonvaEventObject<MouseEvent>) => {
+      // En modo isométrico no se colocan fixtures ni se mide (preview 3/4)
+      if (useCanvasStore.getState().viewMode !== "2d") return;
+
       // Si hay un fixture en modo colocación, colocarlo
       if (placingFixture) {
         const stage = e.target.getStage();
@@ -154,13 +316,23 @@ export function PlanCanvas() {
         const catalogItem = getCatalogItem(placingFixture);
         if (!catalogItem) return;
 
-        // Puertas y ventanas solo se colocan en paredes
+        // Puertas y ventanas solo se colocan en paredes (entidad Wall)
         if (catalogItem.category === "door" || catalogItem.category === "window") {
           if (!wallPreview) return;
 
-          const isHorizontal = wallPreview.side === "top" || wallPreview.side === "bottom";
+          const isHorizontal = wallPreview.y1 === wallPreview.y2;
           const fixtureWidth = catalogItem.width;
           const fixtureHeight = catalogItem.height;
+
+          // Lado de la pared según la posición del puntero respecto de la línea central
+          const wallSide =
+            isHorizontal
+              ? canvasY < wallPreview.y1
+                ? "top"
+                : "bottom"
+              : canvasX < wallPreview.x1
+                ? "left"
+                : "right";
 
           let fx: number;
           let fy: number;
@@ -187,8 +359,8 @@ export function PlanCanvas() {
             rotation,
             color: catalogItem.color,
             props: catalogItem.props ? { ...catalogItem.props } : {},
-            wallId: wallPreview.roomId,
-            wallSide: wallPreview.side,
+            wallId: wallPreview.wallId,
+            wallSide,
             wallOffset: wallPreview.offset,
           });
           setWallPreview(null);
@@ -261,42 +433,53 @@ export function PlanCanvas() {
         scaleY={zoom}
         x={panX}
         y={panY}
-        draggable
+        draggable={viewMode === "isometric" || activeTool !== "wall"}
         onDragEnd={handleDragEnd}
         onWheel={handleWheel}
         onClick={handleStageClick}
+        onMouseDown={handleStageMouseDown}
         onMouseMove={handleMouseMove}
         onContextMenu={handleContextMenu}
       >
-        {/* Una Layer por dominio: cada capa redibuja solo lo que le corresponde */}
-        <Layer>
-          <GridLayer viewportWidth={size.width} viewportHeight={size.height} />
-        </Layer>
-        <Layer>
-          <TerrainLayer />
-        </Layer>
-        <Layer>
-          <ShadowLayer />
-        </Layer>
-        <Layer>
-          <RoomLayer />
-        </Layer>
-        <Layer>
-          <FixtureLayer />
-        </Layer>
-        <Layer>
-          <WallLayer wallPreview={wallPreview} />
-        </Layer>
-        <Layer>
-          <MeasurementLayer />
-        </Layer>
-        <Layer>
-          <SunArcLayer />
-        </Layer>
+        {/* Una Layer por dominio: cada capa redibuja solo lo que le corresponde.
+            En modo isométrico la escena proyectada reemplaza a las capas 2D
+            (spec isometric-view-3: reusa la misma geometría, no se superpone). */}
+        {viewMode === "isometric" ? (
+          <Layer>
+            <IsometricLayer />
+          </Layer>
+        ) : (
+          <>
+            <Layer>
+              <GridLayer viewportWidth={size.width} viewportHeight={size.height} />
+            </Layer>
+            <Layer>
+              <TerrainLayer />
+            </Layer>
+            <Layer>
+              <ShadowLayer />
+            </Layer>
+            <Layer>
+              <RoomLayer />
+            </Layer>
+            <Layer>
+              <FixtureLayer />
+            </Layer>
+            <Layer>
+              <WallLayer wallPreview={wallPreview} drawPreview={drawPreview} />
+            </Layer>
+            <Layer>
+              <MeasurementLayer />
+            </Layer>
+            <Layer>
+              <SunArcLayer />
+            </Layer>
+          </>
+        )}
       </Stage>
       <CompassOverlay />
-      {/* Indicador de pared detectada en modo colocación puerta/ventana */}
-      {wallPreview && (
+      {/* Indicador de pared detectada en modo colocación puerta/ventana (solo 2D) */}
+      {viewMode === "2d" && wallPreview && (
         <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs px-3 py-1 rounded-full shadow-lg pointer-events-none">
           Pared detectada — clic para colocar
         </div>

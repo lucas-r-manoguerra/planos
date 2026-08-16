@@ -18,6 +18,7 @@ import { ZOOM_MIN, ZOOM_MAX } from "@/lib/constants";
 import {
   ZoomIn,
   ZoomOut,
+  Focus,
   Grid3X3,
   Undo2,
   Redo2,
@@ -26,13 +27,16 @@ import {
   Ruler,
   Sun,
   BookOpen,
+  Pencil,
+  Box,
+  Magnet,
 } from "lucide-react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useSunStore } from "@/stores/sun.store";
 
 export function Toolbar() {
-  const { zoom, setZoom, toggleGrid, gridVisible } = useCanvasStore();
+  const { zoom, setZoom, toggleGrid, gridVisible, activeTool, setActiveTool, viewMode, setViewMode, centerTerrain, toggleMagnetism, magnetismEnabled } = useCanvasStore();
   const { terrain } = useTerrainStore();
   const { selectedId, clearSelection } = useSelectionStore();
   const { undo, redo, canUndo, canRedo } = useHistoryStore();
@@ -83,6 +87,9 @@ export function Toolbar() {
         <button onClick={handleZoomReset} className="px-1.5 py-1 hover:bg-gray-100 rounded text-xs font-medium text-gray-500 hover:text-gray-900" title="Zoom 100%" aria-label="Restablecer zoom al 100%">
           1:1
         </button>
+        <button onClick={() => centerTerrain()} className="p-1.5 hover:bg-gray-100 rounded text-gray-600 hover:text-gray-900" title="Centrar plano en la vista" aria-label="Centrar plano en la vista">
+          <Focus size={16} />
+        </button>
       </div>
 
       {/* Grilla */}
@@ -94,6 +101,17 @@ export function Toolbar() {
         aria-pressed={gridVisible}
       >
         <Grid3X3 size={16} />
+      </button>
+
+      {/* Magnetismo de paredes (wall-drawing-6): OFF = puntero crudo */}
+      <button
+        onClick={toggleMagnetism}
+        className={`p-1.5 rounded ${magnetismEnabled ? "bg-blue-100 text-blue-700" : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"}`}
+        title="Toggle magnetismo (Shift lo invierte durante el gesto)"
+        aria-label={magnetismEnabled ? "Desactivar magnetismo" : "Activar magnetismo"}
+        aria-pressed={magnetismEnabled}
+      >
+        <Magnet size={16} />
       </button>
 
       {/* Deshacer / Rehacer */}
@@ -115,6 +133,52 @@ export function Toolbar() {
           aria-label="Rehacer"
         >
           <Redo2 size={16} />
+        </button>
+      </div>
+
+      {/* Herramientas: selección vs pared */}
+      <div className="flex items-center gap-0.5 border-l border-gray-200 pl-2">
+        <button
+          onClick={() => setActiveTool(activeTool === "wall" ? "select" : "wall")}
+          className={`p-1.5 rounded ${activeTool === "wall" ? "bg-blue-100 text-blue-700" : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"}`}
+          title={activeTool === "wall" ? "Herramienta de selección (Esc)" : "Dibujar paredes (trazo con snap)"}
+          aria-label={activeTool === "wall" ? "Salir de la herramienta de paredes" : "Activar herramienta de paredes"}
+          aria-pressed={activeTool === "wall"}
+        >
+          <Pencil size={16} />
+        </button>
+      </div>
+
+      {/* Vista: 2D / Isométrico (S3 — display only, no toca geometría) */}
+      <div
+        className="flex items-center border-l border-gray-200 pl-2"
+        role="group"
+        aria-label="Modo de visualización"
+      >
+        <button
+          onClick={() => setViewMode("2d")}
+          className={`px-2 py-1.5 rounded text-xs font-medium flex items-center gap-1 ${
+            viewMode === "2d"
+              ? "bg-blue-100 text-blue-700"
+              : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+          }`}
+          title="Vista en planta (2D)"
+          aria-pressed={viewMode === "2d"}
+        >
+          2D
+        </button>
+        <button
+          onClick={() => setViewMode("isometric")}
+          className={`px-2 py-1.5 rounded text-xs font-medium flex items-center gap-1 ${
+            viewMode === "isometric"
+              ? "bg-blue-100 text-blue-700"
+              : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+          }`}
+          title="Vista isométrica (preview 3/4, cámara fija)"
+          aria-pressed={viewMode === "isometric"}
+        >
+          <Box size={14} />
+          Isométrico
         </button>
       </div>
 

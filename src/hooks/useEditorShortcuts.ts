@@ -216,11 +216,17 @@ export function useEditorShortcuts(): void {
       const isFixture = useFixtureStore
         .getState()
         .fixtures.some((f) => f.id === selectedId);
+      const isWall = useWallsStore
+        .getState()
+        .walls.some((w) => w.id === selectedId);
 
       if (isRoom) {
         useFloorsStore.getState().removeRoom(selectedId);
       } else if (isFixture) {
         useFixtureStore.getState().removeFixture(selectedId);
+      } else if (isWall) {
+        // Eliminar pared: las aberturas ancladas caen o se re-anclan
+        useWallsStore.getState().removeWall(selectedId);
       }
       clearSelection();
     };

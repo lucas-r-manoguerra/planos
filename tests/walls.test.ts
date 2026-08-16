@@ -16,6 +16,8 @@ import {
   edgeAnchor,
   findWallForAnchor,
   wallKey,
+  wallBandPoints,
+  DEFAULT_WALL_THICKNESS,
 } from "@/lib/wall-utils";
 import { getRoomWallSegments } from "@/lib/walls";
 
@@ -296,5 +298,43 @@ describe("getRoomWallSegments (v3 intacto)", () => {
   it("sigue generando 4 segmentos sólidos en una habitación encerrada", () => {
     const room = makeRoom({ id: "r1" });
     expect(getRoomWallSegments(room, [], true)).toHaveLength(4);
+  });
+});
+
+describe("wallBandPoints (banda de pared, v4-fix)", () => {
+  it("pared horizontal: banda de espesor alrededor de la línea central", () => {
+    const pts = wallBandPoints(0, 5, 300, 5, 10);
+    // (0,10),(300,10),(300,0),(0,0) — Konva Line x1,y1,x2,y2,...
+    expect(pts).toEqual([0, 10, 300, 10, 300, 0, 0, 0]);
+  });
+
+  it("pared vertical: banda a la izquierda/derecha de la línea central", () => {
+    const pts = wallBandPoints(295, 0, 295, 200, 10);
+    expect(pts).toEqual([290, 0, 290, 200, 300, 200, 300, 0]);
+  });
+
+  it("pared diagonal: la banda sigue la orientación real del segmento", () => {
+    // 45°: normal perpendicular (−1,1)/√2 → offset por eje (thickness/2)/√2
+    const pts = wallBandPoints(0, 0, 100, 100, 10);
+    const o = (10 / 2) / Math.SQRT2;
+    expect(pts[0]).toBeCloseTo(-o, 6);
+    expect(pts[1]).toBeCloseTo(o, 6);
+    expect(pts[2]).toBeCloseTo(100 - o, 6);
+    expect(pts[3]).toBeCloseTo(100 + o, 6);
+    expect(pts[4]).toBeCloseTo(100 + o, 6);
+    expect(pts[5]).toBeCloseTo(100 - o, 6);
+    expect(pts[6]).toBeCloseTo(o, 6);
+    expect(pts[7]).toBeCloseTo(-o, 6);
+  });
+
+  it("espesor por defecto DEFAULT_WALL_THICKNESS (10)", () => {
+    expect(wallBandPoints(0, 5, 300, 5)).toEqual(wallBandPoints(0, 5, 300, 5, 10));
+    expect(DEFAULT_WALL_THICKNESS).toBe(10);
+  });
+
+  it("pared degenerada (longitud cero): banda de área nula, sin NaN", () => {
+    const pts = wallBandPoints(50, 50, 50, 50, 10);
+    expect(pts.every((v) => Number.isFinite(v))).toBe(true);
+    expect(pts).toHaveLength(4);
   });
 });

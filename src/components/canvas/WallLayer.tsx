@@ -14,7 +14,7 @@
 "use client";
 
 import { memo } from "react";
-import { Circle, Line, Rect } from "react-konva";
+import { Circle, Line } from "react-konva";
 import Konva from "konva";
 import { useShallow } from "zustand/react/shallow";
 import { useFloorsStore } from "@/stores/floors.store";
@@ -24,6 +24,7 @@ import { useCanvasStore } from "@/stores/canvas.store";
 import { useHistoryStore } from "@/stores/history.store";
 import { Wall } from "@/types/plan";
 import { snapWallPoint } from "@/lib/wall-snap";
+import { wallBandPoints, DEFAULT_WALL_THICKNESS } from "@/lib/wall-utils";
 import { useCanvasColors } from "./canvas-colors";
 
 /** Pared detectada para colocar una abertura (findNearestWallEntity) */
@@ -47,31 +48,11 @@ export interface WallDrawPreview {
   y1: number;
   x2: number;
   y2: number;
+  /** Espesor de la banda (cm); por defecto DEFAULT_WALL_THICKNESS */
+  thickness?: number;
 }
 
 const SELECT_COLOR = "#3b82f6";
-
-/** Rect de una pared: banda de `thickness` alrededor de su línea central */
-function wallRect(
-  wall: Wall
-): { x: number; y: number; width: number; height: number } {
-  if (wall.y1 === wall.y2) {
-    // Horizontal
-    return {
-      x: Math.min(wall.x1, wall.x2),
-      y: wall.y1 - wall.thickness / 2,
-      width: Math.abs(wall.x2 - wall.x1),
-      height: wall.thickness,
-    };
-  }
-  // Vertical
-  return {
-    x: wall.x1 - wall.thickness / 2,
-    y: Math.min(wall.y1, wall.y2),
-    width: wall.thickness,
-    height: Math.abs(wall.y2 - wall.y1),
-  };
-}
 
 /** Pared resaltada en modo colocación puerta/ventana (línea central) */
 function WallPreviewLine({ preview }: { preview: WallPreview }) {
@@ -86,16 +67,32 @@ function WallPreviewLine({ preview }: { preview: WallPreview }) {
   );
 }
 
-/** Preview de trazo mientras se dibuja una pared nueva */
+/**
+ * Preview de trazo mientras se dibuja una pared nueva: banda sólida (el
+ * usuario ve el espesor real de la pared) + línea central punteada.
+ */
 function WallDrawPreviewLine({ preview }: { preview: WallDrawPreview }) {
+  const { wall: wallColor } = useCanvasColors();
+  const thickness = preview.thickness ?? DEFAULT_WALL_THICKNESS;
+  const band = wallBandPoints(preview.x1, preview.y1, preview.x2, preview.y2, thickness);
   return (
-    <Line
-      points={[preview.x1, preview.y1, preview.x2, preview.y2]}
-      stroke={SELECT_COLOR}
-      strokeWidth={2}
-      dash={[8, 6]}
-      pointerEvents="none"
-    />
+    <>
+      <Line
+        points={band}
+        closed
+        fill={wallColor}
+        stroke={SELECT_COLOR}
+        strokeWidth={1}
+        pointerEvents="none"
+      />
+      <Line
+        points={[preview.x1, preview.y1, preview.x2, preview.y2]}
+        stroke={SELECT_COLOR}
+        strokeWidth={1.5}
+        dash={[8, 6]}
+        pointerEvents="none"
+      />
+    </>
   );
 }
 
@@ -115,8 +112,9 @@ function WallEntity({ wall }: { wall: Wall }) {
   const { wall: wallColor } = useCanvasColors();
   const isSelected = selectedId === wall.id;
 
-  const rect = wallRect(wall);
-  if (rect.width <= 0 || rect.height <= 0) return null;
+  // Pared degenerada (longitud cero): no se dibuja
+  if (wall.x1 === wall.x2 && wall.y1 === wall.y2) return null;
+  const band = wallBandPoints(wall.x1, wall.y1, wall.x2, wall.y2, wall.thickness);
 
   /** Firma de listeners de arrastre: mueve o redimensiona la pared */
   const startDrag = (e: Konva.KonvaEventObject<MouseEvent>, mode: "move" | "start" | "end") => {
@@ -178,11 +176,9 @@ function WallEntity({ wall }: { wall: Wall }) {
 
   return (
     <>
-      <Rect
-        x={rect.x}
-        y={rect.y}
-        width={rect.width}
-        height={rect.height}
+      <Line
+        points={band}
+        closed
         fill={wallColor}
         stroke={isSelected ? SELECT_COLOR : undefined}
         strokeWidth={isSelected ? 2 : 0}

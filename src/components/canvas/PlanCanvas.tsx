@@ -19,6 +19,7 @@ import { ShadowLayer } from "./ShadowLayer";
 import { RoomLayer } from "./RoomLayer";
 import { FixtureLayer } from "./FixtureLayer";
 import { WallLayer, WallPreview, WallDrawPreview } from "./WallLayer";
+import { IsometricLayer } from "./IsometricLayer";
 import { MeasurementLayer } from "./MeasurementLayer";
 import { SunArcLayer } from "./SunArcLayer";
 import { CompassOverlay } from "./CompassOverlay";
@@ -41,7 +42,7 @@ export function PlanCanvas() {
   /** Listener de window mouseup del trazo activo (identidad para removal) */
   const windowMouseUpRef = useRef<(() => void) | null>(null);
 
-  const { zoom, panX, panY, smoothZoom, setPan, activeTool, setActiveTool } = useCanvasStore();
+  const { zoom, panX, panY, smoothZoom, setPan, activeTool, setActiveTool, viewMode } = useCanvasStore();
   const { active: rulerActive, pointA, setPointA, setPointerPos, addMeasurement, deactivate } = useRulerStore();
   const { placingFixture, addFixture, setPlacingFixture } = useFixtureStore();
 
@@ -104,6 +105,9 @@ export function PlanCanvas() {
     if (!p) return;
     const end = snapToCanvasPoint(p);
 
+    // En modo isométrico no se crea geometría (viewMode es display-only): cancelar
+    if (useCanvasStore.getState().viewMode !== "2d") return;
+
     // Longitud cero: punto sin dirección, se descarta (wall-drawing-2)
     if (Math.abs(end.x - start.x) <= 0 && Math.abs(end.y - start.y) <= 0) return;
 
@@ -149,9 +153,9 @@ export function PlanCanvas() {
 
   const handleStageMouseDown = useCallback(
     (e: Konva.KonvaEventObject<MouseEvent>) => {
-      const { activeTool: tool } = useCanvasStore.getState();
+      const { activeTool: tool, viewMode: mode } = useCanvasStore.getState();
       const { placingFixture: placing } = useFixtureStore.getState();
-      if (tool !== "wall" || placing) return;
+      if (tool !== "wall" || placing || mode !== "2d") return;
 
       const stage = e.target.getStage();
       if (!stage) return;
@@ -207,8 +211,8 @@ export function PlanCanvas() {
           setDrawPreview({ x1: start.x, y1: start.y, x2: end.x, y2: end.y });
         }
 
-        // Detectar pared (entidad Wall) al colocar puertas/ventanas
-        if (placingFixture) {
+        // Detectar pared (entidad Wall) al colocar puertas/ventanas (solo 2D)
+        if (placingFixture && viewMode === "2d") {
           const catalogItem = getCatalogItem(placingFixture);
           if (catalogItem && (catalogItem.category === "door" || catalogItem.category === "window")) {
             const { activeFloorId } = useFloorsStore.getState();
@@ -236,7 +240,7 @@ export function PlanCanvas() {
         }
       }
     },
-    [panX, panY, zoom, rulerActive, setPointerPos, placingFixture, snapToCanvasPoint],
+    [panX, panY, zoom, rulerActive, setPointerPos, placingFixture, snapToCanvasPoint, viewMode],
   );
 
   const handleContextMenu = useCallback(
@@ -259,6 +263,9 @@ export function PlanCanvas() {
 
   const handleStageClick = useCallback(
     (e: Konva.KonvaEventObject<MouseEvent>) => {
+      // En modo isométrico no se colocan fixtures ni se mide (preview 3/4)
+      if (useCanvasStore.getState().viewMode !== "2d") return;
+
       // Si hay un fixture en modo colocación, colocarlo
       if (placingFixture) {
         const stage = e.target.getStage();
@@ -389,7 +396,7 @@ export function PlanCanvas() {
         scaleY={zoom}
         x={panX}
         y={panY}
-        draggable={activeTool !== "wall"}
+        draggable={viewMode === "isometric" || activeTool !== "wall"}
         onDragEnd={handleDragEnd}
         onWheel={handleWheel}
         onClick={handleStageClick}
@@ -397,35 +404,45 @@ export function PlanCanvas() {
         onMouseMove={handleMouseMove}
         onContextMenu={handleContextMenu}
       >
-        {/* Una Layer por dominio: cada capa redibuja solo lo que le corresponde */}
-        <Layer>
-          <GridLayer viewportWidth={size.width} viewportHeight={size.height} />
-        </Layer>
-        <Layer>
-          <TerrainLayer />
-        </Layer>
-        <Layer>
-          <ShadowLayer />
-        </Layer>
-        <Layer>
-          <RoomLayer />
-        </Layer>
-        <Layer>
-          <FixtureLayer />
-        </Layer>
-        <Layer>
-          <WallLayer wallPreview={wallPreview} drawPreview={drawPreview} />
-        </Layer>
-        <Layer>
-          <MeasurementLayer />
-        </Layer>
-        <Layer>
-          <SunArcLayer />
-        </Layer>
+        {/* Una Layer por dominio: cada capa redibuja solo lo que le corresponde.
+            En modo isométrico la escena proyectada reemplaza a las capas 2D
+            (spec isometric-view-3: reusa la misma geometría, no se superpone). */}
+        {viewMode === "isometric" ? (
+          <Layer>
+            <IsometricLayer />
+          </Layer>
+        ) : (
+          <>
+            <Layer>
+              <GridLayer viewportWidth={size.width} viewportHeight={size.height} />
+            </Layer>
+            <Layer>
+              <TerrainLayer />
+            </Layer>
+            <Layer>
+              <ShadowLayer />
+            </Layer>
+            <Layer>
+              <RoomLayer />
+            </Layer>
+            <Layer>
+              <FixtureLayer />
+            </Layer>
+            <Layer>
+              <WallLayer wallPreview={wallPreview} drawPreview={drawPreview} />
+            </Layer>
+            <Layer>
+              <MeasurementLayer />
+            </Layer>
+            <Layer>
+              <SunArcLayer />
+            </Layer>
+          </>
+        )}
       </Stage>
       <CompassOverlay />
-      {/* Indicador de pared detectada en modo colocación puerta/ventana */}
-      {wallPreview && (
+      {/* Indicador de pared detectada en modo colocación puerta/ventana (solo 2D) */}
+      {viewMode === "2d" && wallPreview && (
         <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs px-3 py-1 rounded-full shadow-lg pointer-events-none">
           Pared detectada — clic para colocar
         </div>

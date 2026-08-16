@@ -112,6 +112,7 @@ export interface CanvasState {
   gridVisible: boolean; // Si la grilla está visible
   gridSize: number;     // Tamaño de la grilla en centímetros
   activeTool: "select" | "pan" | "wall"; // Herramienta activa
+  viewMode: ViewMode;   // Modo de visualización (regla 05: estado de display)
 }
 
 // Interfaz para la tienda de habitaciones (Zustand store)

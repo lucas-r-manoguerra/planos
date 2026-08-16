@@ -27,13 +27,14 @@ import {
   Sun,
   BookOpen,
   Pencil,
+  Box,
 } from "lucide-react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useSunStore } from "@/stores/sun.store";
 
 export function Toolbar() {
-  const { zoom, setZoom, toggleGrid, gridVisible, activeTool, setActiveTool } = useCanvasStore();
+  const { zoom, setZoom, toggleGrid, gridVisible, activeTool, setActiveTool, viewMode, setViewMode } = useCanvasStore();
   const { terrain } = useTerrainStore();
   const { selectedId, clearSelection } = useSelectionStore();
   const { undo, redo, canUndo, canRedo } = useHistoryStore();
@@ -129,6 +130,39 @@ export function Toolbar() {
           aria-pressed={activeTool === "wall"}
         >
           <Pencil size={16} />
+        </button>
+      </div>
+
+      {/* Vista: 2D / Isométrico (S3 — display only, no toca geometría) */}
+      <div
+        className="flex items-center border-l border-gray-200 pl-2"
+        role="group"
+        aria-label="Modo de visualización"
+      >
+        <button
+          onClick={() => setViewMode("2d")}
+          className={`px-2 py-1.5 rounded text-xs font-medium flex items-center gap-1 ${
+            viewMode === "2d"
+              ? "bg-blue-100 text-blue-700"
+              : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+          }`}
+          title="Vista en planta (2D)"
+          aria-pressed={viewMode === "2d"}
+        >
+          2D
+        </button>
+        <button
+          onClick={() => setViewMode("isometric")}
+          className={`px-2 py-1.5 rounded text-xs font-medium flex items-center gap-1 ${
+            viewMode === "isometric"
+              ? "bg-blue-100 text-blue-700"
+              : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+          }`}
+          title="Vista isométrica (preview 3/4, cámara fija)"
+          aria-pressed={viewMode === "isometric"}
+        >
+          <Box size={14} />
+          Isométrico
         </button>
       </div>
 

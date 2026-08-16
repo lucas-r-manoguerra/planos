@@ -7,7 +7,7 @@
 
 import { create } from "zustand";
 import type Konva from "konva";
-import { CanvasState } from "@/types/plan";
+import { CanvasState, ViewMode } from "@/types/plan";
 import { DEFAULT_GRID_SIZE, ZOOM_MIN, ZOOM_MAX } from "@/lib/constants";
 import { clamp } from "@/lib/utils";
 
@@ -19,6 +19,7 @@ const initialState: CanvasState = {
   gridVisible: true,
   gridSize: DEFAULT_GRID_SIZE,
   activeTool: "select",
+  viewMode: "2d",
 };
 
 // Interfaz de la tienda con acciones
@@ -32,6 +33,8 @@ interface CanvasStore extends CanvasState {
   toggleGrid: () => void;
   setGridSize: (size: number) => void;
   setActiveTool: (tool: "select" | "pan" | "wall") => void;
+  /** Cambiar modo de visualización (2D o isométrico) — estado de display (S3) */
+  setViewMode: (viewMode: ViewMode) => void;
 }
 
 let zoomAnimationId: number | null = null;
@@ -88,4 +91,7 @@ export const useCanvasStore = create<CanvasStore>((set, get) => ({
 
   // Cambiar herramienta activa (seleccionar o mover)
   setActiveTool: (activeTool) => set({ activeTool }),
+
+  // Cambiar modo de visualización (display only — no toca la geometría, spec isometric-view-1)
+  setViewMode: (viewMode) => set({ viewMode }),
 }));

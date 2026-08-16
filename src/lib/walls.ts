@@ -1,8 +1,10 @@
 /**
- * Lógica pura de paredes: cálculo de segmentos y cascada de aberturas.
+ * Lógica pura de paredes: cálculo de segmentos de habitaciones.
  *
  * Unidad: centímetros (cm), mismo sistema que el resto del editor.
  * No importa stores ni componentes: recibe los valores por parámetro.
+ * Los segmentos son bandas LOCALES a la habitación; la conversión a
+ * líneas centrales absolutas vive en wall-utils.ts (materialización).
  */
 
 import { Fixture, Room } from "@/types/plan";
@@ -23,7 +25,8 @@ export const GAP_MIN = 40;
 /** Vano máximo (cm) */
 export const GAP_MAX = 250;
 
-interface Seg {
+/** Segmento de línea (coordenadas absolutas) usado para coincidencia */
+export interface Seg {
   x1: number;
   y1: number;
   x2: number;
@@ -31,42 +34,10 @@ interface Seg {
 }
 
 /** Tolerancia (cm) para considerar dos bordes coincidentes */
-const EPS = 1;
-
-/** Lado opuesto (espejo) de una pared */
-const MIRROR: Record<WallSide, WallSide> = {
-  top: "bottom",
-  bottom: "top",
-  left: "right",
-  right: "left",
-};
-
-/** Segmento de pared de una habitación para un lado dado */
-function sideSegment(room: Room, side: WallSide): Seg {
-  switch (side) {
-    case "top":
-      return { x1: room.x, y1: room.y, x2: room.x + room.width, y2: room.y };
-    case "bottom":
-      return {
-        x1: room.x,
-        y1: room.y + room.height,
-        x2: room.x + room.width,
-        y2: room.y + room.height,
-      };
-    case "left":
-      return { x1: room.x, y1: room.y, x2: room.x, y2: room.y + room.height };
-    case "right":
-      return {
-        x1: room.x + room.width,
-        y1: room.y,
-        x2: room.x + room.width,
-        y2: room.y + room.height,
-      };
-  }
-}
+export const EPS = 1;
 
 /** ¿Dos segmentos de pared son colineales y se superponen? */
-function segmentsCoincide(a: Seg, b: Seg): boolean {
+export function segmentsCoincide(a: Seg, b: Seg): boolean {
   const horizontal = a.y1 === a.y2 && b.y1 === b.y2;
   const vertical = a.x1 === a.x2 && b.x1 === b.x2;
 
@@ -85,69 +56,121 @@ function segmentsCoincide(a: Seg, b: Seg): boolean {
   return false;
 }
 
-export interface CascadeResult {
-  /** Fixtures resultantes (aberturas reasignadas + el resto intacto) */
-  fixtures: Fixture[];
-  /** IDs de aberturas reasignadas a otra habitación */
-  reassigned: string[];
-  /** IDs de aberturas descartadas (sin pared compartida) */
-  removedIds: string[];
+/** Distancia (cm) para considerar dos habitaciones adyacentes */
+export const MERGE_THRESHOLD = 5;
+
+/**
+ * Detecta paredes compartidas entre dos habitaciones adyacentes y devuelve
+ * los segmentos fusionados (bandas absolutas). Dos habitaciones son
+ * "adyacentes" si comparten un borde dentro de MERGE_THRESHOLD.
+ *
+ * V3-exact: la línea central de la pared fusionada cae exactamente sobre el
+ * borde de la habitación A (dueña), con espesor = mayor wallWidth.
+ */
+export function findMergedWalls(roomA: Room, roomB: Room): WallSegment[] {
+  const segments: WallSegment[] = [];
+  const maxWallWidth = Math.max(roomA.wallWidth ?? 10, roomB.wallWidth ?? 10);
+
+  // Check if rooms share a vertical edge (left/right)
+  const aLeft = roomA.x;
+  const aRight = roomA.x + roomA.width;
+  const bLeft = roomB.x;
+  const bRight = roomB.x + roomB.width;
+
+  // A's right edge touches B's left edge
+  if (Math.abs(aRight - bLeft) < MERGE_THRESHOLD) {
+    // Find overlapping Y range
+    const overlapTop = Math.max(roomA.y, roomB.y);
+    const overlapBottom = Math.min(roomA.y + roomA.height, roomB.y + roomB.height);
+    if (overlapBottom - overlapTop > 0) {
+      // Merged wall centered on the shared edge
+      segments.push({
+        x: aRight - maxWallWidth / 2,
+        y: overlapTop,
+        width: maxWallWidth,
+        height: overlapBottom - overlapTop,
+      });
+    }
+  }
+
+  // B's right edge touches A's left edge
+  if (Math.abs(bRight - aLeft) < MERGE_THRESHOLD) {
+    const overlapTop = Math.max(roomA.y, roomB.y);
+    const overlapBottom = Math.min(roomA.y + roomA.height, roomB.y + roomB.height);
+    if (overlapBottom - overlapTop > 0) {
+      segments.push({
+        x: aLeft - maxWallWidth / 2,
+        y: overlapTop,
+        width: maxWallWidth,
+        height: overlapBottom - overlapTop,
+      });
+    }
+  }
+
+  // Check if rooms share a horizontal edge (top/bottom)
+  const aTop = roomA.y;
+  const aBottom = roomA.y + roomA.height;
+  const bTop = roomB.y;
+  const bBottom = roomB.y + roomB.height;
+
+  // A's bottom edge touches B's top edge
+  if (Math.abs(aBottom - bTop) < MERGE_THRESHOLD) {
+    const overlapLeft = Math.max(roomA.x, roomB.x);
+    const overlapRight = Math.min(roomA.x + roomA.width, roomB.x + roomB.width);
+    if (overlapRight - overlapLeft > 0) {
+      segments.push({
+        x: overlapLeft,
+        y: aBottom - maxWallWidth / 2,
+        width: overlapRight - overlapLeft,
+        height: maxWallWidth,
+      });
+    }
+  }
+
+  // B's bottom edge touches A's top edge
+  if (Math.abs(bBottom - aTop) < MERGE_THRESHOLD) {
+    const overlapLeft = Math.max(roomA.x, roomB.x);
+    const overlapRight = Math.min(roomA.x + roomA.width, roomB.x + roomB.width);
+    if (overlapRight - overlapLeft > 0) {
+      segments.push({
+        x: overlapLeft,
+        y: aTop - maxWallWidth / 2,
+        width: overlapRight - overlapLeft,
+        height: maxWallWidth,
+      });
+    }
+  }
+
+  return segments;
 }
 
 /**
- * Cascada al eliminar una habitación:
- * - Aberturas ancladas a una pared compartida con otra habitación se
- *   reasignan a esa habitación (lado espejo), conservando wallOffset.
- * - Aberturas sin pared compartida se descartan (quedarían flotando).
+ * Checks if a wall segment is covered by a merged wall.
  */
-export function cascadeOpenings(
-  removed: Room,
-  roomId: string,
-  openings: Fixture[],
-  remaining: Room[],
-): CascadeResult {
-  const anchored = openings.filter((f) => f.wallId === roomId);
-  if (anchored.length === 0) {
-    return { fixtures: openings, reassigned: [], removedIds: [] };
-  }
+export function isCovered(
+  wall: WallSegment,
+  roomX: number,
+  roomY: number,
+  merged: WallSegment[]
+): boolean {
+  const wx = roomX + wall.x;
+  const wy = roomY + wall.y;
 
-  const anchoredIds = new Set(anchored.map((f) => f.id));
-  const result: Fixture[] = [];
-  const reassigned: string[] = [];
-  const removedIds: string[] = [];
+  for (const m of merged) {
+    // Check if the wall center is inside the merged wall
+    const wallCenterX = wx + wall.width / 2;
+    const wallCenterY = wy + wall.height / 2;
 
-  for (const opening of anchored) {
-    const side = opening.wallSide;
-    if (!side) {
-      // Abertura anclada sin lado definido: no se puede reasignar
-      removedIds.push(opening.id);
-      continue;
-    }
-    const removedSeg = sideSegment(removed, side);
-    let neighbor: Room | undefined;
-    for (const candidate of remaining) {
-      if (segmentsCoincide(removedSeg, sideSegment(candidate, MIRROR[side]))) {
-        neighbor = candidate;
-        break;
-      }
-    }
-    if (!neighbor) {
-      removedIds.push(opening.id);
-    } else {
-      result.push({
-        ...opening,
-        wallId: neighbor.id,
-        wallSide: MIRROR[side],
-      });
-      reassigned.push(opening.id);
+    if (
+      wallCenterX >= m.x &&
+      wallCenterX <= m.x + m.width &&
+      wallCenterY >= m.y &&
+      wallCenterY <= m.y + m.height
+    ) {
+      return true;
     }
   }
-
-  return {
-    fixtures: [...openings.filter((f) => !anchoredIds.has(f.id)), ...result],
-    reassigned,
-    removedIds,
-  };
+  return false;
 }
 
 const ALL_SIDES: WallSide[] = ["top", "bottom", "left", "right"];

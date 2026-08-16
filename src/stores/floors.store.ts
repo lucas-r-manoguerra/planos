@@ -9,10 +9,10 @@ import { create } from "zustand";
 import { Floor, Room } from "@/types/plan";
 import { generateId, snapToGrid, clampPosition, applyWallMergeSnap } from "@/lib/utils";
 import { SNAP_THRESHOLD } from "@/lib/constants";
-import { cascadeOpenings } from "@/lib/walls";
 import { useHistoryStore } from "@/stores/history.store";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { useFixtureStore } from "@/stores/fixtures.store";
+import { useWallsStore } from "@/stores/walls.store";
 
 // Collision detection helpers
 function roomsOverlap(
@@ -114,6 +114,7 @@ export const useFloorsStore = create<FloorStore>((set, get) => {
       activeFloorId: current.activeFloorId,
       terrain,
       fixtures: useFixtureStore.getState().fixtures,
+      walls: useWallsStore.getState().walls,
     });
   };
 
@@ -159,15 +160,18 @@ export const useFloorsStore = create<FloorStore>((set, get) => {
         };
       }),
 
-    removeFloor: (id) =>
-      set((state) => {
-        recordHistory();
-        if (state.floors.length <= 1) return state;
-        const newFloors = state.floors.filter((f) => f.id !== id);
-        const newActiveId =
-          state.activeFloorId === id ? newFloors[0].id : state.activeFloorId;
-        return { floors: newFloors, activeFloorId: newActiveId };
-      }),
+    removeFloor: (id) => {
+      const state = get();
+      // Sin historial si no hay nada que eliminar (no empujar no-ops)
+      if (state.floors.length <= 1) return;
+      recordHistory();
+      const newFloors = state.floors.filter((f) => f.id !== id);
+      const newActiveId =
+        state.activeFloorId === id ? newFloors[0].id : state.activeFloorId;
+      set({ floors: newFloors, activeFloorId: newActiveId });
+      // La planta ya no existe: sus paredes se descartan
+      useWallsStore.getState().regenerateFloorWalls(id);
+    },
 
     setActiveFloor: (id) => set({ activeFloorId: id }),
 
@@ -179,37 +183,42 @@ export const useFloorsStore = create<FloorStore>((set, get) => {
         };
       }),
 
-    addRoom: (roomData) =>
-      set((state) => {
-        recordHistory();
-        const activeFloor = state.floors.find(
-          (f) => f.id === state.activeFloorId
-        );
-        if (!activeFloor) return state;
+    addRoom: (roomData) => {
+      const state = get();
+      const activeFloor = state.floors.find(
+        (f) => f.id === state.activeFloorId
+      );
+      if (!activeFloor) return;
 
-        const id = generateId();
-        const { terrain } = useTerrainStore.getState();
-        const centerX = (terrain.width - roomData.width) / 2;
-        const centerY = (terrain.height - roomData.height) / 2;
+      recordHistory();
 
-        const newRoom: Room = {
-          ...roomData,
-          id,
-          snapEnabled: roomData.snapEnabled !== false,
-          wallWidth: roomData.wallWidth ?? 10,
-          enclosed: roomData.enclosed ?? true,
-          x: snapToGrid(centerX, SNAP_THRESHOLD),
-          y: snapToGrid(centerY, SNAP_THRESHOLD),
-        };
+      const id = generateId();
+      const { terrain } = useTerrainStore.getState();
+      const centerX = (terrain.width - roomData.width) / 2;
+      const centerY = (terrain.height - roomData.height) / 2;
 
-        return {
-          floors: state.floors.map((f) =>
-            f.id === state.activeFloorId
-              ? { ...f, rooms: [...f.rooms, newRoom] }
-              : f
-          ),
-        };
-      }),
+      const newRoom: Room = {
+        ...roomData,
+        id,
+        snapEnabled: roomData.snapEnabled !== false,
+        wallWidth: roomData.wallWidth ?? 10,
+        enclosed: roomData.enclosed ?? true,
+        x: snapToGrid(centerX, SNAP_THRESHOLD),
+        y: snapToGrid(centerY, SNAP_THRESHOLD),
+      };
+
+      set({
+        floors: state.floors.map((f) =>
+          f.id === state.activeFloorId
+            ? { ...f, rooms: [...f.rooms, newRoom] }
+            : f
+        ),
+      });
+
+      // Materializar paredes: la nueva habitación puede fusionarse con
+      // habitaciones adyacentes (pared compartida).
+      useWallsStore.getState().regenerateFloorWalls(state.activeFloorId);
+    },
 
     removeRoom: (id) => {
       const state = get();
@@ -223,81 +232,76 @@ export const useFloorsStore = create<FloorStore>((set, get) => {
       const remainingRooms = activeFloor.rooms.filter((r) => r.id !== id);
 
       // Historial ANTES de mutar: deshacer debe restaurar la habitación
-      // con sus aberturas originales.
       recordHistory();
-
-      // Cascada de aberturas ancladas a las paredes de la habitación
-      // eliminada: se reasignan a la habitación vecina que comparte la
-      // pared, o se descartan si quedan huérfanas (spec cascade-1/2).
-      const { fixtures } = useFixtureStore.getState();
-      const { fixtures: updatedFixtures } = cascadeOpenings(
-        removed,
-        id,
-        fixtures,
-        remainingRooms
-      );
-      useFixtureStore.setState({ fixtures: updatedFixtures });
 
       set({
         floors: state.floors.map((f) =>
           f.id === state.activeFloorId ? { ...f, rooms: remainingRooms } : f
         ),
       });
+
+      // Regenerar paredes: las de la habitación eliminada desaparecen
+      // (las aberturas ancladas se re-anclan en S2 — fixtures-management-3).
+      useWallsStore.getState().regenerateFloorWalls(state.activeFloorId);
     },
 
-    moveRoom: (id, x, y) =>
-      set((state) => {
-        recordHistory();
-        const activeFloor = state.floors.find(
-          (f) => f.id === state.activeFloorId
-        );
-        if (!activeFloor) return state;
+    moveRoom: (id, x, y) => {
+      const state = get();
+      const activeFloor = state.floors.find(
+        (f) => f.id === state.activeFloorId
+      );
+      if (!activeFloor) return;
 
-        const room = activeFloor.rooms.find((r) => r.id === id);
-        if (!room) return state;
+      const room = activeFloor.rooms.find((r) => r.id === id);
+      if (!room) return;
 
-        const terrain = useTerrainStore.getState().terrain;
-        const otherRooms = activeFloor.rooms.filter((r) => r.id !== id);
-        const snapEnabled = room.snapEnabled !== false;
-        const clamped = snapEnabled
-          ? clampPosition(x, y, room, terrain, 25, otherRooms)
-          : { x: Math.max(0, Math.min(x, terrain.width - room.width)), y: Math.max(0, Math.min(y, terrain.height - room.height)) };
+      recordHistory();
 
-        // Semi-magnetism for wall merging (5cm threshold)
-        // This runs even when snapEnabled is false — it's specifically for wall alignment
-        const wallMerged = applyWallMergeSnap(clamped.x, clamped.y, room, otherRooms, 5);
+      const terrain = useTerrainStore.getState().terrain;
+      const otherRooms = activeFloor.rooms.filter((r) => r.id !== id);
+      const snapEnabled = room.snapEnabled !== false;
+      const clamped = snapEnabled
+        ? clampPosition(x, y, room, terrain, 25, otherRooms)
+        : { x: Math.max(0, Math.min(x, terrain.width - room.width)), y: Math.max(0, Math.min(y, terrain.height - room.height)) };
 
-        let finalX = wallMerged.x;
-        let finalY = wallMerged.y;
+      // Semi-magnetism for wall merging (5cm threshold)
+      // This runs even when snapEnabled is false — it's specifically for wall alignment
+      const wallMerged = applyWallMergeSnap(clamped.x, clamped.y, room, otherRooms, 5);
 
-        const snappedToEdgeX = finalX === 0 || finalX === terrain.width - room.width;
-        const snappedToEdgeY = finalY === 0 || finalY === terrain.height - room.height;
+      let finalX = wallMerged.x;
+      let finalY = wallMerged.y;
 
-        const roomRect = { x: finalX, y: finalY, width: room.width, height: room.height };
+      const snappedToEdgeX = finalX === 0 || finalX === terrain.width - room.width;
+      const snappedToEdgeY = finalY === 0 || finalY === terrain.height - room.height;
 
-        for (const other of otherRooms) {
-          if (roomsOverlap(roomRect, other)) {
-            const resolved = resolveCollision(roomRect, other, terrain);
-            if (!snappedToEdgeX) finalX = resolved.x;
-            if (!snappedToEdgeY) finalY = resolved.y;
-            roomRect.x = finalX;
-            roomRect.y = finalY;
-          }
+      const roomRect = { x: finalX, y: finalY, width: room.width, height: room.height };
+
+      for (const other of otherRooms) {
+        if (roomsOverlap(roomRect, other)) {
+          const resolved = resolveCollision(roomRect, other, terrain);
+          if (!snappedToEdgeX) finalX = resolved.x;
+          if (!snappedToEdgeY) finalY = resolved.y;
+          roomRect.x = finalX;
+          roomRect.y = finalY;
         }
+      }
 
-        return {
-          floors: state.floors.map((f) =>
-            f.id === state.activeFloorId
-              ? {
-                  ...f,
-                  rooms: f.rooms.map((r) =>
-                    r.id === id ? { ...r, x: finalX, y: finalY } : r
-                  ),
-                }
-              : f
-          ),
-        };
-      }),
+      set({
+        floors: state.floors.map((f) =>
+          f.id === state.activeFloorId
+            ? {
+                ...f,
+                rooms: f.rooms.map((r) =>
+                  r.id === id ? { ...r, x: finalX, y: finalY } : r
+                ),
+              }
+            : f
+        ),
+      });
+
+      // Regenerar: mover una habitación cambia las paredes compartidas
+      useWallsStore.getState().regenerateFloorWalls(state.activeFloorId);
+    },
 
     renameRoom: (id, label) =>
       set((state) => {
@@ -350,101 +354,156 @@ export const useFloorsStore = create<FloorStore>((set, get) => {
         };
       }),
 
-    duplicateRoom: (id) =>
-      set((state) => {
-        recordHistory();
-        const activeFloor = state.floors.find(
-          (f) => f.id === state.activeFloorId
-        );
-        if (!activeFloor) return state;
+    duplicateRoom: (id) => {
+      const state = get();
+      const activeFloor = state.floors.find(
+        (f) => f.id === state.activeFloorId
+      );
+      if (!activeFloor) return;
 
-        const room = activeFloor.rooms.find((r) => r.id === id);
-        if (!room) return state;
+      const room = activeFloor.rooms.find((r) => r.id === id);
+      if (!room) return;
 
-        const newRoom: Room = {
-          ...room,
-          id: generateId(),
-          label: `${room.label} (copia)`,
-          x: room.x + 20,
-          y: room.y + 20,
-        };
+      recordHistory();
 
-        return {
-          floors: state.floors.map((f) =>
-            f.id === state.activeFloorId
-              ? { ...f, rooms: [...f.rooms, newRoom] }
-              : f
-          ),
-        };
-      }),
+      const newRoom: Room = {
+        ...room,
+        id: generateId(),
+        label: `${room.label} (copia)`,
+        x: room.x + 20,
+        y: room.y + 20,
+      };
 
-    updateRoomDimensions: (id, width, height) =>
-      set((state) => {
-        recordHistory();
-        return {
-          floors: state.floors.map((f) =>
-            f.id === state.activeFloorId
-              ? {
-                  ...f,
-                  rooms: f.rooms.map((r) =>
-                    r.id === id ? { ...r, width, height } : r
-                  ),
-                }
-              : f
-          ),
-        };
-      }),
+      set({
+        floors: state.floors.map((f) =>
+          f.id === state.activeFloorId
+            ? { ...f, rooms: [...f.rooms, newRoom] }
+            : f
+        ),
+      });
 
-    updateRoomGeometry: (id, x, y, width, height) =>
-      set((state) => {
-        recordHistory();
-        return {
-          floors: state.floors.map((f) =>
-            f.id === state.activeFloorId
-              ? {
-                  ...f,
-                  rooms: f.rooms.map((r) =>
-                    r.id === id ? { ...r, x, y, width, height } : r
-                  ),
-                }
-              : f
-          ),
-        };
-      }),
+      // La copia puede fusionarse con la original u otras habitaciones
+      useWallsStore.getState().regenerateFloorWalls(state.activeFloorId);
+    },
 
-    setRoomWallWidth: (id, width) =>
-      set((state) => {
-        recordHistory();
-        return {
-          floors: state.floors.map((f) =>
-            f.id === state.activeFloorId
-              ? {
-                  ...f,
-                  rooms: f.rooms.map((r) =>
-                    r.id === id ? { ...r, wallWidth: width } : r
-                  ),
-                }
-              : f
-          ),
-        };
-      }),
+    updateRoomDimensions: (id, width, height) => {
+      const state = get();
+      const activeFloor = state.floors.find(
+        (f) => f.id === state.activeFloorId
+      );
+      if (!activeFloor) return;
+      const room = activeFloor.rooms.find((r) => r.id === id);
+      if (!room) return;
+      if (width === room.width && height === room.height) return;
 
-    setRoomEnclosed: (id, enclosed) =>
-      set((state) => {
-        recordHistory();
-        return {
-          floors: state.floors.map((f) =>
-            f.id === state.activeFloorId
-              ? {
-                  ...f,
-                  rooms: f.rooms.map((r) =>
-                    r.id === id ? { ...r, enclosed } : r
-                  ),
-                }
-              : f
-          ),
-        };
-      }),
+      recordHistory();
+
+      set({
+        floors: state.floors.map((f) =>
+          f.id === state.activeFloorId
+            ? {
+                ...f,
+                rooms: f.rooms.map((r) =>
+                  r.id === id ? { ...r, width, height } : r
+                ),
+              }
+            : f
+        ),
+      });
+
+      useWallsStore.getState().regenerateFloorWalls(state.activeFloorId);
+    },
+
+    updateRoomGeometry: (id, x, y, width, height) => {
+      const state = get();
+      const activeFloor = state.floors.find(
+        (f) => f.id === state.activeFloorId
+      );
+      if (!activeFloor) return;
+      const room = activeFloor.rooms.find((r) => r.id === id);
+      if (!room) return;
+      if (
+        x === room.x &&
+        y === room.y &&
+        width === room.width &&
+        height === room.height
+      ) {
+        return;
+      }
+
+      recordHistory();
+
+      set({
+        floors: state.floors.map((f) =>
+          f.id === state.activeFloorId
+            ? {
+                ...f,
+                rooms: f.rooms.map((r) =>
+                  r.id === id ? { ...r, x, y, width, height } : r
+                ),
+              }
+            : f
+        ),
+      });
+
+      useWallsStore.getState().regenerateFloorWalls(state.activeFloorId);
+    },
+
+    setRoomWallWidth: (id, width) => {
+      const state = get();
+      const activeFloor = state.floors.find(
+        (f) => f.id === state.activeFloorId
+      );
+      if (!activeFloor) return;
+      const room = activeFloor.rooms.find((r) => r.id === id);
+      if (!room || room.wallWidth === width) return;
+
+      recordHistory();
+
+      set({
+        floors: state.floors.map((f) =>
+          f.id === state.activeFloorId
+            ? {
+                ...f,
+                rooms: f.rooms.map((r) =>
+                  r.id === id ? { ...r, wallWidth: width } : r
+                ),
+              }
+            : f
+        ),
+      });
+
+      // El espesor cambia la banda (línea central intacta — claves estables)
+      useWallsStore.getState().regenerateFloorWalls(state.activeFloorId);
+    },
+
+    setRoomEnclosed: (id, enclosed) => {
+      const state = get();
+      const activeFloor = state.floors.find(
+        (f) => f.id === state.activeFloorId
+      );
+      if (!activeFloor) return;
+      const room = activeFloor.rooms.find((r) => r.id === id);
+      if (!room || room.enclosed === enclosed) return;
+
+      recordHistory();
+
+      set({
+        floors: state.floors.map((f) =>
+          f.id === state.activeFloorId
+            ? {
+                ...f,
+                rooms: f.rooms.map((r) =>
+                  r.id === id ? { ...r, enclosed } : r
+                ),
+              }
+            : f
+        ),
+      });
+
+      // Habitación abierta/cerrada cambia los vanos de sus paredes
+      useWallsStore.getState().regenerateFloorWalls(state.activeFloorId);
+    },
 
     moveFloorUp: (id) =>
       set((state) => {
@@ -466,17 +525,24 @@ export const useFloorsStore = create<FloorStore>((set, get) => {
         return { floors: updated };
       }),
 
-    applyFloorTemplate: (rooms) =>
-      set((state) => {
-        recordHistory();
-        return {
-          floors: state.floors.map((f) =>
-            f.id === state.activeFloorId
-              ? { ...f, rooms }
-              : f
-          ),
-        };
-      }),
+    applyFloorTemplate: (rooms) => {
+      const state = get();
+      const activeFloor = state.floors.find(
+        (f) => f.id === state.activeFloorId
+      );
+      if (!activeFloor) return;
+
+      recordHistory();
+
+      set({
+        floors: state.floors.map((f) =>
+          f.id === state.activeFloorId ? { ...f, rooms } : f
+        ),
+      });
+
+      // Template nuevo: materializar todas sus paredes
+      useWallsStore.getState().regenerateFloorWalls(state.activeFloorId);
+    },
 
     getActiveRooms: () => {
       const state = get();

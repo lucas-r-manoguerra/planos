@@ -10,6 +10,7 @@ import { generateId } from "@/lib/utils";
 import { useHistoryStore } from "@/stores/history.store";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { useFloorsStore } from "@/stores/floors.store";
+import { useWallsStore } from "@/stores/walls.store";
 
 interface FixtureStore {
   fixtures: Fixture[];
@@ -35,6 +36,7 @@ export const useFixtureStore = create<FixtureStore>((set, get) => {
       activeFloorId,
       terrain,
       fixtures: current.fixtures,
+      walls: useWallsStore.getState().walls,
     });
   };
 

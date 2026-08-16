@@ -4,7 +4,7 @@
  * Uso: bunx tsx scripts/migrate.ts
  */
 import { migrateProjectData } from "../src/lib/migrate";
-import { Fixture, Floor } from "../src/types/plan";
+import { Fixture, Floor, Room, RoomType, Wall } from "../src/types/plan";
 
 let failures = 0;
 
@@ -39,18 +39,46 @@ function fixture(id: string, floorId?: string): Fixture {
   };
 }
 
+/** Proyección de paredes sin ids (aleatorios): geometría + origen */
+function projWalls(walls: Wall[]) {
+  return walls
+    .map((w) => ({
+      roomId: w.roomId,
+      x1: w.x1,
+      y1: w.y1,
+      x2: w.x2,
+      y2: w.y2,
+      thickness: w.thickness,
+      floorId: w.floorId,
+    }))
+    .sort((a, b) => a.y1 - b.y1 || a.x1 - b.x1 || a.x2 - b.x2);
+}
+
+const room: Room = {
+  id: "r1",
+  label: "Sala",
+  type: RoomType.ESTAR_COMEDOR,
+  x: 0,
+  y: 0,
+  width: 300,
+  height: 200,
+  wallWidth: 10,
+  enclosed: true,
+};
+
 console.log("migrateProjectData");
 check(
-  "fixtures legados sin floorId → primera planta y versión 3",
+  "fixtures legados sin floorId → primera planta y versión 4",
   migrateProjectData({
     version: 2,
     floors: [floorA, floorB],
     fixtures: [fixture("a"), fixture("b")],
   }),
   {
-    version: 3,
+    version: 4,
     floors: [floorA, floorB],
     fixtures: [fixture("a", "f1"), fixture("b", "f1")],
+    walls: [],
   }
 );
 
@@ -62,36 +90,70 @@ check(
     fixtures: [fixture("a", "f2")],
   }),
   {
-    version: 3,
+    version: 4,
     floors: [floorA, floorB],
     fixtures: [fixture("a", "f2")],
+    walls: [],
   }
 );
 
 check(
-  "v3 no se modifica (idempotente)",
+  "v3 migra a v4 (materializa paredes, vacío sin habitaciones)",
   migrateProjectData({
     version: 3,
     floors: [floorA],
     fixtures: [fixture("a", "f1")],
   }),
   {
-    version: 3,
+    version: 4,
     floors: [floorA],
     fixtures: [fixture("a", "f1")],
+    walls: [],
   }
 );
 
 check(
-  "sin fixtures → solo bump de versión, sin clave nueva",
-  migrateProjectData({ version: 2, floors: [floorA] }),
-  { version: 3, floors: [floorA] }
+  "v4 no se modifica (idempotente)",
+  migrateProjectData({
+    version: 4,
+    floors: [floorA],
+    fixtures: [fixture("a", "f1")],
+    walls: [],
+  }),
+  {
+    version: 4,
+    floors: [floorA],
+    fixtures: [fixture("a", "f1")],
+    walls: [],
+  }
 );
 
 check(
-  "sin plantas → fixtures intactos y versión 3",
+  "sin fixtures → solo bump de versión + walls, sin clave fixtures",
+  migrateProjectData({ version: 2, floors: [floorA] }),
+  { version: 4, floors: [floorA], walls: [] }
+);
+
+check(
+  "sin plantas → fixtures intactos y versión 4",
   migrateProjectData({ version: 2, floors: [], fixtures: [fixture("a")] }),
-  { version: 3, floors: [], fixtures: [fixture("a")] }
+  { version: 4, floors: [], fixtures: [fixture("a")], walls: [] }
+);
+
+check(
+  "habitación encerrada → 4 paredes materializadas (líneas centrales)",
+  projWalls(
+    migrateProjectData({
+      version: 3,
+      floors: [{ ...floorA, rooms: [room] }],
+    }).walls ?? []
+  ),
+  [
+    { roomId: "r1", x1: 5, y1: 0, x2: 5, y2: 200, thickness: 10, floorId: "f1" },
+    { roomId: "r1", x1: 295, y1: 0, x2: 295, y2: 200, thickness: 10, floorId: "f1" },
+    { roomId: "r1", x1: 0, y1: 5, x2: 300, y2: 5, thickness: 10, floorId: "f1" },
+    { roomId: "r1", x1: 0, y1: 195, x2: 300, y2: 195, thickness: 10, floorId: "f1" },
+  ]
 );
 
 if (failures > 0) {

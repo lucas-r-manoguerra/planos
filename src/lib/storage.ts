@@ -1,5 +1,9 @@
 /**
- * Persistencia local de proyectos (v3).
+ * Persistencia local de proyectos (v4).
+ *
+ * v4 añade las paredes como entidades (`walls`) materializadas a partir de
+ * las habitaciones (ver lib/wall-utils.ts) y re-ancla las aberturas a
+ * entidades Wall. La migración v3 → v4 ocurre al cargar (lib/migrate.ts).
  *
  * v3 soporta múltiples proyectos nombrados con un índice
  * (`planos:projects:v1`) y una clave por proyecto (`planos:project:{id}`).
@@ -10,7 +14,7 @@
  * desde scripts (regla 08); el resto usa `localStorage` de forma lazy.
  */
 
-import { Floor, Fixture, SunSettings, Terrain } from "@/types/plan";
+import { Floor, Fixture, SunSettings, Terrain, Wall } from "@/types/plan";
 import { DEFAULT_PROJECT_NAME, DEFAULT_SUN_SETTINGS, DEFAULT_TERRAIN } from "@/lib/constants";
 import { buildInitialProjectIndex, migrateProjectData } from "@/lib/migrate";
 import { generateId } from "@/lib/utils";
@@ -23,13 +27,14 @@ export interface ProjectData {
   activeFloorId: string;
   sunSettings: SunSettings;
   fixtures?: Fixture[];
+  walls?: Wall[];
   savedAt: string;
 }
 
 // Clave legada de un solo proyecto: se mantiene hasta que el usuario
 // la importe o borre (spec persistence-4). No renombrar.
 const LEGACY_STORAGE_KEY = "planos-project";
-const CURRENT_VERSION = 3;
+const CURRENT_VERSION = 4;
 
 // ==================== Índice de proyectos ====================
 
@@ -99,6 +104,7 @@ function defaultProjectData(name: string, savedAt: string): ProjectData {
     activeFloorId: floor.id,
     sunSettings: { ...DEFAULT_SUN_SETTINGS },
     fixtures: [],
+    walls: [],
     savedAt,
   };
 }
@@ -323,7 +329,8 @@ export function isProjectDataShape(value: unknown): value is ProjectData {
     Array.isArray(value.floors) &&
     typeof value.activeFloorId === "string" &&
     isSunSettingsShape(value.sunSettings) &&
-    (value.fixtures === undefined || Array.isArray(value.fixtures))
+    (value.fixtures === undefined || Array.isArray(value.fixtures)) &&
+    (value.walls === undefined || Array.isArray(value.walls))
   );
 }
 

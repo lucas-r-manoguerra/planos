@@ -1,27 +1,27 @@
 # Regla 08 — Verificación de cambios
 
-> Qué significa "listo" en este repo. No hay suite de tests configurada aún:
-> la verificación se apoya en lint, typecheck y build, y en validación manual
-> del flujo afectado.
+> Qué significa "listo" en este repo. La verificación se apoya en lint,
+> typecheck, build, tests (vitest) y validación manual del flujo afectado.
+> Los tests de lógica pura viven en `tests/*.test.ts` (comando: `bun test`).
 
 ## Verificación mínima obligatoria (siempre)
 
 1. `bun lint` — sin errores nuevos (ESLint + next/core-web-vitals + TS rules).
 2. `bun build` — build de producción verde.
 3. `bunx tsc --noEmit` — typecheck limpio (sin `any` silencioso, regla 02).
-4. **Validación manual del flujo tocado**: si el cambio es visual (canvas, UI,
+4. `bun test` — suite vitest verde (los tests tocados, mínimo).
+5. **Validación manual del flujo tocado**: si el cambio es visual (canvas, UI,
    docs), correr `bun dev` y verificar en navegador la interacción afectada
    (zoom, pan, selección, snap, simulación solar, render de docs).
 
 ## Para lógica pura (lib/)
 
-- Funciones como `solar.ts`, `shadow.ts`, `storage.ts`, `templates.ts` son
-  deterministas: al modificarlas, verificar con un script ad-hoc
-  (`bunx tsx <script>`) o ejercicio manual los casos de borde (fechas límite,
-  zonas horarias, coordenadas extremas, ángulos >360°).
-- Si la función tiene varios casos de borde y no existe test, **proponer agregar
-  un test runner** (p. ej. `vitest`) antes de escribir más casos — no acumular
-  lógica sin test.
+- Las funciones deterministas (`solar.ts`, `shadow.ts`, `storage.ts`,
+  `wall-utils.ts`, `migrate.ts`, ...) se verifican con tests en `tests/`
+  (vitest, `bun test`). Los casos de borde se cubren en los tests: fechas
+  límite, zonas horarias, coordenadas extremas, ángulos >360°, migraciones.
+- Los scripts ad-hoc (`scripts/*.ts`, `bunx tsx <script>`) siguen disponibles
+  para smoke checks rápidos, pero no reemplazan la suite.
 
 ## Para el editor (canvas/stores)
 

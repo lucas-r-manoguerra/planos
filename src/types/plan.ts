@@ -85,6 +85,25 @@ export interface Floor {
   rooms: Room[];
 }
 
+// Interfaz para una pared del plano (entidad persistente, v4)
+//
+// x1/y1/x2/y2 definen la LÍNEA CENTRAL de la pared en cm. La banda visible
+// se dibuja a `thickness / 2` a cada lado de esa línea. `roomId` indica la
+// habitación que la generó (pared materializada); ausente = pared libre.
+export interface Wall {
+  id: string;         // Identificador único (crypto.randomUUID())
+  floorId: string;    // Planta a la que pertenece
+  x1: number;         // Inicio de la línea central (cm)
+  y1: number;         // Inicio de la línea central (cm)
+  x2: number;         // Fin de la línea central (cm)
+  y2: number;         // Fin de la línea central (cm)
+  thickness: number;  // Espesor de la pared en cm (default: 10)
+  roomId?: string;    // Habitación que la generó; ausente = pared libre
+}
+
+// Modo de visualización del editor (S3: isometrico usa la misma geometría)
+export type ViewMode = "2d" | "isometric";
+
 // Interfaz para el estado del canvas
 export interface CanvasState {
   zoom: number;         // Nivel de zoom (0.1 a 5.0)
@@ -92,7 +111,7 @@ export interface CanvasState {
   panY: number;         // Desplazamiento vertical en centímetros
   gridVisible: boolean; // Si la grilla está visible
   gridSize: number;     // Tamaño de la grilla en centímetros
-  activeTool: "select" | "pan"; // Herramienta activa
+  activeTool: "select" | "pan" | "wall"; // Herramienta activa
 }
 
 // Interfaz para la tienda de habitaciones (Zustand store)
@@ -175,7 +194,7 @@ export interface Fixture {
   // Propiedades específicas
   props: Record<string, number | string | boolean>;
   // Para puertas/ventanas: pared anclada
-  wallId?: string;      // id de la habitación a la que está anclada
+  wallId?: string;      // v4: id de la pared (Wall). v3 legado: id de la habitación
   wallSide?: "top" | "bottom" | "left" | "right"; // qué pared
-  wallOffset?: number;  // offset desde la esquina de la pared (cm)
+  wallOffset?: number;  // offset desde el inicio de la pared (cm)
 }

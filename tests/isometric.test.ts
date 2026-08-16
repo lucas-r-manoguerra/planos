@@ -16,6 +16,9 @@ import {
   unprojectIsometric,
 } from "@/lib/isometric";
 import { useCanvasStore } from "@/stores/canvas.store";
+import { useTerrainStore } from "@/stores/rooms.store";
+import { fitToView } from "@/lib/canvas-fit";
+import { ZOOM_MIN, ZOOM_MAX } from "@/lib/constants";
 import { Wall } from "@/types/plan";
 
 /** Pared horizontal de 300 cm, espesor 10, sobre y = 5 */
@@ -182,14 +185,12 @@ describe("canvas.store ViewMode (spec isometric-view-1)", () => {
     expect(useCanvasStore.getState().viewMode).toBe("2d");
   });
 
-  it("toggle a isometric y vuelta: display-only, sin pérdida de geometría", () => {
-    const before = useCanvasStore.getState();
-    const snapshot = {
-      zoom: before.zoom,
-      panX: before.panX,
-      panY: before.panY,
-      activeTool: before.activeTool,
-    };
+  it("toggle a isometric y vuelta: recentra en 2d sin tocar herramientas", () => {
+    // Terreno conocido y sin Stage → viewport fallback 800×600 (S3 fix)
+    useTerrainStore.setState({
+      terrain: { ...useTerrainStore.getState().terrain, width: 1000, height: 800 },
+    });
+    const fit = fitToView(1000, 800, 800, 600, ZOOM_MIN, ZOOM_MAX);
 
     useCanvasStore.getState().setViewMode("isometric");
     expect(useCanvasStore.getState().viewMode).toBe("isometric");
@@ -197,11 +198,26 @@ describe("canvas.store ViewMode (spec isometric-view-1)", () => {
     useCanvasStore.getState().setViewMode("2d");
     const after = useCanvasStore.getState();
     expect(after.viewMode).toBe("2d");
+    // El pan/zoom del iso no vale en 2d: la vuelta re-centra el terreno
+    expect(after.zoom).toBe(fit.zoom);
+    expect(after.panX).toBe(fit.panX);
+    expect(after.panY).toBe(fit.panY);
+    // La herramienta activa no se toca (display-only)
+    expect(after.activeTool).toBe("select");
+  });
+
+  it("setViewMode al mismo modo no re-centra (solo iso→2d)", () => {
+    const before = useCanvasStore.getState();
+    useCanvasStore.getState().setViewMode("2d");
+    const after = useCanvasStore.getState();
     expect({
       zoom: after.zoom,
       panX: after.panX,
       panY: after.panY,
-      activeTool: after.activeTool,
-    }).toEqual(snapshot);
+    }).toEqual({
+      zoom: before.zoom,
+      panX: before.panX,
+      panY: before.panY,
+    });
   });
 });

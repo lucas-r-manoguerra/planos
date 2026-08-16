@@ -1,12 +1,6 @@
-# Editor Rendering Specification
+# Delta for Editor Rendering
 
-## Purpose
-
-Structure the canvas as per-domain Konva layers with memoized components, avoid
-unnecessary re-renders during pan/zoom, and make the `enclosed` toggle actually
-change wall rendering.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: editor-rendering-1: Per-domain Konva layers
 
@@ -35,24 +29,6 @@ no layer MAY derive wall geometry from room rects at render time.
 - GIVEN walls exist on the active floor
 - WHEN the wall layer renders
 - THEN it draws shapes from wall entities and no room-derived segments
-
-### Requirement: editor-rendering-2: Memoized layers and fine selectors
-
-Canvas layers MUST be memoized and subscribe to fine-grained store selectors so
-that pan, zoom, and selection changes do not re-render unrelated layers. Shadow
-and sun-arc results MUST NOT be recomputed on pan/zoom.
-
-#### Scenario: Pan/zoom skips shadow work
-
-- GIVEN the editor is rendering with shadows
-- WHEN the user pans or zooms
-- THEN the shadow layer does not recompute its geometry
-
-#### Scenario: Only affected layers re-render
-
-- GIVEN a room is moved
-- WHEN the state updates
-- THEN only the layers affected by the room change re-render
 
 ### Requirement: editor-rendering-3: Wall settings regenerate wall entities
 

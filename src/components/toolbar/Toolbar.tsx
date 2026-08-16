@@ -26,13 +26,14 @@ import {
   Ruler,
   Sun,
   BookOpen,
+  Pencil,
 } from "lucide-react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useSunStore } from "@/stores/sun.store";
 
 export function Toolbar() {
-  const { zoom, setZoom, toggleGrid, gridVisible } = useCanvasStore();
+  const { zoom, setZoom, toggleGrid, gridVisible, activeTool, setActiveTool } = useCanvasStore();
   const { terrain } = useTerrainStore();
   const { selectedId, clearSelection } = useSelectionStore();
   const { undo, redo, canUndo, canRedo } = useHistoryStore();
@@ -115,6 +116,19 @@ export function Toolbar() {
           aria-label="Rehacer"
         >
           <Redo2 size={16} />
+        </button>
+      </div>
+
+      {/* Herramientas: selección vs pared */}
+      <div className="flex items-center gap-0.5 border-l border-gray-200 pl-2">
+        <button
+          onClick={() => setActiveTool(activeTool === "wall" ? "select" : "wall")}
+          className={`p-1.5 rounded ${activeTool === "wall" ? "bg-blue-100 text-blue-700" : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"}`}
+          title={activeTool === "wall" ? "Herramienta de selección (Esc)" : "Dibujar paredes (trazo con snap)"}
+          aria-label={activeTool === "wall" ? "Salir de la herramienta de paredes" : "Activar herramienta de paredes"}
+          aria-pressed={activeTool === "wall"}
+        >
+          <Pencil size={16} />
         </button>
       </div>
 

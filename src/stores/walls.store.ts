@@ -29,7 +29,7 @@ interface WallsStore {
   // Acciones de paredes libres (S2: dibujo manual)
   addWall: (wall: Omit<Wall, "id">) => void;
   moveWall: (id: string, x1: number, y1: number, x2: number, y2: number) => void;
-  resizeWall: (id: string, thickness: number) => void;
+  resizeWall: (id: string, x1: number, y1: number, x2: number, y2: number) => void;
   removeWall: (id: string) => void;
 
   /**
@@ -81,21 +81,31 @@ export const useWallsStore = create<WallsStore>((set, get) => {
           w.id === id ? { ...w, x1, y1, x2, y2 } : w
         ),
       }));
+      // Las aberturas ancladas siguen a la pared (design D7)
+      get().reanchorOpenings();
     },
 
-    resizeWall: (id, thickness) => {
-      if (thickness <= 0) return;
+    resizeWall: (id, x1, y1, x2, y2) => {
+      const wall = get().walls.find((w) => w.id === id);
+      if (!wall) return;
+      // Longitud cero: rechazar (punto sin dirección)
+      if (Math.abs(x1 - x2) <= 0 && Math.abs(y1 - y2) <= 0) return;
       recordHistory();
       set((state) => ({
         walls: state.walls.map((w) =>
-          w.id === id ? { ...w, thickness } : w
+          w.id === id ? { ...w, x1, y1, x2, y2 } : w
         ),
       }));
+      // Las aberturas ancladas siguen a la pared (design D7)
+      get().reanchorOpenings();
     },
 
     removeWall: (id) => {
       recordHistory();
       set((state) => ({ walls: state.walls.filter((w) => w.id !== id) }));
+      // Aberturas de la pared eliminada: re-anclar o descartar
+      // (spec fixtures-management-3)
+      get().reanchorOpenings();
     },
 
     regenerateFloorWalls: (floorId) => {
@@ -106,7 +116,11 @@ export const useWallsStore = create<WallsStore>((set, get) => {
       if (!floor) {
         // Planta eliminada: descartar sus paredes
         const remaining = existing.filter((w) => w.floorId !== floorId);
-        if (remaining.length !== existing.length) set({ walls: remaining });
+        if (remaining.length !== existing.length) {
+          set({ walls: remaining });
+          // Las aberturas de la planta eliminada caen o se re-anclan
+          get().reanchorOpenings();
+        }
         return;
       }
 
@@ -131,6 +145,10 @@ export const useWallsStore = create<WallsStore>((set, get) => {
       }
 
       set({ walls: [...otherFloors, ...freeForm, ...materialized] });
+      // Geometría de habitaciones cambió: las aberturas ancladas siguen a
+      // las paredes (design D7); las de paredes eliminadas caen o se
+      // re-anclan a una coincidente (spec fixtures-management-3).
+      get().reanchorOpenings();
     },
 
     reanchorOpenings: () => {

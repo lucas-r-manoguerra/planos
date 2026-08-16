@@ -16,6 +16,7 @@ import { useSelectionStore } from "@/stores/selection.store";
 import { useContextMenuStore } from "@/stores/context-menu.store";
 import { usePanelStore, type PanelType } from "@/stores/panel.store";
 import { useHistoryStore } from "@/stores/history.store";
+import { useCanvasStore } from "@/stores/canvas.store";
 import Konva from "konva";
 import { Fixture } from "@/types/plan";
 import { useCanvasColors } from "./canvas-colors";
@@ -40,6 +41,7 @@ const FixtureRect = memo(function FixtureRect({ fixture }: { fixture: Fixture })
   const select = useSelectionStore((s) => s.select);
   const show = useContextMenuStore((s) => s.show);
   const openPanel = usePanelStore((s) => s.openPanel);
+  const activeTool = useCanvasStore((s) => s.activeTool);
   const { fixtureStroke, fixtureLabel } = useCanvasColors();
   const isSelected = selectedId === fixture.id;
 
@@ -113,7 +115,7 @@ const FixtureRect = memo(function FixtureRect({ fixture }: { fixture: Fixture })
         <Group
           x={posX}
           y={posY}
-          draggable
+          draggable={activeTool === "select"}
           rotation={fixture.rotation}
           onDragStart={handleDragStart}
           onDragMove={handleDragMove}
@@ -153,7 +155,7 @@ const FixtureRect = memo(function FixtureRect({ fixture }: { fixture: Fixture })
         <Group
           x={posX}
           y={posY}
-          draggable
+          draggable={activeTool === "select"}
           rotation={fixture.rotation}
           onDragStart={handleDragStart}
           onDragMove={handleDragMove}
@@ -207,7 +209,7 @@ const FixtureRect = memo(function FixtureRect({ fixture }: { fixture: Fixture })
         <Group
           x={posX}
           y={posY}
-          draggable
+          draggable={activeTool === "select"}
           rotation={fixture.rotation}
           onDragStart={handleDragStart}
           onDragMove={handleDragMove}
@@ -277,7 +279,7 @@ const FixtureRect = memo(function FixtureRect({ fixture }: { fixture: Fixture })
           <Group
             x={posX}
             y={posY}
-            draggable
+            draggable={activeTool === "select"}
             rotation={fixture.rotation}
             onDragStart={handleDragStart}
             onDragMove={handleDragMove}
@@ -400,7 +402,7 @@ const FixtureRect = memo(function FixtureRect({ fixture }: { fixture: Fixture })
         <Group
           x={posX}
           y={posY}
-          draggable
+          draggable={activeTool === "select"}
           rotation={fixture.rotation}
           onDragStart={handleDragStart}
           onDragMove={handleDragMove}

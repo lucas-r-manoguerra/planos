@@ -18,15 +18,17 @@ import { TerrainLayer } from "./TerrainLayer";
 import { ShadowLayer } from "./ShadowLayer";
 import { RoomLayer } from "./RoomLayer";
 import { FixtureLayer } from "./FixtureLayer";
-import { WallLayer, WallPreview } from "./WallLayer";
+import { WallLayer, WallPreview, WallDrawPreview } from "./WallLayer";
 import { MeasurementLayer } from "./MeasurementLayer";
 import { SunArcLayer } from "./SunArcLayer";
 import { CompassOverlay } from "./CompassOverlay";
 import { CoordinateDisplay } from "./CoordinateDisplay";
 import { useFixtureStore } from "@/stores/fixtures.store";
 import { useFloorsStore } from "@/stores/floors.store";
+import { useWallsStore } from "@/stores/walls.store";
 import { getCatalogItem, calculateStairs } from "@/lib/fixtures-catalog";
-import { findNearestWall } from "@/lib/utils";
+import { findNearestWallEntity, snapWallPoint } from "@/lib/wall-snap";
+import { Point } from "@/types/plan";
 
 export function PlanCanvas() {
   const stageRef = useRef<Konva.Stage>(null);
@@ -34,8 +36,12 @@ export function PlanCanvas() {
   const [size, setSize] = useState({ width: 800, height: 600 });
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [wallPreview, setWallPreview] = useState<WallPreview | null>(null);
+  const [drawPreview, setDrawPreview] = useState<WallDrawPreview | null>(null);
+  const drawStartRef = useRef<Point | null>(null);
+  /** Listener de window mouseup del trazo activo (identidad para removal) */
+  const windowMouseUpRef = useRef<(() => void) | null>(null);
 
-  const { zoom, panX, panY, smoothZoom, setPan } = useCanvasStore();
+  const { zoom, panX, panY, smoothZoom, setPan, activeTool, setActiveTool } = useCanvasStore();
   const { active: rulerActive, pointA, setPointA, setPointerPos, addMeasurement, deactivate } = useRulerStore();
   const { placingFixture, addFixture, setPlacingFixture } = useFixtureStore();
 
@@ -60,17 +66,108 @@ export function PlanCanvas() {
     return () => useCanvasStore.setState({ stageRef: null });
   }, []);
 
-  // Cancelar modo colocación con Escape
+  /** Punto del cursor en coordenadas de canvas (cm) */
+  const pointerToCanvas = useCallback((stage: Konva.Stage): Point | null => {
+    const pointer = stage.getPointerPosition();
+    if (!pointer) return null;
+    const { zoom: z, panX: px, panY: py } = useCanvasStore.getState();
+    return { x: (pointer.x - px) / z, y: (pointer.y - py) / z };
+  }, []);
+
+  /** Convierte un punto snap en coords de canvas según el estado vivo */
+  const snapToCanvasPoint = useCallback((p: Point): Point => {
+    const { activeFloorId } = useFloorsStore.getState();
+    const rooms = useFloorsStore.getState().getActiveRooms();
+    const walls = useWallsStore.getState().getWallsForFloor(activeFloorId);
+    return snapWallPoint(p, rooms, walls);
+  }, []);
+
+  /** Quita el listener de window mouseup del trazo (si quedó registrado) */
+  const finishWindowListeners = useCallback(() => {
+    if (windowMouseUpRef.current) {
+      window.removeEventListener("mouseup", windowMouseUpRef.current);
+      windowMouseUpRef.current = null;
+    }
+  }, []);
+
+  /** Finaliza el trazo: crea la pared si el trazo tiene longitud */
+  const completeDraw = useCallback(() => {
+    const start = drawStartRef.current;
+    drawStartRef.current = null;
+    setDrawPreview(null);
+    finishWindowListeners();
+    if (!start) return;
+
+    const stage = stageRef.current;
+    if (!stage) return;
+    const p = pointerToCanvas(stage);
+    if (!p) return;
+    const end = snapToCanvasPoint(p);
+
+    // Longitud cero: punto sin dirección, se descarta (wall-drawing-2)
+    if (Math.abs(end.x - start.x) <= 0 && Math.abs(end.y - start.y) <= 0) return;
+
+    useWallsStore.getState().addWall({
+      floorId: useFloorsStore.getState().activeFloorId,
+      x1: start.x,
+      y1: start.y,
+      x2: end.x,
+      y2: end.y,
+      thickness: 10, // espesor por defecto (cm)
+    });
+  }, [pointerToCanvas, snapToCanvasPoint, finishWindowListeners]);
+
+  const handleWindowMouseUp = useCallback(() => {
+    if (!drawStartRef.current) return;
+    completeDraw();
+  }, [completeDraw]);
+
+  // Cancelar modo colocación / trazo de pared / salir de la herramienta con Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && placingFixture) {
+      if (e.key !== "Escape") return;
+      if (placingFixture) {
         setPlacingFixture(null);
         setWallPreview(null);
+        return;
+      }
+      if (drawStartRef.current) {
+        // Prioridad 1: cancelar el trazo en curso (no crea pared)
+        finishWindowListeners();
+        drawStartRef.current = null;
+        setDrawPreview(null);
+        return;
+      }
+      if (activeTool === "wall") {
+        // Prioridad 2: salir de la herramienta pared
+        setActiveTool("select");
       }
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [placingFixture, setPlacingFixture]);
+  }, [placingFixture, setPlacingFixture, activeTool, setActiveTool, finishWindowListeners]);
+
+  const handleStageMouseDown = useCallback(
+    (e: Konva.KonvaEventObject<MouseEvent>) => {
+      const { activeTool: tool } = useCanvasStore.getState();
+      const { placingFixture: placing } = useFixtureStore.getState();
+      if (tool !== "wall" || placing) return;
+
+      const stage = e.target.getStage();
+      if (!stage) return;
+      const p = pointerToCanvas(stage);
+      if (!p) return;
+
+      const start = snapToCanvasPoint(p);
+      drawStartRef.current = start;
+      setDrawPreview({ x1: start.x, y1: start.y, x2: start.x, y2: start.y });
+      // El mouseup puede ocurrir fuera del Stage: safety en window
+      finishWindowListeners();
+      windowMouseUpRef.current = handleWindowMouseUp;
+      window.addEventListener("mouseup", windowMouseUpRef.current);
+    },
+    [pointerToCanvas, snapToCanvasPoint, handleWindowMouseUp, finishWindowListeners],
+  );
 
   const handleWheel = useCallback(
     (e: { evt: { deltaY: number; preventDefault: () => void } }) => {
@@ -103,13 +200,34 @@ export function PlanCanvas() {
           setPointerPos(x, y);
         }
 
-        // Detectar pared cercana al colocar puertas/ventanas
+        // Actualizar preview de trazo de pared en curso (wall tool)
+        if (drawStartRef.current) {
+          const end = snapToCanvasPoint({ x, y });
+          const start = drawStartRef.current;
+          setDrawPreview({ x1: start.x, y1: start.y, x2: end.x, y2: end.y });
+        }
+
+        // Detectar pared (entidad Wall) al colocar puertas/ventanas
         if (placingFixture) {
           const catalogItem = getCatalogItem(placingFixture);
           if (catalogItem && (catalogItem.category === "door" || catalogItem.category === "window")) {
-            const rooms = useFloorsStore.getState().getActiveRooms();
-            const preview = findNearestWall(x, y, rooms);
-            setWallPreview(preview);
+            const { activeFloorId } = useFloorsStore.getState();
+            const walls = useWallsStore.getState().getWallsForFloor(activeFloorId);
+            const hit = findNearestWallEntity({ x, y }, walls);
+            setWallPreview(
+              hit
+                ? {
+                    wallId: hit.wall.id,
+                    x1: hit.wall.x1,
+                    y1: hit.wall.y1,
+                    x2: hit.wall.x2,
+                    y2: hit.wall.y2,
+                    x: hit.x,
+                    y: hit.y,
+                    offset: hit.offset,
+                  }
+                : null,
+            );
           } else {
             setWallPreview(null);
           }
@@ -118,7 +236,7 @@ export function PlanCanvas() {
         }
       }
     },
-    [panX, panY, zoom, rulerActive, setPointerPos, placingFixture],
+    [panX, panY, zoom, rulerActive, setPointerPos, placingFixture, snapToCanvasPoint],
   );
 
   const handleContextMenu = useCallback(
@@ -154,13 +272,23 @@ export function PlanCanvas() {
         const catalogItem = getCatalogItem(placingFixture);
         if (!catalogItem) return;
 
-        // Puertas y ventanas solo se colocan en paredes
+        // Puertas y ventanas solo se colocan en paredes (entidad Wall)
         if (catalogItem.category === "door" || catalogItem.category === "window") {
           if (!wallPreview) return;
 
-          const isHorizontal = wallPreview.side === "top" || wallPreview.side === "bottom";
+          const isHorizontal = wallPreview.y1 === wallPreview.y2;
           const fixtureWidth = catalogItem.width;
           const fixtureHeight = catalogItem.height;
+
+          // Lado de la pared según la posición del puntero respecto de la línea central
+          const wallSide =
+            isHorizontal
+              ? canvasY < wallPreview.y1
+                ? "top"
+                : "bottom"
+              : canvasX < wallPreview.x1
+                ? "left"
+                : "right";
 
           let fx: number;
           let fy: number;
@@ -187,8 +315,8 @@ export function PlanCanvas() {
             rotation,
             color: catalogItem.color,
             props: catalogItem.props ? { ...catalogItem.props } : {},
-            wallId: wallPreview.roomId,
-            wallSide: wallPreview.side,
+            wallId: wallPreview.wallId,
+            wallSide,
             wallOffset: wallPreview.offset,
           });
           setWallPreview(null);
@@ -261,10 +389,11 @@ export function PlanCanvas() {
         scaleY={zoom}
         x={panX}
         y={panY}
-        draggable
+        draggable={activeTool !== "wall"}
         onDragEnd={handleDragEnd}
         onWheel={handleWheel}
         onClick={handleStageClick}
+        onMouseDown={handleStageMouseDown}
         onMouseMove={handleMouseMove}
         onContextMenu={handleContextMenu}
       >
@@ -285,7 +414,7 @@ export function PlanCanvas() {
           <FixtureLayer />
         </Layer>
         <Layer>
-          <WallLayer wallPreview={wallPreview} />
+          <WallLayer wallPreview={wallPreview} drawPreview={drawPreview} />
         </Layer>
         <Layer>
           <MeasurementLayer />

@@ -18,6 +18,7 @@ import { ZOOM_MIN, ZOOM_MAX } from "@/lib/constants";
 import {
   ZoomIn,
   ZoomOut,
+  Focus,
   Grid3X3,
   Undo2,
   Redo2,
@@ -34,7 +35,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { useSunStore } from "@/stores/sun.store";
 
 export function Toolbar() {
-  const { zoom, setZoom, toggleGrid, gridVisible, activeTool, setActiveTool, viewMode, setViewMode } = useCanvasStore();
+  const { zoom, setZoom, toggleGrid, gridVisible, activeTool, setActiveTool, viewMode, setViewMode, centerTerrain } = useCanvasStore();
   const { terrain } = useTerrainStore();
   const { selectedId, clearSelection } = useSelectionStore();
   const { undo, redo, canUndo, canRedo } = useHistoryStore();
@@ -84,6 +85,9 @@ export function Toolbar() {
         </button>
         <button onClick={handleZoomReset} className="px-1.5 py-1 hover:bg-gray-100 rounded text-xs font-medium text-gray-500 hover:text-gray-900" title="Zoom 100%" aria-label="Restablecer zoom al 100%">
           1:1
+        </button>
+        <button onClick={() => centerTerrain()} className="p-1.5 hover:bg-gray-100 rounded text-gray-600 hover:text-gray-900" title="Centrar plano en la vista" aria-label="Centrar plano en la vista">
+          <Focus size={16} />
         </button>
       </div>
 

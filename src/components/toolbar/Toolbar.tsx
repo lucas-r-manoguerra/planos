@@ -29,13 +29,14 @@ import {
   BookOpen,
   Pencil,
   Box,
+  Magnet,
 } from "lucide-react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useSunStore } from "@/stores/sun.store";
 
 export function Toolbar() {
-  const { zoom, setZoom, toggleGrid, gridVisible, activeTool, setActiveTool, viewMode, setViewMode, centerTerrain } = useCanvasStore();
+  const { zoom, setZoom, toggleGrid, gridVisible, activeTool, setActiveTool, viewMode, setViewMode, centerTerrain, toggleMagnetism, magnetismEnabled } = useCanvasStore();
   const { terrain } = useTerrainStore();
   const { selectedId, clearSelection } = useSelectionStore();
   const { undo, redo, canUndo, canRedo } = useHistoryStore();
@@ -100,6 +101,17 @@ export function Toolbar() {
         aria-pressed={gridVisible}
       >
         <Grid3X3 size={16} />
+      </button>
+
+      {/* Magnetismo de paredes (wall-drawing-6): OFF = puntero crudo */}
+      <button
+        onClick={toggleMagnetism}
+        className={`p-1.5 rounded ${magnetismEnabled ? "bg-blue-100 text-blue-700" : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"}`}
+        title="Toggle magnetismo (Shift lo invierte durante el gesto)"
+        aria-label={magnetismEnabled ? "Desactivar magnetismo" : "Activar magnetismo"}
+        aria-pressed={magnetismEnabled}
+      >
+        <Magnet size={16} />
       </button>
 
       {/* Deshacer / Rehacer */}

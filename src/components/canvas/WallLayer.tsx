@@ -24,6 +24,7 @@ import { useCanvasStore } from "@/stores/canvas.store";
 import { useHistoryStore } from "@/stores/history.store";
 import { Wall } from "@/types/plan";
 import { snapWallPoint } from "@/lib/wall-snap";
+import { resolveWallEnd, effectiveMagnetism } from "@/lib/wall-angle-snap";
 import { wallBandPoints, DEFAULT_WALL_THICKNESS } from "@/lib/wall-utils";
 import { useCanvasColors } from "./canvas-colors";
 
@@ -50,6 +51,8 @@ export interface WallDrawPreview {
   y2: number;
   /** Espesor de la banda (cm); por defecto DEFAULT_WALL_THICKNESS */
   thickness?: number;
+  /** Extremo magnetizado (snap de punto/ángulo aplicado); readouts en P3 */
+  snapped?: boolean;
 }
 
 const SELECT_COLOR = "#3b82f6";
@@ -140,7 +143,7 @@ function WallEntity({ wall }: { wall: Wall }) {
       useHistoryStore.getState().endGesture();
     };
 
-    const handleMove = () => {
+    const handleMove = (e: Konva.KonvaEventObject<MouseEvent>) => {
       const screen = stage.getPointerPosition();
       if (!screen) return;
       const { zoom: z, panX: px, panY: py } = useCanvasStore.getState();
@@ -149,24 +152,33 @@ function WallEntity({ wall }: { wall: Wall }) {
       const others = useWallsStore
         .getState()
         .walls.filter((w) => w.id !== wall.id && w.floorId === wall.floorId);
-      const snapped = snapWallPoint(p, rooms, others);
 
       if (mode === "move") {
-        // Ambos extremos se desplazan por el mismo delta (wall-drawing-4)
+        // Mover: SOLO snap de puntos; ambos extremos se desplazan por el mismo
+        // delta (wall-drawing-4 — el ángulo de la pared no cambia).
+        const snapped = snapWallPoint(p, rooms, others);
         const dx = snapped.x - start.x;
         const dy = snapped.y - start.y;
         moveWall(wall.id, base.x1 + dx, base.y1 + dy, base.x2 + dx, base.y2 + dy);
         return;
       }
 
-      // Resize: extremo arrastrado va al punto snap; el otro queda fijo.
+      // Resize: el extremo arrastrado se resuelve como en dibujo — snap de
+      // puntos, luego ángulo (pivote = extremo fijo), luego crudo; el
+      // magnetismo efectivo es flag XOR Shift del evento (wall-drawing-4/6).
       // Leer la pared viva (el closure guarda la versión del mousedown).
       const live = useWallsStore.getState().walls.find((w) => w.id === wall.id);
       if (!live) return;
+      const magnetize = effectiveMagnetism(useCanvasStore.getState().magnetismEnabled, e.evt.shiftKey);
+      const pivot =
+        mode === "start"
+          ? { x: live.x2, y: live.y2 }
+          : { x: live.x1, y: live.y1 };
+      const resolved = resolveWallEnd(p, pivot, rooms, others, magnetize);
       const next =
         mode === "start"
-          ? { x1: snapped.x, y1: snapped.y, x2: live.x2, y2: live.y2 }
-          : { x1: live.x1, y1: live.y1, x2: snapped.x, y2: snapped.y };
+          ? { x1: resolved.x, y1: resolved.y, x2: live.x2, y2: live.y2 }
+          : { x1: live.x1, y1: live.y1, x2: resolved.x, y2: resolved.y };
       resizeWall(wall.id, next.x1, next.y1, next.x2, next.y2);
     };
 

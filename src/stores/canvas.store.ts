@@ -22,6 +22,7 @@ const initialState: CanvasState = {
   gridSize: DEFAULT_GRID_SIZE,
   activeTool: "select",
   viewMode: "2d",
+  magnetismEnabled: true,
 };
 
 // Interfaz de la tienda con acciones
@@ -35,6 +36,7 @@ interface CanvasStore extends CanvasState {
   toggleGrid: () => void;
   setGridSize: (size: number) => void;
   setActiveTool: (tool: "select" | "pan" | "wall") => void;
+  toggleMagnetism: () => void; // Alternar magnetismo de paredes (wall-drawing-6)
   /** Cambiar modo de visualización (2D o isométrico) — estado de display (S3) */
   setViewMode: (viewMode: ViewMode) => void;
   /**
@@ -99,6 +101,9 @@ export const useCanvasStore = create<CanvasStore>((set, get) => ({
 
   // Cambiar herramienta activa (seleccionar o mover)
   setActiveTool: (activeTool) => set({ activeTool }),
+
+  // Alternar magnetismo de paredes (wall-drawing-6)
+  toggleMagnetism: () => set((state) => ({ magnetismEnabled: !state.magnetismEnabled })),
 
   // Cambiar modo de visualización (display only — no toca la geometría, spec isometric-view-1)
   setViewMode: (viewMode) => {

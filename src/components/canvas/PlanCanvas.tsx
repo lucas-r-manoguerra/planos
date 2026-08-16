@@ -28,7 +28,8 @@ import { useFixtureStore } from "@/stores/fixtures.store";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useWallsStore } from "@/stores/walls.store";
 import { getCatalogItem, calculateStairs } from "@/lib/fixtures-catalog";
-import { findNearestWallEntity, snapWallPoint, snapWallPointDirectional } from "@/lib/wall-snap";
+import { findNearestWallEntity, snapWallPoint } from "@/lib/wall-snap";
+import { resolveWallEnd, effectiveMagnetism } from "@/lib/wall-angle-snap";
 import { Point } from "@/types/plan";
 
 export function PlanCanvas() {
@@ -40,7 +41,7 @@ export function PlanCanvas() {
   const [drawPreview, setDrawPreview] = useState<WallDrawPreview | null>(null);
   const drawStartRef = useRef<Point | null>(null);
   /** Listener de window mouseup del trazo activo (identidad para removal) */
-  const windowMouseUpRef = useRef<(() => void) | null>(null);
+  const windowMouseUpRef = useRef<((e: MouseEvent) => void) | null>(null);
 
   const { zoom, panX, panY, smoothZoom, setPan, activeTool, setActiveTool, viewMode } = useCanvasStore();
   const { active: rulerActive, pointA, setPointA, setPointerPos, addMeasurement, deactivate } = useRulerStore();
@@ -84,15 +85,15 @@ export function PlanCanvas() {
   }, []);
 
   /**
-   * Snap direccional para el EXTREMO del trazo: evita que una pared
-   * perpendicular cercana colapse la pared a un segmento vertical/horizontal
-   * de longitud ~0 (fix "las paredes solo se extienden en vertical").
+   * Resuelve el EXTREMO del trazo (dibujo y resize): cadena única del diseño
+   * (D3) — snap direccional de puntos → snap de ángulo → puntero crudo,
+   * gobernada por el magnetismo efectivo (flag del store XOR Shift).
    */
-  const snapToCanvasPointDirectional = useCallback((p: Point, start: Point): Point => {
+  const resolveCanvasWallEnd = useCallback((p: Point, start: Point, magnetize: boolean): Point => {
     const { activeFloorId } = useFloorsStore.getState();
     const rooms = useFloorsStore.getState().getActiveRooms();
     const walls = useWallsStore.getState().getWallsForFloor(activeFloorId);
-    return snapWallPointDirectional(p, start, rooms, walls);
+    return resolveWallEnd(p, start, rooms, walls, magnetize);
   }, []);
 
   /** Quita el listener de window mouseup del trazo (si quedó registrado) */
@@ -104,7 +105,7 @@ export function PlanCanvas() {
   }, []);
 
   /** Finaliza el trazo: crea la pared si el trazo tiene longitud */
-  const completeDraw = useCallback(() => {
+  const completeDraw = useCallback((shiftKey: boolean) => {
     const start = drawStartRef.current;
     drawStartRef.current = null;
     setDrawPreview(null);
@@ -115,7 +116,9 @@ export function PlanCanvas() {
     if (!stage) return;
     const p = pointerToCanvas(stage);
     if (!p) return;
-    const end = snapToCanvasPointDirectional(p, start);
+    // Shift en el mouseup inyecta la inversión del magnetismo en el commit (D2)
+    const magnetize = effectiveMagnetism(useCanvasStore.getState().magnetismEnabled, shiftKey);
+    const end = resolveCanvasWallEnd(p, start, magnetize);
 
     // En modo isométrico no se crea geometría (viewMode es display-only): cancelar
     if (useCanvasStore.getState().viewMode !== "2d") return;
@@ -131,11 +134,11 @@ export function PlanCanvas() {
       y2: end.y,
       thickness: 10, // espesor por defecto (cm)
     });
-  }, [pointerToCanvas, snapToCanvasPointDirectional, finishWindowListeners]);
+  }, [pointerToCanvas, resolveCanvasWallEnd, finishWindowListeners]);
 
-  const handleWindowMouseUp = useCallback(() => {
+  const handleWindowMouseUp = useCallback((e: MouseEvent) => {
     if (!drawStartRef.current) return;
-    completeDraw();
+    completeDraw(e.shiftKey);
   }, [completeDraw]);
 
   // Cancelar modo colocación / trazo de pared / salir de la herramienta con Escape
@@ -174,9 +177,18 @@ export function PlanCanvas() {
       const p = pointerToCanvas(stage);
       if (!p) return;
 
-      const start = snapToCanvasPoint(p);
+      // Inicio del trazo: magnetismo efectivo (flag XOR Shift en el mousedown).
+      // OFF = puntero crudo también para el inicio (wall-drawing-6, D3).
+      const magnetize = effectiveMagnetism(useCanvasStore.getState().magnetismEnabled, e.evt.shiftKey);
+      const start = magnetize ? snapToCanvasPoint(p) : p;
       drawStartRef.current = start;
-      setDrawPreview({ x1: start.x, y1: start.y, x2: start.x, y2: start.y });
+      setDrawPreview({
+        x1: start.x,
+        y1: start.y,
+        x2: start.x,
+        y2: start.y,
+        snapped: start.x !== p.x || start.y !== p.y,
+      });
       // El mouseup puede ocurrir fuera del Stage: safety en window
       finishWindowListeners();
       windowMouseUpRef.current = handleWindowMouseUp;
@@ -219,8 +231,15 @@ export function PlanCanvas() {
         // Actualizar preview de trazo de pared en curso (wall tool)
         if (drawStartRef.current) {
           const start = drawStartRef.current;
-          const end = snapToCanvasPointDirectional({ x, y }, start);
-          setDrawPreview({ x1: start.x, y1: start.y, x2: end.x, y2: end.y });
+          const magnetize = effectiveMagnetism(useCanvasStore.getState().magnetismEnabled, e.evt.shiftKey);
+          const end = resolveCanvasWallEnd({ x, y }, start, magnetize);
+          setDrawPreview({
+            x1: start.x,
+            y1: start.y,
+            x2: end.x,
+            y2: end.y,
+            snapped: end.x !== x || end.y !== y,
+          });
         }
 
         // Detectar pared (entidad Wall) al colocar puertas/ventanas (solo 2D)
@@ -252,7 +271,7 @@ export function PlanCanvas() {
         }
       }
     },
-    [panX, panY, zoom, rulerActive, setPointerPos, placingFixture, snapToCanvasPointDirectional, viewMode],
+    [panX, panY, zoom, rulerActive, setPointerPos, placingFixture, resolveCanvasWallEnd, viewMode],
   );
 
   const handleContextMenu = useCallback(

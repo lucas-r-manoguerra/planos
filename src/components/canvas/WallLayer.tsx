@@ -27,6 +27,7 @@ import { snapWallPoint } from "@/lib/wall-snap";
 import { resolveWallEnd, effectiveMagnetism } from "@/lib/wall-angle-snap";
 import { wallBandPoints, DEFAULT_WALL_THICKNESS } from "@/lib/wall-utils";
 import { useCanvasColors } from "./canvas-colors";
+import { WallPreviewReadout } from "./WallPreviewReadout";
 
 /** Pared detectada para colocar una abertura (findNearestWallEntity) */
 export interface WallPreview {
@@ -72,7 +73,9 @@ function WallPreviewLine({ preview }: { preview: WallPreview }) {
 
 /**
  * Preview de trazo mientras se dibuja una pared nueva: banda sólida (el
- * usuario ve el espesor real de la pared) + línea central punteada.
+ * usuario ve el espesor real de la pared) + línea central punteada +
+ * readouts (ángulo cerca del cursor, largo en el punto medio, indicador de
+ * snap) — solo mientras el preview existe (editor-rendering-4).
  */
 function WallDrawPreviewLine({ preview }: { preview: WallDrawPreview }) {
   const { wall: wallColor } = useCanvasColors();
@@ -95,6 +98,7 @@ function WallDrawPreviewLine({ preview }: { preview: WallDrawPreview }) {
         dash={[8, 6]}
         pointerEvents="none"
       />
+      <WallPreviewReadout preview={preview} />
     </>
   );
 }

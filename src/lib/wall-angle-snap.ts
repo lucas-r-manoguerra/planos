@@ -113,3 +113,42 @@ export function resolveWallEnd(
 
   return snapWallAngle(p, start);
 }
+
+/**
+ * Preview readout values for a draw stroke segment (P3, editor-rendering-4).
+ * Both values derive from the segment already resolved by resolveWallEnd —
+ * the preview holds the SNAPPED end, so the readouts reflect the effective
+ * angle/length, never the raw pointer. Pure: no stores, no canvas.
+ */
+export interface WallReadout {
+  /** Undirected stroke angle in degrees within [0, 180) (wallAngleDeg) */
+  angleDeg: number;
+  /** Euclidean length of the stroke in cm */
+  lengthCm: number;
+}
+
+export function wallReadout(x1: number, y1: number, x2: number, y2: number): WallReadout {
+  return {
+    angleDeg: wallAngleDeg({ x: x2, y: y2 }, { x: x1, y: y1 }),
+    lengthCm: Math.hypot(x2 - x1, y2 - y1),
+  };
+}
+
+/** "45°" — whole degrees with the degree sign (editor-rendering-4 readout) */
+export function formatAngleReadout(angleDeg: number): string {
+  return `${Math.round(angleDeg)}°`;
+}
+
+/** "345 cm" — whole centimeters with the unit (editor-rendering-4 readout) */
+export function formatLengthReadout(lengthCm: number): string {
+  return `${Math.round(lengthCm)} cm`;
+}
+
+/**
+ * True when resolving the wall end changed it vs. the raw pointer — the
+ * preview.snapped flag (editor-rendering-4 snap indicator). Value
+ * comparison, matching the point-snap "wins by value" contract (D3).
+ */
+export function isSnapped(raw: Point, resolved: Point): boolean {
+  return resolved.x !== raw.x || resolved.y !== raw.y;
+}

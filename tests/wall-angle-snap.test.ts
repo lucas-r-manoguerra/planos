@@ -20,6 +20,10 @@ import {
   resolveWallEnd,
   effectiveMagnetism,
   ANGLE_SNAP_TARGETS,
+  wallReadout,
+  formatAngleReadout,
+  formatLengthReadout,
+  isSnapped,
 } from "@/lib/wall-angle-snap";
 
 function wall(partial: Partial<Wall> = {}): Wall {
@@ -167,5 +171,86 @@ describe("effectiveMagnetism (wall-drawing-6: Shift inverts the toggle)", () => 
     expect(effectiveMagnetism(true, true)).toBe(false);
     expect(effectiveMagnetism(false, true)).toBe(true);
     expect(effectiveMagnetism(false, false)).toBe(false);
+  });
+});
+
+describe("wallReadout (editor-rendering-4: preview readout values)", () => {
+  it("horizontal 400 cm stroke reads angle 0 and length 400 cm", () => {
+    const r = wallReadout(0, 0, 400, 0);
+    expect(r.angleDeg).toBeCloseTo(0, 9);
+    expect(r.lengthCm).toBeCloseTo(400, 9);
+  });
+
+  it("45° stroke reads angle 45 and the drawn length", () => {
+    const p = at(100, 45);
+    const r = wallReadout(0, 0, p.x, p.y);
+    expect(r.angleDeg).toBeCloseTo(45, 9);
+    expect(r.lengthCm).toBeCloseTo(100, 9);
+  });
+
+  it("a reversed segment reads the same undirected angle and length", () => {
+    const p = at(100, 45);
+    const forward = wallReadout(0, 0, p.x, p.y);
+    const reversed = wallReadout(p.x, p.y, 0, 0);
+    expect(reversed.angleDeg).toBeCloseTo(forward.angleDeg, 9);
+    expect(reversed.lengthCm).toBeCloseTo(forward.lengthCm, 9);
+  });
+
+  it("derives from the SNAPPED end: a 44° pointer that magnetizes reads 45°", () => {
+    const raw = at(100, 44);
+    const end = resolveWallEnd(raw, { x: 0, y: 0 }, [], [], true);
+    const r = wallReadout(0, 0, end.x, end.y);
+    expect(r.angleDeg).toBeCloseTo(45, 9);
+    expect(r.lengthCm).toBeCloseTo(100, 9);
+  });
+
+  it("zero-length segment reads angle 0 and length 0 (no NaN)", () => {
+    const r = wallReadout(50, 50, 50, 50);
+    expect(r.angleDeg).toBe(0);
+    expect(r.lengthCm).toBe(0);
+  });
+});
+
+describe("formatAngleReadout / formatLengthReadout (editor-rendering-4)", () => {
+  it("rounds the angle to whole degrees with the degree sign", () => {
+    expect(formatAngleReadout(44.7)).toBe("45°");
+    expect(formatAngleReadout(0)).toBe("0°");
+    expect(formatAngleReadout(179.4)).toBe("179°");
+  });
+
+  it("rounds the length to whole centimeters with the unit", () => {
+    expect(formatLengthReadout(345.6)).toBe("346 cm");
+    expect(formatLengthReadout(0)).toBe("0 cm");
+    expect(formatLengthReadout(1000)).toBe("1000 cm");
+  });
+});
+
+describe("isSnapped (preview.snapped flag semantics, editor-rendering-4)", () => {
+  it("false when the resolved end equals the raw pointer (no snap applied)", () => {
+    const raw = { x: 123, y: 45 };
+    expect(isSnapped(raw, { x: 123, y: 45 })).toBe(false);
+  });
+
+  it("true when the resolution chain moved the end in x or y", () => {
+    expect(isSnapped({ x: 100, y: 10 }, { x: 101, y: 10 })).toBe(true);
+    expect(isSnapped({ x: 100, y: 10 }, { x: 100, y: 9.5 })).toBe(true);
+  });
+
+  it("propagation: an angle-snapped 44° stroke reports snapped; OFF stays raw", () => {
+    const raw = at(100, 44);
+    const magnetized = resolveWallEnd(raw, { x: 0, y: 0 }, [], [], true);
+    expect(isSnapped(raw, magnetized)).toBe(true);
+    const off = resolveWallEnd(raw, { x: 0, y: 0 }, [], [], false);
+    expect(isSnapped(raw, off)).toBe(false);
+    expect(off).toEqual(raw);
+  });
+
+  it("propagation: a point snap inside 25 cm reports snapped", () => {
+    const ex = 100 * Math.cos((44 * Math.PI) / 180);
+    const ey = 100 * Math.sin((44 * Math.PI) / 180);
+    const endpointWall = wall({ id: "w", x1: 10, y1: ey, x2: ex, y2: ey });
+    const raw = { x: ex + 1, y: ey - 0.5 };
+    const resolved = resolveWallEnd(raw, { x: 0, y: 0 }, [], [endpointWall], true);
+    expect(isSnapped(raw, resolved)).toBe(true);
   });
 });

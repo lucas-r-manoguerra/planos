@@ -29,7 +29,7 @@ import { useFloorsStore } from "@/stores/floors.store";
 import { useWallsStore } from "@/stores/walls.store";
 import { getCatalogItem, calculateStairs } from "@/lib/fixtures-catalog";
 import { findNearestWallEntity, snapWallPoint } from "@/lib/wall-snap";
-import { resolveWallEnd, effectiveMagnetism } from "@/lib/wall-angle-snap";
+import { resolveWallEnd, effectiveMagnetism, isSnapped } from "@/lib/wall-angle-snap";
 import { Point } from "@/types/plan";
 
 export function PlanCanvas() {
@@ -187,7 +187,7 @@ export function PlanCanvas() {
         y1: start.y,
         x2: start.x,
         y2: start.y,
-        snapped: start.x !== p.x || start.y !== p.y,
+        snapped: isSnapped(p, start),
       });
       // El mouseup puede ocurrir fuera del Stage: safety en window
       finishWindowListeners();
@@ -238,7 +238,7 @@ export function PlanCanvas() {
             y1: start.y,
             x2: end.x,
             y2: end.y,
-            snapped: end.x !== x || end.y !== y,
+            snapped: isSnapped({ x, y }, end),
           });
         }
 

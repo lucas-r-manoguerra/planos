@@ -12,7 +12,7 @@
 
 import { create } from "zustand";
 
-export type PanelType = "room" | "fixture" | "opening" | "stair";
+export type PanelType = "room" | "fixture" | "opening" | "stair" | "column" | "beam";
 
 interface PanelStore {
   isOpen: boolean;

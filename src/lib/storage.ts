@@ -14,7 +14,7 @@
  * desde scripts (regla 08); el resto usa `localStorage` de forma lazy.
  */
 
-import { Floor, Fixture, SunSettings, Terrain, Wall } from "@/types/plan";
+import { Column, Floor, Fixture, SunSettings, Terrain, Wall } from "@/types/plan";
 import { DEFAULT_PROJECT_NAME, DEFAULT_SUN_SETTINGS, DEFAULT_TERRAIN } from "@/lib/constants";
 import { buildInitialProjectIndex, migrateProjectData } from "@/lib/migrate";
 import { generateId } from "@/lib/utils";
@@ -28,13 +28,14 @@ export interface ProjectData {
   sunSettings: SunSettings;
   fixtures?: Fixture[];
   walls?: Wall[];
+  structural?: Column[];
   savedAt: string;
 }
 
 // Clave legada de un solo proyecto: se mantiene hasta que el usuario
 // la importe o borre (spec persistence-4). No renombrar.
 const LEGACY_STORAGE_KEY = "planos-project";
-const CURRENT_VERSION = 4;
+const CURRENT_VERSION = 5;
 
 // ==================== Índice de proyectos ====================
 
@@ -105,6 +106,7 @@ function defaultProjectData(name: string, savedAt: string): ProjectData {
     sunSettings: { ...DEFAULT_SUN_SETTINGS },
     fixtures: [],
     walls: [],
+    structural: [],
     savedAt,
   };
 }
@@ -330,7 +332,8 @@ export function isProjectDataShape(value: unknown): value is ProjectData {
     typeof value.activeFloorId === "string" &&
     isSunSettingsShape(value.sunSettings) &&
     (value.fixtures === undefined || Array.isArray(value.fixtures)) &&
-    (value.walls === undefined || Array.isArray(value.walls))
+    (value.walls === undefined || Array.isArray(value.walls)) &&
+    (value.structural === undefined || Array.isArray(value.structural))
   );
 }
 

@@ -35,7 +35,7 @@ interface CanvasStore extends CanvasState {
   setPan: (x: number, y: number) => void;
   toggleGrid: () => void;
   setGridSize: (size: number) => void;
-  setActiveTool: (tool: "select" | "pan" | "wall") => void;
+  setActiveTool: (tool: "select" | "pan" | "wall" | "column" | "beam") => void;
   toggleMagnetism: () => void; // Alternar magnetismo de paredes (wall-drawing-6)
   /** Cambiar modo de visualización (2D o isométrico) — estado de display (S3) */
   setViewMode: (viewMode: ViewMode) => void;
@@ -45,6 +45,12 @@ interface CanvasStore extends CanvasState {
    * usa el tamaño del Stage (fallback 800×600).
    */
   centerTerrain: (viewportWidth?: number, viewportHeight?: number) => void;
+
+  // ── Display toggles (session-only, no persistidos — regla 05, Slice C) ──
+  floorOverlayEnabled: boolean;
+  structuralDimensioningEnabled: boolean;
+  toggleFloorOverlay: () => void;
+  toggleStructuralDimensioning: () => void;
 }
 
 let zoomAnimationId: number | null = null;
@@ -53,6 +59,10 @@ let zoomAnimationId: number | null = null;
 export const useCanvasStore = create<CanvasStore>((set, get) => ({
   ...initialState,
   stageRef: null,
+
+  // Display toggles: session-only, default overlay OFF, dimensioning ON
+  floorOverlayEnabled: false,
+  structuralDimensioningEnabled: true,
 
   // Registrar el Stage de Konva (null al desmontar)
   setStageRef: (stageRef) => set({ stageRef }),
@@ -131,4 +141,14 @@ export const useCanvasStore = create<CanvasStore>((set, get) => ({
     );
     set({ zoom, panX, panY });
   },
+
+  // Toggle superposición de plantas adyacentes (Slice C, floor-overlay-1)
+  toggleFloorOverlay: () =>
+    set((state) => ({ floorOverlayEnabled: !state.floorOverlayEnabled })),
+
+  // Toggle dimensionado automático (Slice C, structural-dimensioning-3)
+  toggleStructuralDimensioning: () =>
+    set((state) => ({
+      structuralDimensioningEnabled: !state.structuralDimensioningEnabled,
+    })),
 }));

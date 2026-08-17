@@ -10,7 +10,7 @@
 
 import { useRef, useEffect, useState, useCallback } from "react";
 import Konva from "konva";
-import { Stage, Layer } from "react-konva";
+import { Stage, Layer, Line } from "react-konva";
 import { useCanvasStore } from "@/stores/canvas.store";
 import { useRulerStore } from "@/stores/ruler.store";
 import { GridLayer } from "./GridLayer";
@@ -22,18 +22,23 @@ import { WallLayer, WallPreview, WallDrawPreview } from "./WallLayer";
 import { IsometricLayer } from "./IsometricLayer";
 import { MeasurementLayer } from "./MeasurementLayer";
 import { SunArcLayer } from "./SunArcLayer";
+import { FloorOverlayLayer } from "./FloorOverlayLayer";
 import { CompassOverlay } from "./CompassOverlay";
 import { CoordinateDisplay } from "./CoordinateDisplay";
 import { useFixtureStore } from "@/stores/fixtures.store";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useWallsStore } from "@/stores/walls.store";
 import { useTerrainStore } from "@/stores/rooms.store";
+import { useStructuralStore } from "@/stores/structural.store";
 import { getCatalogItem, calculateStairs } from "@/lib/fixtures-catalog";
 import { findNearestWallEntity } from "@/lib/wall-snap";
 import { resolveWallEnd, effectiveMagnetism, isSnapped } from "@/lib/wall-angle-snap";
 import { snapWallStart } from "@/lib/terrain-snap";
-import { DEFAULT_WALL_THICKNESS } from "@/lib/wall-utils";
+import { DEFAULT_WALL_THICKNESS, wallBandPoints } from "@/lib/wall-utils";
+import { isWithinTerrain, snapBeamEndpoint, validateBeam, DEFAULT_BEAM_WIDTH } from "@/lib/structural-utils";
+import { activePreset } from "@/components/sidebar/StructuralSection";
 import { Point } from "@/types/plan";
+import { StructuralLayer } from "./StructuralLayer";
 
 export function PlanCanvas() {
   const stageRef = useRef<Konva.Stage>(null);
@@ -42,6 +47,7 @@ export function PlanCanvas() {
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [wallPreview, setWallPreview] = useState<WallPreview | null>(null);
   const [drawPreview, setDrawPreview] = useState<WallDrawPreview | null>(null);
+  const [beamPreview, setBeamPreview] = useState<{ x1: number; y1: number; x2: number; y2: number } | null>(null);
   const drawStartRef = useRef<Point | null>(null);
   /** Listener de window mouseup del trazo activo (identidad para removal) */
   const windowMouseUpRef = useRef<((e: MouseEvent) => void) | null>(null);
@@ -110,11 +116,12 @@ export function PlanCanvas() {
     }
   }, []);
 
-  /** Finaliza el trazo: crea la pared si el trazo tiene longitud */
+  /** Finaliza el trazo: crea la pared o viga si el trazo tiene longitud */
   const completeDraw = useCallback((shiftKey: boolean) => {
     const start = drawStartRef.current;
     drawStartRef.current = null;
     setDrawPreview(null);
+    setBeamPreview(null);
     finishWindowListeners();
     if (!start) return;
 
@@ -122,24 +129,40 @@ export function PlanCanvas() {
     if (!stage) return;
     const p = pointerToCanvas(stage);
     if (!p) return;
-    // Shift en el mouseup inyecta la inversión del magnetismo en el commit (D2)
-    const magnetize = effectiveMagnetism(useCanvasStore.getState().magnetismEnabled, shiftKey);
-    const end = resolveCanvasWallEnd(p, start, magnetize);
 
     // En modo isométrico no se crea geometría (viewMode es display-only): cancelar
     if (useCanvasStore.getState().viewMode !== "2d") return;
 
-    // Longitud cero: punto sin dirección, se descarta (wall-drawing-2)
-    if (Math.abs(end.x - start.x) <= 0 && Math.abs(end.y - start.y) <= 0) return;
+    const tool = useCanvasStore.getState().activeTool;
+    const magnetize = effectiveMagnetism(useCanvasStore.getState().magnetismEnabled, shiftKey);
 
-    useWallsStore.getState().addWall({
-      floorId: useFloorsStore.getState().activeFloorId,
-      x1: start.x,
-      y1: start.y,
-      x2: end.x,
-      y2: end.y,
-      thickness: 10, // espesor por defecto (cm)
-    });
+    if (tool === "beam") {
+      const { activeFloorId } = useFloorsStore.getState();
+      const columns = useStructuralStore.getState().getColumnsForFloor(activeFloorId);
+      const walls = useWallsStore.getState().getWallsForFloor(activeFloorId);
+      const end = snapBeamEndpoint(p, columns, walls, magnetize);
+      const beam = {
+        x1: start.x,
+        y1: start.y,
+        x2: end.x,
+        y2: end.y,
+        width: DEFAULT_BEAM_WIDTH,
+      };
+      if (!validateBeam(beam)) return;
+      useStructuralStore.getState().addBeam(beam);
+    } else {
+      // Wall
+      const end = resolveCanvasWallEnd(p, start, magnetize);
+      if (Math.abs(end.x - start.x) <= 0 && Math.abs(end.y - start.y) <= 0) return;
+      useWallsStore.getState().addWall({
+        floorId: useFloorsStore.getState().activeFloorId,
+        x1: start.x,
+        y1: start.y,
+        x2: end.x,
+        y2: end.y,
+        thickness: 10,
+      });
+    }
   }, [pointerToCanvas, resolveCanvasWallEnd, finishWindowListeners]);
 
   const handleWindowMouseUp = useCallback((e: MouseEvent) => {
@@ -157,14 +180,21 @@ export function PlanCanvas() {
         return;
       }
       if (drawStartRef.current) {
-        // Prioridad 1: cancelar el trazo en curso (no crea pared)
+        // Prioridad 1: cancelar el trazo en curso (no crea pared/viga)
         finishWindowListeners();
         drawStartRef.current = null;
         setDrawPreview(null);
+        setBeamPreview(null);
         return;
       }
       if (activeTool === "wall") {
         // Prioridad 2: salir de la herramienta pared
+        setActiveTool("select");
+      }
+      if (activeTool === "column") {
+        setActiveTool("select");
+      }
+      if (activeTool === "beam") {
         setActiveTool("select");
       }
     };
@@ -176,7 +206,8 @@ export function PlanCanvas() {
     (e: Konva.KonvaEventObject<MouseEvent>) => {
       const { activeTool: tool, viewMode: mode } = useCanvasStore.getState();
       const { placingFixture: placing } = useFixtureStore.getState();
-      if (tool !== "wall" || placing || mode !== "2d") return;
+      if (tool !== "wall" && tool !== "beam") return;
+      if (placing || mode !== "2d") return;
 
       const stage = e.target.getStage();
       if (!stage) return;
@@ -184,17 +215,30 @@ export function PlanCanvas() {
       if (!p) return;
 
       // Inicio del trazo: magnetismo efectivo (flag XOR Shift en el mousedown).
-      // OFF = puntero crudo también para el inicio (wall-drawing-6, D3).
       const magnetize = effectiveMagnetism(useCanvasStore.getState().magnetismEnabled, e.evt.shiftKey);
-      const start = magnetize ? snapToCanvasPoint(p) : p;
+      let start = magnetize ? snapToCanvasPoint(p) : p;
+
+      if (tool === "beam") {
+        const { activeFloorId } = useFloorsStore.getState();
+        const columns = useStructuralStore.getState().getColumnsForFloor(activeFloorId);
+        const walls = useWallsStore.getState().getWallsForFloor(activeFloorId);
+        start = snapBeamEndpoint(p, columns, walls, magnetize);
+      }
+
       drawStartRef.current = start;
-      setDrawPreview({
-        x1: start.x,
-        y1: start.y,
-        x2: start.x,
-        y2: start.y,
-        snapped: isSnapped(p, start),
-      });
+
+      if (tool === "wall") {
+        setDrawPreview({
+          x1: start.x,
+          y1: start.y,
+          x2: start.x,
+          y2: start.y,
+          snapped: isSnapped(p, start),
+        });
+      } else {
+        setBeamPreview({ x1: start.x, y1: start.y, x2: start.x, y2: start.y });
+      }
+
       // El mouseup puede ocurrir fuera del Stage: safety en window
       finishWindowListeners();
       windowMouseUpRef.current = handleWindowMouseUp;
@@ -234,18 +278,27 @@ export function PlanCanvas() {
           setPointerPos(x, y);
         }
 
-        // Actualizar preview de trazo de pared en curso (wall tool)
+        // Actualizar preview de trazo de pared o viga en curso
         if (drawStartRef.current) {
           const start = drawStartRef.current;
           const magnetize = effectiveMagnetism(useCanvasStore.getState().magnetismEnabled, e.evt.shiftKey);
-          const end = resolveCanvasWallEnd({ x, y }, start, magnetize);
-          setDrawPreview({
-            x1: start.x,
-            y1: start.y,
-            x2: end.x,
-            y2: end.y,
-            snapped: isSnapped({ x, y }, end),
-          });
+
+          if (useCanvasStore.getState().activeTool === "beam") {
+            const { activeFloorId } = useFloorsStore.getState();
+            const columns = useStructuralStore.getState().getColumnsForFloor(activeFloorId);
+            const walls = useWallsStore.getState().getWallsForFloor(activeFloorId);
+            const end = snapBeamEndpoint({ x, y }, columns, walls, magnetize);
+            setBeamPreview({ x1: start.x, y1: start.y, x2: end.x, y2: end.y });
+          } else {
+            const end = resolveCanvasWallEnd({ x, y }, start, magnetize);
+            setDrawPreview({
+              x1: start.x,
+              y1: start.y,
+              x2: end.x,
+              y2: end.y,
+              snapped: isSnapped({ x, y }, end),
+            });
+          }
         }
 
         // Detectar pared (entidad Wall) al colocar puertas/ventanas (solo 2D)
@@ -302,6 +355,26 @@ export function PlanCanvas() {
     (e: Konva.KonvaEventObject<MouseEvent>) => {
       // En modo isométrico no se colocan fixtures ni se mide (preview 3/4)
       if (useCanvasStore.getState().viewMode !== "2d") return;
+
+      // Columna: colocar en la posición del click
+      if (useCanvasStore.getState().activeTool === "column") {
+        const stage = e.target.getStage();
+        if (!stage) return;
+        const pointer = stage.getPointerPosition();
+        if (!pointer) return;
+        const canvasX = (pointer.x - panX) / zoom;
+        const canvasY = (pointer.y - panY) / zoom;
+        const terrain = useTerrainStore.getState().terrain;
+        if (!isWithinTerrain(canvasX, canvasY, terrain)) return;
+        const [presetW, presetH] = activePreset.current;
+        useStructuralStore.getState().addColumn({
+          x: canvasX,
+          y: canvasY,
+          sectionWidth: presetW,
+          sectionHeight: presetH,
+        });
+        return;
+      }
 
       // Si hay un fixture en modo colocación, colocarlo
       if (placingFixture) {
@@ -433,7 +506,7 @@ export function PlanCanvas() {
         scaleY={zoom}
         x={panX}
         y={panY}
-        draggable={viewMode === "isometric" || activeTool !== "wall"}
+        draggable={viewMode === "isometric" || (activeTool !== "wall" && activeTool !== "beam")}
         onDragEnd={handleDragEnd}
         onWheel={handleWheel}
         onClick={handleStageClick}
@@ -463,10 +536,31 @@ export function PlanCanvas() {
               <RoomLayer />
             </Layer>
             <Layer>
+              <StructuralLayer />
+              {beamPreview && (
+                <Line
+                  points={wallBandPoints(
+                    beamPreview.x1, beamPreview.y1,
+                    beamPreview.x2, beamPreview.y2,
+                    DEFAULT_BEAM_WIDTH,
+                  )}
+                  closed
+                  fill="rgba(148, 163, 184, 0.4)"
+                  stroke="#94a3b8"
+                  strokeWidth={1}
+                  dash={[6, 4]}
+                  pointerEvents="none"
+                />
+              )}
+            </Layer>
+            <Layer>
               <FixtureLayer />
             </Layer>
             <Layer>
               <WallLayer wallPreview={wallPreview} drawPreview={drawPreview} />
+            </Layer>
+            <Layer>
+              <FloorOverlayLayer />
             </Layer>
             <Layer>
               <MeasurementLayer />

@@ -24,6 +24,7 @@ import { useWallsStore } from "@/stores/walls.store";
 import { useFixtureStore } from "@/stores/fixtures.store";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { useSunStore } from "@/stores/sun.store";
+import { useStructuralStore } from "@/stores/structural.store";
 import {
   isoOpeningQuad,
   isoRect,
@@ -31,7 +32,7 @@ import {
 } from "@/lib/isometric";
 import { openingExtrusion } from "@/lib/openings";
 import { ROOM_COLORS } from "@/lib/constants";
-import { Fixture, Room, Terrain, Wall } from "@/types/plan";
+import { Beam, Column, Fixture, Room, Terrain, Wall } from "@/types/plan";
 import { useCanvasColors } from "./canvas-colors";
 
 /** Altura de piso por defecto en cm (constants.ts:68) — seguro ante 0 */
@@ -78,6 +79,28 @@ interface IsoScene {
   terrain: number[];
   rooms: IsoRoom[];
   walls: IsoWall[];
+  columns: IsoColumn[];
+  beams: IsoBeam[];
+}
+
+interface IsoColumn {
+  key: string;
+  top: number[];
+  sideA: number[];
+  sideB: number[];
+  topFill: string;
+  sideFill: string;
+  depth: number;
+}
+
+interface IsoBeam {
+  key: string;
+  top: number[];
+  sideA: number[];
+  sideB: number[];
+  topFill: string;
+  sideFill: string;
+  depth: number;
 }
 
 /** Construye la escena proyectada (puro: sin stores, sin componentes) */
@@ -87,7 +110,9 @@ function buildIsoScene(
   walls: Wall[],
   openings: Fixture[],
   floorHeight: number,
-  wallColor: string
+  wallColor: string,
+  columns: Column[],
+  beams: Beam[],
 ): IsoScene {
   const sideFill = shade(wallColor, 0.7);
   const topFill = shade(wallColor, 1.25);
@@ -129,8 +154,79 @@ function buildIsoScene(
         openings: wallOpenings,
       };
     })
-    .filter((w): w is IsoWall => w !== null)
-    .sort((a, b) => a.depth - b.depth);
+    .filter((w): w is IsoWall => w !== null);
+
+  // Columnas como prismas verticales (z = 0 → floorHeight)
+  const colSideFill = shade("#60a5fa", 0.7);
+  const colTopFill = shade("#60a5fa", 1.25);
+  const columnsIso: IsoColumn[] = columns
+    .map((col) => {
+      const hw = col.sectionWidth / 2;
+      const hh = col.sectionHeight / 2;
+      const bottom = isoRect(col.x - hw, col.y - hh, col.sectionWidth, col.sectionHeight, 0);
+      const top = isoRect(col.x - hw, col.y - hh, col.sectionWidth, col.sectionHeight, floorHeight);
+      // Prism: top face + 2 visible side faces
+      // Depth: center of column for sorting
+      const cx = col.x;
+      const cy = col.y;
+      // Side faces from bottom corners to top corners
+      // Front-left face
+      const sideA = [
+        bottom[0], bottom[1], // bottom-left
+        bottom[2], bottom[3], // bottom-right
+        top[2], top[3],       // top-right
+        top[0], top[1],       // top-left
+      ];
+      // Side-bottom face (visible when looking from below)
+      const sideB = [
+        bottom[2], bottom[3], // bottom-right
+        bottom[4], bottom[5], // bottom-far-right
+        top[4], top[5],       // top-far-right
+        top[2], top[3],       // top-right
+      ];
+      return {
+        key: `iso-col-${col.id}`,
+        top,
+        sideA,
+        sideB,
+        topFill: colTopFill,
+        sideFill: colSideFill,
+        depth: cx + cy,
+      };
+    });
+
+  // Vigas como bandas extruidas (z = 0 → floorHeight)
+  const beamSideFill = shade("#94a3b8", 0.7);
+  const beamTopFill = shade("#94a3b8", 1.25);
+  const beamsIso: IsoBeam[] = beams
+    .map((beam) => {
+      // Proyectar rectángulo del band de la viga en z=0 y z=floorHeight
+      const bPoints = isoRect(
+        Math.min(beam.x1, beam.x2) - beam.width / 2,
+        Math.min(beam.y1, beam.y2) - beam.width / 2,
+        Math.abs(beam.x2 - beam.x1) + beam.width,
+        Math.abs(beam.y2 - beam.y1) + beam.width,
+        0,
+      );
+      const tPoints = isoRect(
+        Math.min(beam.x1, beam.x2) - beam.width / 2,
+        Math.min(beam.y1, beam.y2) - beam.width / 2,
+        Math.abs(beam.x2 - beam.x1) + beam.width,
+        Math.abs(beam.y2 - beam.y1) + beam.width,
+        floorHeight,
+      );
+      const sideA = [bPoints[0], bPoints[1], bPoints[2], bPoints[3], tPoints[2], tPoints[3], tPoints[0], tPoints[1]];
+      const sideB = [bPoints[2], bPoints[3], bPoints[4], bPoints[5], tPoints[4], tPoints[5], tPoints[2], tPoints[3]];
+      return {
+        key: `iso-beam-${beam.id}`,
+        top: tPoints,
+        sideA,
+        sideB,
+        topFill: beamTopFill,
+        sideFill: beamSideFill,
+        depth: (beam.x1 + beam.y1 + beam.x2 + beam.y2) / 2,
+      };
+    });
 
   return {
     terrain: isoRect(0, 0, terrain.width, terrain.height, 0),
@@ -140,7 +236,9 @@ function buildIsoScene(
       fill: room.color || ROOM_COLORS[room.type],
       opacity: room.opacity ?? 1,
     })),
-    walls: wallsIso,
+    walls: wallsIso.sort((a, b) => a.depth - b.depth),
+    columns: columnsIso.sort((a, b) => a.depth - b.depth),
+    beams: beamsIso.sort((a, b) => a.depth - b.depth),
   };
 }
 
@@ -153,6 +251,12 @@ export const IsometricLayer = memo(function IsometricLayer() {
   const walls = useWallsStore(useShallow((s) => s.getWallsForFloor(activeFloorId)));
   const fixtures = useFixtureStore(
     useShallow((s) => s.getFixturesForFloor(activeFloorId))
+  );
+  const columns = useStructuralStore(
+    useShallow((s) => s.columns.filter((c) => c.floorId === activeFloorId))
+  );
+  const beams = useStructuralStore(
+    useShallow((s) => s.beams.filter((b) => b.floorId === activeFloorId))
   );
   const { wall: wallColor } = useCanvasColors();
 
@@ -173,8 +277,8 @@ export const IsometricLayer = memo(function IsometricLayer() {
 
   // Memoizado: pan/zoom (Stage) no cambian estas dependencias → sin recomputo
   const scene = useMemo(
-    () => buildIsoScene(terrain, rooms, walls, openings, floorHeight, wallColor),
-    [terrain, rooms, walls, openings, floorHeight, wallColor]
+    () => buildIsoScene(terrain, rooms, walls, openings, floorHeight, wallColor, columns, beams),
+    [terrain, rooms, walls, openings, floorHeight, wallColor, columns, beams]
   );
 
   return (
@@ -212,6 +316,22 @@ export const IsometricLayer = memo(function IsometricLayer() {
               />
             ) : null
           )}
+        </Group>
+      ))}
+      {/* Columnas isométricas (prismas verticales) */}
+      {scene.columns.map((col) => (
+        <Group key={col.key} listening={false}>
+          <Line points={col.sideB} closed fill={col.sideFill} />
+          <Line points={col.sideA} closed fill={col.sideFill} />
+          <Line points={col.top} closed fill={col.topFill} />
+        </Group>
+      ))}
+      {/* Vigas isométricas (bandas extruidas) */}
+      {scene.beams.map((beam) => (
+        <Group key={beam.key} listening={false}>
+          <Line points={beam.sideB} closed fill={beam.sideFill} />
+          <Line points={beam.sideA} closed fill={beam.sideFill} />
+          <Line points={beam.top} closed fill={beam.topFill} />
         </Group>
       ))}
     </>

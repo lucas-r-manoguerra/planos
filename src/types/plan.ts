@@ -111,7 +111,7 @@ export interface CanvasState {
   panY: number;         // Desplazamiento vertical en centímetros
   gridVisible: boolean; // Si la grilla está visible
   gridSize: number;     // Tamaño de la grilla en centímetros
-  activeTool: "select" | "pan" | "wall"; // Herramienta activa
+  activeTool: "select" | "pan" | "wall" | "column" | "beam"; // Herramienta activa
   viewMode: ViewMode;   // Modo de visualización (regla 05: estado de display)
   magnetismEnabled: boolean; // Magnetismo de paredes (snap punto + ángulo, wall-drawing-6)
 }
@@ -202,3 +202,29 @@ export interface Fixture {
   wallSide?: "top" | "bottom" | "left" | "right"; // qué pared
   wallOffset?: number;  // offset desde el inicio de la pared (cm)
 }
+
+// ==================== STRUCTURAL (Columnas + Vigas) ====================
+
+// Columna estructural: sección centrada en x/y
+export interface Column {
+  id: string;           // Identificador único (crypto.randomUUID())
+  floorId: string;      // Planta a la que pertenece
+  x: number;            // Centro de la sección en cm (origen del terreno)
+  y: number;            // Centro de la sección en cm
+  sectionWidth: number; // Ancho de la sección en cm (preset: 20, 25, 30)
+  sectionHeight: number;// Alto de la sección en cm (preset: 20, 25, 30)
+}
+
+// Viga estructural: línea central con ancho editable
+export interface Beam {
+  id: string;           // Identificador único (crypto.randomUUID())
+  floorId: string;      // Planta a la que pertenece
+  x1: number;           // Inicio de la línea central en cm
+  y1: number;           // Inicio de la línea central en cm
+  x2: number;           // Fin de la línea central en cm
+  y2: number;           // Fin de la línea central en cm
+  width: number;        // Ancho de la viga en cm (default: 20)
+}
+
+// Unión discriminada de elementos estructurales
+export type StructuralElement = Column | Beam;

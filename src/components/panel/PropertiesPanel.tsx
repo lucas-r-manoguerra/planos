@@ -18,6 +18,9 @@ import { RoomEditor } from "./properties/room-editor";
 import { FixtureEditor } from "./properties/fixture-editor";
 import { OpeningEditor } from "./properties/opening-editor";
 import { StairEditor } from "./properties/stair-editor";
+import { ColumnEditor } from "./ColumnEditor";
+import { BeamEditor } from "./BeamEditor";
+import { useStructuralStore } from "@/stores/structural.store";
 
 export function PropertiesPanel() {
   const { isOpen, type, elementId, closePanel } = usePanelStore();
@@ -38,7 +41,23 @@ export function PropertiesPanel() {
   let title = "Propiedades";
   let content: React.ReactNode = null;
 
-  if (room) {
+  const column =
+    type === "column" && elementId
+      ? useStructuralStore.getState().columns.find((c) => c.id === elementId)
+      : null;
+
+  const beam =
+    type === "beam" && elementId
+      ? useStructuralStore.getState().beams.find((b) => b.id === elementId)
+      : null;
+
+  if (column && elementId) {
+    title = "Propiedades de Columna";
+    content = <ColumnEditor elementId={elementId} />;
+  } else if (beam && elementId) {
+    title = "Propiedades de Viga";
+    content = <BeamEditor elementId={elementId} />;
+  } else if (room) {
     title = `Propiedades de ${room.label}`;
     content = <RoomEditor room={room} />;
   } else if (fixture) {

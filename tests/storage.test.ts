@@ -76,7 +76,7 @@ describe("serializeProjectExport / parseProjectImport", () => {
     expect(parsed.ok).toBe(true);
     if (parsed.ok) {
       expect(parsed.project.walls).toEqual(walls);
-      expect(parsed.project.version).toBe(4);
+      expect(parsed.project.version).toBe(5);
     }
   });
 
@@ -102,7 +102,7 @@ describe("serializeProjectExport / parseProjectImport", () => {
     const parsed = parseProjectImport(JSON.stringify(exported));
     expect(parsed.ok).toBe(true);
     if (parsed.ok) {
-      expect(parsed.project.version).toBe(4);
+      expect(parsed.project.version).toBe(5);
       expect(parsed.project.walls).toHaveLength(4);
       expect(parsed.project.walls?.every((w) => w.floorId === "f1")).toBe(true);
     }

@@ -10,7 +10,7 @@
  * scripts (regla 08).
  */
 
-import { Fixture, Floor, Room, Wall } from "@/types/plan";
+import { Column, Fixture, Floor, Room, Wall } from "@/types/plan";
 import { DEFAULT_PROJECT_NAME } from "@/lib/constants";
 import type { ProjectData, ProjectIndex, ProjectIndexEntry } from "@/lib/storage";
 import {
@@ -27,6 +27,7 @@ export interface MigratableProject {
   floors: Floor[];
   fixtures?: Fixture[];
   walls?: Wall[];
+  structural?: Column[];
 }
 
 /**
@@ -39,7 +40,7 @@ export interface MigratableProject {
 export function migrateProjectData<T extends MigratableProject>(
   data: T
 ): T & MigratableProject {
-  if (data.version >= 4) return data;
+  if (data.version >= 5) return data;
 
   let current: T = data;
 
@@ -65,7 +66,12 @@ export function migrateProjectData<T extends MigratableProject>(
 
   // v3 → v4
   if (current.version < 4) {
-    return migrateToV4(current);
+    current = migrateToV4(current);
+  }
+
+  // v4 → v5: add structural slice
+  if (current.version < 5) {
+    current = migrateToV5(current);
   }
 
   return current;
@@ -143,6 +149,20 @@ export function migrateToV4<T extends MigratableProject>(
     version: 4,
     walls,
     fixtures: migratedFixtures,
+  };
+}
+
+/**
+ * Migración v4 → v5: añade el slice `structural` (columnas) si falta.
+ * Aditiva e idempotente: no elimina ni reescribe campos existentes.
+ */
+export function migrateToV5<T extends MigratableProject>(
+  data: T
+): T & MigratableProject {
+  return {
+    ...data,
+    version: 5,
+    structural: data.structural ?? [],
   };
 }
 

@@ -16,6 +16,7 @@ import { SurfaceInfo } from "./SurfaceInfo";
 import { RoomForm } from "./RoomForm";
 import { RoomList } from "./RoomList";
 import { FixtureCatalog } from "./FixtureCatalog";
+import { StructuralSection } from "./StructuralSection";
 import { useState } from "react";
 import { Pencil, ChevronDown, ChevronRight } from "lucide-react";
 
@@ -79,6 +80,11 @@ export function Sidebar() {
         {/* Sección: Simulación Solar */}
         <div className="px-4 py-3 border-b border-gray-100">
           <SunSettings />
+        </div>
+
+        {/* Sección: Elementos Estructurales */}
+        <div className="border-b border-gray-100">
+          <StructuralSection />
         </div>
 
         {/* Sección: Superficie */}

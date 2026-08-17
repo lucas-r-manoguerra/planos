@@ -23,6 +23,7 @@ import { useFloorsStore } from "@/stores/floors.store";
 import { useTerrainStore } from "@/stores/rooms.store";
 import { useFixtureStore } from "@/stores/fixtures.store";
 import { useWallsStore } from "@/stores/walls.store";
+import { useStructuralStore } from "@/stores/structural.store";
 import { useSelectionStore } from "@/stores/selection.store";
 import { useCanvasStore } from "@/stores/canvas.store";
 import type { HistoryEntry } from "@/stores/history.store";
@@ -42,6 +43,9 @@ export function applyHistoryEntry(entry: HistoryEntry): void {
   }
   if (entry.walls) {
     useWallsStore.setState({ walls: entry.walls });
+  }
+  if (entry.structural) {
+    useStructuralStore.getState().replaceStructural(entry.structural);
   }
 }
 
@@ -213,6 +217,12 @@ export function useEditorShortcuts(): void {
       const { floors, activeFloorId } = useFloorsStore.getState();
       const activeFloor = floors.find((f) => f.id === activeFloorId);
       const isRoom = activeFloor?.rooms.some((r) => r.id === selectedId);
+      const isStructural = useStructuralStore
+        .getState()
+        .columns.some((c) => c.id === selectedId);
+      const isBeam = useStructuralStore
+        .getState()
+        .beams.some((b) => b.id === selectedId);
       const isFixture = useFixtureStore
         .getState()
         .fixtures.some((f) => f.id === selectedId);
@@ -222,6 +232,10 @@ export function useEditorShortcuts(): void {
 
       if (isRoom) {
         useFloorsStore.getState().removeRoom(selectedId);
+      } else if (isStructural) {
+        useStructuralStore.getState().removeColumn(selectedId);
+      } else if (isBeam) {
+        useStructuralStore.getState().removeBeam(selectedId);
       } else if (isFixture) {
         useFixtureStore.getState().removeFixture(selectedId);
       } else if (isWall) {

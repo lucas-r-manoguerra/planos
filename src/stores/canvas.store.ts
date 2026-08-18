@@ -32,6 +32,8 @@ interface CanvasStore extends CanvasState {
   setStageRef: (stage: Konva.Stage | null) => void;
   setZoom: (zoom: number) => void;
   smoothZoom: (targetZoom: number) => void;
+  /** Cancel any in-flight smooth zoom animation (call on unmount) */
+  cancelZoomAnimation: () => void;
   setPan: (x: number, y: number) => void;
   toggleGrid: () => void;
   setGridSize: (size: number) => void;
@@ -98,6 +100,14 @@ export const useCanvasStore = create<CanvasStore>((set, get) => ({
     };
 
     zoomAnimationId = requestAnimationFrame(animate);
+  },
+
+  // Cancel any in-flight smooth zoom animation
+  cancelZoomAnimation: () => {
+    if (zoomAnimationId !== null) {
+      cancelAnimationFrame(zoomAnimationId);
+      zoomAnimationId = null;
+    }
   },
 
   // Actualizar desplazamiento del canvas

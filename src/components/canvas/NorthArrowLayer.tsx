@@ -10,8 +10,9 @@ const ROSE_RADIUS = 45;
 const ROSE_PADDING = 25;
 
 export function NorthArrowLayer() {
-  const { enabled } = useSunStore();
-  const { terrain, setTerrainAngle } = useTerrainStore();
+  const enabled = useSunStore((s) => s.enabled);
+  const terrain = useTerrainStore((s) => s.terrain);
+  const setTerrainAngle = useTerrainStore((s) => s.setTerrainAngle);
   const groupRef = useRef<Konva.Group>(null);
   const [isDragging, setIsDragging] = useState(false);
 

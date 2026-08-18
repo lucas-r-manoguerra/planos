@@ -122,7 +122,7 @@ function WallDrawPreviewLine({ preview }: { preview: WallDrawPreview }) {
  * posicionamiento y para poder snapear el punto arrastrado.
  * Cada drag es UN paso de undo (beginGesture/endGesture).
  */
-function WallEntity({ wall }: { wall: Wall }) {
+const WallEntity = memo(function WallEntity({ wall }: { wall: Wall }) {
   const moveWall = useWallsStore((s) => s.moveWall);
   const resizeWall = useWallsStore((s) => s.resizeWall);
   const selectedId = useSelectionStore((s) => s.selectedId);
@@ -253,7 +253,7 @@ function WallEntity({ wall }: { wall: Wall }) {
       )}
     </>
   );
-}
+});
 
 export const WallLayer = memo(function WallLayer({
   wallPreview,

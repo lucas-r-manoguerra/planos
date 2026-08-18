@@ -35,7 +35,7 @@ export interface ProjectData {
 // Clave legada de un solo proyecto: se mantiene hasta que el usuario
 // la importe o borre (spec persistence-4). No renombrar.
 const LEGACY_STORAGE_KEY = "planos-project";
-const CURRENT_VERSION = 5;
+const CURRENT_VERSION = 6;
 
 // ==================== Índice de proyectos ====================
 

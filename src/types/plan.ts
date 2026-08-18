@@ -75,6 +75,7 @@ export interface Terrain {
   backgroundImage?: string; // URL de imagen de textura
   front: "top" | "bottom" | "left" | "right"; // Lado del frente (calle)
   northAngle: number; // grados desde Norte (0° = Norte arriba, sentido horario)
+  setbacks?: { front: number; left: number; right: number; rear: number };
 }
 
 // Interfaz para una planta del edificio
@@ -99,6 +100,7 @@ export interface Wall {
   y2: number;         // Fin de la línea central (cm)
   thickness: number;  // Espesor de la pared en cm (default: 10)
   roomId?: string;    // Habitación que la generó; ausente = pared libre
+  type?: "exterior" | "interior" | "medianera";
 }
 
 // Modo de visualización del editor (S3: isometrico usa la misma geometría)
@@ -228,3 +230,23 @@ export interface Beam {
 
 // Unión discriminada de elementos estructurales
 export type StructuralElement = Column | Beam;
+
+// ==================== VALIDATION (Normative Validation System) ====================
+
+// Severidad de una violación normativa
+export type ViolationSeverity = "error" | "warning" | "info";
+
+// Categoría de la violación
+export type ViolationCategory = "dimensions" | "lighting" | "safety" | "structural" | "circulation";
+
+// Una violación normativa detectada
+export interface Violation {
+  id: string;                    // Identificador único
+  severity: ViolationSeverity;   // error = bloquea cumplimiento, warning = viola norma, info = informativo
+  category: ViolationCategory;   // Categoría de la violación
+  roomId?: string;               // Habitación afectada
+  fixtureId?: string;            // Fixture afectado
+  feature: string;               // Feature que detectó (ej: "min-dimensions")
+  message: string;               // Mensaje legible para el usuario
+  normativeRef: string;          // Referencia normativa (ej: "CIRSOC 201 Tabla 3.1.3")
+}

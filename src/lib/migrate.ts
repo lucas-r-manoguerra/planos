@@ -10,7 +10,7 @@
  * scripts (regla 08).
  */
 
-import { Column, Fixture, Floor, Room, Wall } from "@/types/plan";
+import { Column, Fixture, Floor, Room, Terrain, Wall } from "@/types/plan";
 import { DEFAULT_PROJECT_NAME } from "@/lib/constants";
 import type { ProjectData, ProjectIndex, ProjectIndexEntry } from "@/lib/storage";
 import {
@@ -24,6 +24,7 @@ import {
 /** Forma mínima de proyecto que la migración necesita conocer */
 export interface MigratableProject {
   version: number;
+  terrain?: Terrain;
   floors: Floor[];
   fixtures?: Fixture[];
   walls?: Wall[];
@@ -40,7 +41,7 @@ export interface MigratableProject {
 export function migrateProjectData<T extends MigratableProject>(
   data: T
 ): T & MigratableProject {
-  if (data.version >= 5) return data;
+  if (data.version >= 6) return data;
 
   let current: T = data;
 
@@ -72,6 +73,11 @@ export function migrateProjectData<T extends MigratableProject>(
   // v4 → v5: add structural slice
   if (current.version < 5) {
     current = migrateToV5(current);
+  }
+
+  // v5 → v6: add normative validation fields (wall type, terrain setbacks)
+  if (current.version < 6) {
+    current = migrateToV6(current);
   }
 
   return current;
@@ -164,6 +170,34 @@ export function migrateToV5<T extends MigratableProject>(
     version: 5,
     structural: data.structural ?? [],
   };
+}
+
+/**
+ * Migración v5 → v6: añade campos de validación normativa.
+ * - `wall.type`: default "interior" si no existe.
+ * - `terrain.setbacks`: default { front: 300, left: 150, right: 150, rear: 300 } si falta.
+ * Aditiva e idempotente: no elimina ni reescribe campos existentes.
+ */
+export function migrateToV6<T extends MigratableProject>(
+  data: T
+): T & MigratableProject {
+  const DEFAULT_SETBACKS = { front: 300, left: 150, right: 150, rear: 300 };
+
+  const walls = data.walls?.map((w) =>
+    w.type === undefined ? { ...w, type: "interior" as const } : w
+  );
+
+  const terrain =
+    data.terrain !== undefined && data.terrain.setbacks === undefined
+      ? { ...data.terrain, setbacks: DEFAULT_SETBACKS }
+      : data.terrain;
+
+  return {
+    ...data,
+    version: 6,
+    ...(walls !== undefined && { walls }),
+    ...(terrain !== undefined && { terrain }),
+  } as T & MigratableProject;
 }
 
 /**

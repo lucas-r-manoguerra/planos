@@ -14,10 +14,24 @@ import Konva from "konva";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useSelectionStore } from "@/stores/selection.store";
 import { useCanvasStore } from "@/stores/canvas.store";
+import { useValidationStore } from "@/stores/validation.store";
 import { Room } from "@/types/plan";
 import { formatDimensions } from "@/lib/utils";
 import { ROOM_COLORS } from "@/lib/constants";
 import { useCanvasColors } from "./canvas-colors";
+
+/**
+ * Returns true if a hex color is perceptually light.
+ * Uses relative luminance (W3C formula).
+ */
+function isLightColor(hex: string): boolean {
+  const raw = hex.replace("#", "");
+  const r = parseInt(raw.substring(0, 2), 16) / 255;
+  const g = parseInt(raw.substring(2, 4), 16) / 255;
+  const b = parseInt(raw.substring(4, 6), 16) / 255;
+  const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  return luminance > 0.5;
+}
 
 const draggedRoomIdRef = { current: null as string | null };
 
@@ -26,8 +40,13 @@ const RoomRect = memo(function RoomRect({ room }: { room: Room }) {
   const selectedId = useSelectionStore((s) => s.selectedId);
   const select = useSelectionStore((s) => s.select);
   const activeTool = useCanvasStore((s) => s.activeTool);
+  const showAreas = useValidationStore((s) => s.overlays.areas);
   const { roomStroke, roomLabel, roomDim } = useCanvasColors();
   const isSelected = selectedId === room.id;
+
+  const fill = room.color || ROOM_COLORS[room.type];
+  const areaM2 = (room.width * room.height) / 10000;
+  const areaColor = fill ? (isLightColor(fill) ? "#1a1a1a" : "#ffffff") : "#374151";
 
   const handleDragStart = (e: Konva.KonvaEventObject<DragEvent>) => {
     e.cancelBubble = true;
@@ -102,6 +121,18 @@ const RoomRect = memo(function RoomRect({ room }: { room: Room }) {
         align="center"
         y={room.height / 2}
       />
+      {showAreas && room.width >= 80 && room.height >= 60 && (
+        <Text
+          text={`${areaM2.toFixed(1)} m²`}
+          fontSize={11}
+          fontFamily="monospace"
+          fill={areaColor}
+          width={room.width}
+          align="center"
+          y={room.height / 2 + 16}
+          listening={false}
+        />
+      )}
     </Group>
   );
 });

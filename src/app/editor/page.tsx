@@ -18,8 +18,10 @@ import { usePanelStore } from "@/stores/panel.store";
 import { useCanvasStore } from "@/stores/canvas.store";
 import { useEditorShortcuts } from "@/hooks/useEditorShortcuts";
 import { useEditorLifecycle } from "@/hooks/useEditorLifecycle";
+import { useValidation } from "@/hooks/useValidation";
 import { ErrorBoundary } from "@/components/feedback/ErrorBoundary";
 import { FirstRunHint } from "@/components/feedback/FirstRunHint";
+import { ValidationPanel } from "@/components/panel/ValidationPanel";
 import { Room } from "@/types/plan";
 
 export default function EditorPage() {
@@ -30,6 +32,9 @@ export default function EditorPage() {
 
   // Atajos de teclado (undo/redo, eliminar selección)
   useEditorShortcuts();
+
+  // Validación normativa: re-evalúa al cambiar estado del editor
+  useValidation();
 
   // Context menu handlers
   useEffect(() => {
@@ -183,6 +188,7 @@ export default function EditorPage() {
           <Sidebar />
           <PlanCanvas />
         </div>
+        <ValidationPanel />
       </div>
     </ErrorBoundary>
   );

@@ -30,10 +30,15 @@ import {
   Pencil,
   Box,
   Magnet,
+  MoveHorizontal,
+  Maximize2,
+  PieChart,
+  ShieldAlert,
 } from "lucide-react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useSunStore } from "@/stores/sun.store";
+import { useValidationStore } from "@/stores/validation.store";
 
 export function Toolbar() {
   const { zoom, setZoom, toggleGrid, gridVisible, activeTool, setActiveTool, viewMode, setViewMode, centerTerrain, toggleMagnetism, magnetismEnabled } = useCanvasStore();
@@ -42,6 +47,7 @@ export function Toolbar() {
   const { undo, redo, canUndo, canRedo } = useHistoryStore();
   const { active: rulerActive, activate, deactivate, clearMeasurements, measurements } = useRulerStore();
   const { enabled: sunEnabled, setEnabled: setSunEnabled } = useSunStore();
+  const { overlays, toggleOverlay } = useValidationStore();
 
   const [showExport, setShowExport] = useState(false);
 
@@ -214,6 +220,46 @@ export function Toolbar() {
       >
         <Sun size={16} />
       </button>
+
+      {/* Overlays de validación */}
+      <div className="flex items-center gap-0.5 border-l border-gray-200 pl-2">
+        <button
+          onClick={() => toggleOverlay("cotas")}
+          className={`p-1.5 rounded ${overlays.cotas ? "bg-blue-100 text-blue-700" : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"}`}
+          title={overlays.cotas ? "Ocultar cotas" : "Mostrar cotas"}
+          aria-label={overlays.cotas ? "Ocultar cotas automáticas" : "Mostrar cotas automáticas"}
+          aria-pressed={overlays.cotas}
+        >
+          <MoveHorizontal size={16} />
+        </button>
+        <button
+          onClick={() => toggleOverlay("setbacks")}
+          className={`p-1.5 rounded ${overlays.setbacks ? "bg-blue-100 text-blue-700" : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"}`}
+          title={overlays.setbacks ? "Ocultar retiros" : "Mostrar retiros"}
+          aria-label={overlays.setbacks ? "Ocultar zonas de retiro" : "Mostrar zonas de retiro"}
+          aria-pressed={overlays.setbacks}
+        >
+          <Maximize2 size={16} />
+        </button>
+        <button
+          onClick={() => toggleOverlay("areas")}
+          className={`p-1.5 rounded ${overlays.areas ? "bg-blue-100 text-blue-700" : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"}`}
+          title={overlays.areas ? "Ocultar áreas" : "Mostrar áreas"}
+          aria-label={overlays.areas ? "Ocultar cálculo de áreas" : "Mostrar cálculo de áreas"}
+          aria-pressed={overlays.areas}
+        >
+          <PieChart size={16} />
+        </button>
+        <button
+          onClick={() => toggleOverlay("validationPanel")}
+          className={`p-1.5 rounded ${overlays.validationPanel ? "bg-blue-100 text-blue-700" : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"}`}
+          title={overlays.validationPanel ? "Ocultar panel de validación" : "Mostrar panel de validación"}
+          aria-label={overlays.validationPanel ? "Cerrar panel de validación" : "Abrir panel de validación"}
+          aria-pressed={overlays.validationPanel}
+        >
+          <ShieldAlert size={16} />
+        </button>
+      </div>
 
       {/* Info del terreno */}
       <div className="border-l border-gray-200 pl-2 text-gray-500 text-xs">

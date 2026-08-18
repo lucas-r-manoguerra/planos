@@ -15,6 +15,7 @@ import { useCanvasStore } from "@/stores/canvas.store";
 import { useRulerStore } from "@/stores/ruler.store";
 import { GridLayer } from "./GridLayer";
 import { TerrainLayer } from "./TerrainLayer";
+import { SetbackLayer } from "./SetbackLayer";
 import { ShadowLayer } from "./ShadowLayer";
 import { RoomLayer } from "./RoomLayer";
 import { FixtureLayer } from "./FixtureLayer";
@@ -22,6 +23,7 @@ import { WallLayer, WallPreview, WallDrawPreview } from "./WallLayer";
 import { IsometricLayer } from "./IsometricLayer";
 import { MeasurementLayer } from "./MeasurementLayer";
 import { SunArcLayer } from "./SunArcLayer";
+import { ValidationOverlayLayer } from "./ValidationOverlayLayer";
 import { FloorOverlayLayer } from "./FloorOverlayLayer";
 import { CompassOverlay } from "./CompassOverlay";
 import { CoordinateDisplay } from "./CoordinateDisplay";
@@ -530,6 +532,9 @@ export function PlanCanvas() {
               <TerrainLayer />
             </Layer>
             <Layer>
+              <SetbackLayer />
+            </Layer>
+            <Layer>
               <ShadowLayer />
             </Layer>
             <Layer>
@@ -567,6 +572,9 @@ export function PlanCanvas() {
             </Layer>
             <Layer>
               <SunArcLayer />
+            </Layer>
+            <Layer>
+              <ValidationOverlayLayer />
             </Layer>
           </>
         )}

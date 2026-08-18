@@ -14,10 +14,12 @@ import { useRulerStore } from "@/stores/ruler.store";
 import { useCanvasStore } from "@/stores/canvas.store";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useStructuralStore } from "@/stores/structural.store";
+import { useValidationStore } from "@/stores/validation.store";
 import {
   computeSpanAnnotations,
   type SpanAnnotation,
 } from "@/lib/structural-utils";
+import { CotaDimension } from "./CotaDimension";
 
 function MeasurementLine({ x1, y1, x2, y2 }: { x1: number; y1: number; x2: number; y2: number }) {
   const dx = x2 - x1;
@@ -110,9 +112,44 @@ export const MeasurementLayer = memo(function MeasurementLayer() {
   const pointerPos = useRulerStore((s) => s.pointerPos);
   const measurements = useRulerStore((s) => s.measurements);
 
+  // Cotas overlay
+  const cotasEnabled = useValidationStore((s) => s.overlays.cotas);
+  const activeFloorId = useFloorsStore((s) => s.activeFloorId);
+  const getActiveRooms = useFloorsStore((s) => s.getActiveRooms);
+
+  const cotaData = useMemo(() => {
+    if (!cotasEnabled) return [];
+    const floorRooms = getActiveRooms();
+    const COTA_OFFSET = 15;
+    const result: Array<{
+      key: string;
+      horizontal: { x1: number; y1: number; x2: number; y2: number; value: number };
+      vertical: { x1: number; y1: number; x2: number; y2: number; value: number };
+    }> = [];
+    for (const room of floorRooms) {
+      result.push({
+        key: room.id,
+        horizontal: {
+          x1: room.x,
+          y1: room.y - COTA_OFFSET,
+          x2: room.x + room.width,
+          y2: room.y - COTA_OFFSET,
+          value: room.width,
+        },
+        vertical: {
+          x1: room.x - COTA_OFFSET,
+          y1: room.y,
+          x2: room.x - COTA_OFFSET,
+          y2: room.y + room.height,
+          value: room.height,
+        },
+      });
+    }
+    return result;
+  }, [cotasEnabled, getActiveRooms]);
+
   // Slice C: structural dimensioning toggle + data
   const structuralEnabled = useCanvasStore((s) => s.structuralDimensioningEnabled);
-  const activeFloorId = useFloorsStore((s) => s.activeFloorId);
   const columns = useStructuralStore((s) => s.columns);
   const beams = useStructuralStore((s) => s.beams);
 
@@ -176,6 +213,18 @@ export const MeasurementLayer = memo(function MeasurementLayer() {
         <Group listening={false}>
           {structuralAnnotations.map((a, i) => (
             <SpanAnnotationLine key={`span-${i}`} annotation={a} />
+          ))}
+        </Group>
+      )}
+
+      {/* ── Cotas de habitaciones (validation overlay) ── */}
+      {cotasEnabled && cotaData.length > 0 && (
+        <Group listening={false}>
+          {cotaData.map((c) => (
+            <Group key={`cotas-${c.key}`}>
+              <CotaDimension {...c.horizontal} />
+              <CotaDimension {...c.vertical} />
+            </Group>
           ))}
         </Group>
       )}

@@ -124,14 +124,25 @@ describe("validateMinDimensions", () => {
   });
 
   it("room below minimum side length → warning", () => {
-    // DORMITORIO: minSide=300. Use width=200, height=290 → maxSide=290 < 300
-    // Area = 200×290 = 5.8 m² < 10.5 → area violation + side violation = 2 violations
-    const room = makeRoom({ width: 200, height: 290, type: RoomType.DORMITORIO });
+    // DORMITORIO: minSide=300. Use width=400, height=250 → minSide=250 < 300
+    // Area = 400×250 = 10 m² < 10.5 → area violation + side violation = 2 violations
+    const room = makeRoom({ width: 400, height: 250, type: RoomType.DORMITORIO });
     const violations = validateMinDimensions([room]);
     expect(violations.length).toBeGreaterThanOrEqual(2);
-    const sideViolation = violations.find(v => v.message.includes("Lado:"));
+    const sideViolation = violations.find(v => v.message.includes("Lado mínimo:"));
     expect(sideViolation).toBeDefined();
-    expect(sideViolation!.message).toContain("290 cm");
+    expect(sideViolation!.message).toContain("250 cm");
+  });
+
+  it("asymmetric room: long side passes but short side fails → warning", () => {
+    // DORMITORIO: minSide=300. width=500, height=280
+    // Math.max would give 500 ≥ 300 (no violation — old bug)
+    // Math.min gives 280 < 300 (correct detection)
+    const room = makeRoom({ width: 500, height: 280, type: RoomType.DORMITORIO });
+    const violations = validateMinDimensions([room]);
+    const sideViolation = violations.find(v => v.message.includes("Lado mínimo:"));
+    expect(sideViolation).toBeDefined();
+    expect(sideViolation!.message).toContain("280 cm");
   });
 
   it("room with zero dimensions → warning", () => {

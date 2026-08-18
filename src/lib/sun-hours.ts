@@ -56,7 +56,7 @@ export function computeSunHoursForRoom(
   room: Room,
   otherRooms: Room[],
   sunSettings: SunSettings,
-  _terrain: Terrain,
+  terrain: Terrain,
   date: Date = new Date(2025, 5, 21),
 ): number {
   const center: Point = {
@@ -67,6 +67,10 @@ export function computeSunHoursForRoom(
   const dateStr = formatDateISO(date);
   const { latitude, longitude, timezone } = sunSettings.location;
   const floorHeight = sunSettings.floorHeight;
+  const northAngle = terrain.northAngle ?? 0;
+  const rad = (northAngle * Math.PI) / 180;
+  const cosA = Math.cos(rad);
+  const sinA = Math.sin(rad);
 
   let sunlitSteps = 0;
 
@@ -81,7 +85,12 @@ export function computeSunHoursForRoom(
 
     if (elevation <= 0) continue;
 
-    const shadowVector = computeShadowVector(azimuth, elevation, floorHeight);
+    const raw = computeShadowVector(azimuth, elevation, floorHeight);
+    // Rotate geographic vector to canvas coordinates using terrain northAngle
+    const shadowVector: Point = {
+      x: raw.x * cosA + raw.y * sinA,
+      y: -raw.x * sinA + raw.y * cosA,
+    };
 
     let inShadow = false;
     for (const other of otherRooms) {

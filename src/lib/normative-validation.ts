@@ -93,7 +93,7 @@ export function validateMinDimensions(rooms: Room[]): Violation[] {
   for (const room of rooms) {
     const rule = MIN_DIMENSIONS[room.type];
     const areaM2 = (room.width * room.height) / 10_000;
-    const maxSide = Math.max(room.width, room.height);
+    const minSide = Math.min(room.width, room.height);
 
     if (areaM2 < rule.minArea) {
       violations.push({
@@ -103,19 +103,19 @@ export function validateMinDimensions(rooms: Room[]): Violation[] {
         roomId: room.id,
         feature: "min-dimensions",
         message: `Área: ${areaM2.toFixed(2)} m² (mínimo: ${rule.minArea} m²)`,
-         normativeRef: "Resolución 5/2022",
-       });
-     }
+        normativeRef: "Resolución 5/2022",
+      });
+    }
 
-     if (maxSide < rule.minSide) {
-       violations.push({
-         id: nextId("min-dimensions", room.id),
-         severity: "warning",
-         category: "dimensions",
-         roomId: room.id,
-         feature: "min-dimensions",
-         message: `Lado: ${maxSide} cm (mínimo: ${rule.minSide} cm)`,
-         normativeRef: "Resolución 5/2022",
+    if (minSide < rule.minSide) {
+      violations.push({
+        id: nextId("min-dimensions", room.id),
+        severity: "warning",
+        category: "dimensions",
+        roomId: room.id,
+        feature: "min-dimensions",
+        message: `Lado mínimo: ${minSide} cm (requerido: ${rule.minSide} cm)`,
+        normativeRef: "Resolución 5/2022",
       });
     }
   }

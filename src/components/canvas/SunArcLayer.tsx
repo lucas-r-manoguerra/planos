@@ -11,7 +11,7 @@
 import { memo, useMemo } from "react";
 import { Line, Circle, Text } from "react-konva";
 import { useSunStore } from "@/stores/sun.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { getSunPosition } from "@/lib/solar";
 import { useCanvasColors } from "./canvas-colors";
 

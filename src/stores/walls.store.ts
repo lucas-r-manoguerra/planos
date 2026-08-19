@@ -18,8 +18,17 @@ import { materializeFloorWalls, reanchorOpenings } from "@/lib/wall-utils";
 import { mergeWallToFixpoint, tryMergeCollinearWalls } from "@/lib/wall-merge";
 import { useHistoryStore } from "@/stores/history.store";
 import { useFloorsStore } from "@/stores/floors.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { useFixtureStore } from "@/stores/fixtures.store";
+
+/** Simple hash for memoization key — O(n) scan of room geometry. */
+function floorGeometryHash(floor: { rooms: { x: number; y: number; width: number; height: number }[] }): string {
+  let h = 0;
+  for (const r of floor.rooms) {
+    h = ((h << 5) - h + r.x + r.y + r.width + r.height) | 0;
+  }
+  return `${floor.rooms.length}-${h}`;
+}
 
 interface WallsStore {
   walls: Wall[];
@@ -59,6 +68,9 @@ export const useWallsStore = create<WallsStore>((set, get) => {
       walls: get().walls,
     });
   };
+
+  // Cache: last floor geometry hash per floorId to skip materialization
+  const floorHashCache = new Map<string, string>();
 
   return {
     walls: [],
@@ -154,11 +166,22 @@ export const useWallsStore = create<WallsStore>((set, get) => {
 
       const materialized = materializeFloorWalls(floor, existingRoomWalls);
 
-      // Idempotencia: sin cambios de geometría → no tocar nada.
-      // Solo aplica si ya había paredes de esta planta (si no, materializar
-      // siempre — caso de carga/importación de proyecto).
+      // Memoization: skip if floor geometry hasn't changed since last materialization.
+      // This avoids the O(n²) JSON.stringify comparison on every room mutation.
+      const currentHash = floorGeometryHash(floor);
       if (
         existingRoomWalls.length > 0 &&
+        floorHashCache.get(floorId) === currentHash
+      ) {
+        return;
+      }
+      floorHashCache.set(floorId, currentHash);
+
+      // Idempotencia: sin cambios de geometría → no tocar nada.
+      // Fallback: if no cache entry yet, compare with JSON.
+      if (
+        existingRoomWalls.length > 0 &&
+        floorHashCache.size > 1 &&
         JSON.stringify(materialized) === JSON.stringify(existingRoomWalls)
       ) {
         return;

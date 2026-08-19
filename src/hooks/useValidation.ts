@@ -9,7 +9,7 @@
 
 import { useEffect, useRef } from "react";
 import { useValidationStore } from "@/stores/validation.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useFixtureStore } from "@/stores/fixtures.store";
 import { useStructuralStore } from "@/stores/structural.store";

@@ -12,7 +12,7 @@
 import { useEffect } from "react";
 import { Floor, Fixture, SunSettings, Terrain, Wall } from "@/types/plan";
 import { useFloorsStore } from "@/stores/floors.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { useSunStore } from "@/stores/sun.store";
 import { useFixtureStore } from "@/stores/fixtures.store";
 import { useWallsStore } from "@/stores/walls.store";

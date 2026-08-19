@@ -11,8 +11,9 @@ import { useEffect } from "react";
 import { Toolbar } from "@/components/toolbar/Toolbar";
 import { Sidebar } from "@/components/sidebar/Sidebar";
 import { PlanCanvas } from "@/components/canvas/PlanCanvas";
+import { DimensionToolbar } from "@/components/canvas/DimensionToolbar";
 import { useFloorsStore } from "@/stores/floors.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { useContextMenuStore } from "@/stores/context-menu.store";
 import { usePanelStore } from "@/stores/panel.store";
 import { useCanvasStore } from "@/stores/canvas.store";
@@ -186,7 +187,10 @@ export default function EditorPage() {
         <Toolbar />
         <div className="flex flex-1 overflow-hidden">
           <Sidebar />
-          <PlanCanvas />
+          <div className="relative flex-1">
+            <PlanCanvas />
+            <DimensionToolbar />
+          </div>
         </div>
         <ValidationPanel />
       </div>

@@ -2,9 +2,10 @@
 
 import { memo } from "react";
 import { Line, Text } from "react-konva";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { useValidationStore } from "@/stores/validation.store";
 import { DEFAULT_SETBACKS } from "@/lib/normative-rules";
+import { getZoneSetbacks } from "@/lib/normative/gualeguay/fos-fot";
 import { cmToDisplay } from "@/lib/utils";
 
 export const SetbackLayer = memo(function SetbackLayer() {
@@ -13,11 +14,15 @@ export const SetbackLayer = memo(function SetbackLayer() {
 
   if (!visible || !terrain.setbacks) return null;
 
+  // Zone-aware defaults: use Gualeguay zone setbacks when terrain
+  // doesn't have explicit setback values. Falls back to national
+  // DEFAULT_SETBACKS when zone data is unavailable.
+  const zoneDefaults = getZoneSetbacks(terrain.zoneId);
   const sb = {
-    front: terrain.setbacks.front ?? DEFAULT_SETBACKS.front,
-    rear: terrain.setbacks.rear ?? DEFAULT_SETBACKS.rear,
-    left: terrain.setbacks.left ?? DEFAULT_SETBACKS.left,
-    right: terrain.setbacks.right ?? DEFAULT_SETBACKS.right,
+    front: terrain.setbacks.front ?? zoneDefaults.front ?? DEFAULT_SETBACKS.front,
+    rear: terrain.setbacks.rear ?? zoneDefaults.rear ?? DEFAULT_SETBACKS.rear,
+    left: terrain.setbacks.left ?? zoneDefaults.side ?? DEFAULT_SETBACKS.left,
+    right: terrain.setbacks.right ?? zoneDefaults.side ?? DEFAULT_SETBACKS.right,
   };
 
   const left = sb.left;
@@ -35,10 +40,16 @@ export const SetbackLayer = memo(function SetbackLayer() {
       bottom = terrain.height - sb.front;
       break;
     case "left":
-    case "right":
-      top = sb.front;
-      bottom = terrain.height - sb.rear;
+      top = sb.left;
+      bottom = terrain.height - sb.right;
       break;
+    case "right":
+      top = sb.right;
+      bottom = terrain.height - sb.left;
+      break;
+    default:
+      top = 0;
+      bottom = terrain.height;
   }
 
   if (left >= right || top >= bottom) return null;
@@ -89,7 +100,7 @@ export const SetbackLayer = memo(function SetbackLayer() {
         <Text
           x={left + 4}
           y={top + 14}
-          text={`Izq: ${cmToDisplay(sb.left)}`}
+          text={`R. Izq: ${cmToDisplay(sb.left)}`}
           fontSize={10}
           fill="#f97316"
           listening={false}
@@ -100,7 +111,7 @@ export const SetbackLayer = memo(function SetbackLayer() {
         <Text
           x={right - 80}
           y={top + 14}
-          text={`Der: ${cmToDisplay(sb.right)}`}
+          text={`R. Der: ${cmToDisplay(sb.right)}`}
           fontSize={10}
           fill="#f97316"
           listening={false}

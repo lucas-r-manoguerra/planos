@@ -9,7 +9,7 @@
 
 import type { FloorTemplate } from "@/lib/templates";
 import { layoutTemplateRooms } from "@/lib/templates";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { LayoutTemplate, X } from "lucide-react";
 
 interface TemplatePreviewDialogProps {

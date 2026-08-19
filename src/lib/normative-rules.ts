@@ -104,6 +104,22 @@ export const SUN_EVAL_STEP = 0.5;  // cada 30 minutos
 /** Tolerancia de alineación de columnas entre pisos (cm) */
 export const COLUMN_ALIGNMENT_TOLERANCE = 5;
 
+// ── Terreno (Gualeguay — valores baseline, Decreto 203/16 pendiente) ──
+
+/** Superficie mínima de terreno por zona (m²) — baseline nacional */
+export const MIN_TERRAIN_AREA: Record<string, number> = {
+  R1: 250,   // Zona R1 — residencial unifamiliar
+  R2: 150,   // Zona R2 — residencial multifamiliar
+  C1: 200,   // Zona C1 — comercial
+};
+
+/** Frente mínimo de terreno por zona (cm) — baseline nacional */
+export const MIN_TERRAIN_FRONTAGE: Record<string, number> = {
+  R1: 600,   // 6.0 m
+  R2: 500,   // 5.0 m
+  C1: 600,   // 6.0 m
+};
+
 // ── Paredes ──────────────────────────────────────────────────────
 
 export const MIN_WALL_THICKNESS: Record<string, number> = {

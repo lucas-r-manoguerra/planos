@@ -57,7 +57,7 @@ export function computeSunHoursForRoom(
   otherRooms: Room[],
   sunSettings: SunSettings,
   terrain: Terrain,
-  date: Date = new Date(2025, 5, 21),
+  date: Date = new Date(new Date().getFullYear(), 5, 21),
 ): number {
   const center: Point = {
     x: room.x + room.width / 2,
@@ -120,16 +120,81 @@ export function computeSunHoursForRoom(
 
 /**
  * Compute sun hours for all rooms. Returns results indexed by room ID.
+ *
+ * Shadow polygons are pre-computed once per timestamp and reused for
+ * every room — O(timestamps × rooms × rooms) without redundant
+ * sun-position or shadow-vector calculations.
  */
 export function computeSunHoursForAllRooms(
   rooms: Room[],
   sunSettings: SunSettings,
   terrain: Terrain,
-  date: Date = new Date(2025, 5, 21),
+  date: Date = new Date(new Date().getFullYear(), 5, 21),
 ): SunHoursResult[] {
+  const { latitude, longitude, timezone } = sunSettings.location;
+  const floorHeight = sunSettings.floorHeight;
+  const northAngle = terrain.northAngle ?? 0;
+  const rad = (northAngle * Math.PI) / 180;
+  const cosA = Math.cos(rad);
+  const sinA = Math.sin(rad);
+  const dateStr = formatDateISO(date);
+
+  // Pre-compute per-room shadow polygons per timestamp.
+  // Structure: hour -> roomId -> shadow polygon (Point[])
+  const shadowByHour = new Map<number, Map<string, Point[]>>();
+
+  for (let hour = SUN_EVAL_START; hour <= SUN_EVAL_END; hour += SUN_EVAL_STEP) {
+    const { azimuth, elevation } = getSunPosition(
+      latitude, longitude, dateStr, hour, timezone,
+    );
+    if (elevation <= 0) continue;
+
+    const raw = computeShadowVector(azimuth, elevation, floorHeight);
+    const sv: Point = {
+      x: raw.x * cosA + raw.y * sinA,
+      y: -raw.x * sinA + raw.y * cosA,
+    };
+
+    const polygons = new Map<string, Point[]>();
+    for (const room of rooms) {
+      polygons.set(
+        room.id,
+        computeShadowPolygon(room.x, room.y, room.width, room.height, sv),
+      );
+    }
+    shadowByHour.set(hour, polygons);
+  }
+
   return rooms.map((room) => {
-    const otherRooms = rooms.filter((r) => r.id !== room.id);
-    const hours = computeSunHoursForRoom(room, otherRooms, sunSettings, terrain, date);
+    const center: Point = {
+      x: room.x + room.width / 2,
+      y: room.y + room.height / 2,
+    };
+
+    let sunlitSteps = 0;
+    for (let hour = SUN_EVAL_START; hour <= SUN_EVAL_END; hour += SUN_EVAL_STEP) {
+      const { elevation } = getSunPosition(
+        latitude, longitude, dateStr, hour, timezone,
+      );
+      if (elevation <= 0) continue;
+
+      const roomPolygons = shadowByHour.get(hour);
+      if (!roomPolygons) continue;
+
+      let inShadow = false;
+      for (const other of rooms) {
+        if (other.id === room.id) continue;
+        const poly = roomPolygons.get(other.id);
+        if (poly && pointInPolygon(center, poly)) {
+          inShadow = true;
+          break;
+        }
+      }
+
+      if (!inShadow) sunlitSteps++;
+    }
+
+    const hours = sunlitSteps * SUN_EVAL_STEP;
     return {
       roomId: room.id,
       hours: Math.round(hours * 10) / 10,

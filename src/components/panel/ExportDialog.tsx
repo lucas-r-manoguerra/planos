@@ -12,7 +12,8 @@ import { useState } from "react";
 import { exportPlanPNG, ExportScale } from "@/lib/export";
 import { useCanvasStore } from "@/stores/canvas.store";
 import { useSunStore } from "@/stores/sun.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
+import { useFloorsStore } from "@/stores/floors.store";
 import { useToastStore } from "@/stores/toast.store";
 import { useCanvasColors } from "@/components/canvas/canvas-colors";
 
@@ -20,9 +21,12 @@ const SCALES: ExportScale[] = [1, 2, 4];
 
 export function ExportDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [scale, setScale] = useState<ExportScale>(2);
+  const [showCotas, setShowCotas] = useState(false);
+  const [showLegend, setShowLegend] = useState(false);
   const stage = useCanvasStore((s) => s.stageRef);
   const { enabled: sunEnabled } = useSunStore();
   const { terrain } = useTerrainStore();
+  const floors = useFloorsStore((s) => s.floors);
   const colors = useCanvasColors();
   const push = useToastStore((s) => s.push);
 
@@ -42,6 +46,10 @@ export function ExportDialog({ open, onClose }: { open: boolean; onClose: () => 
         text: colors.textMuted,
         north: "#e74c3c",
       },
+      showCotas,
+      showLegend,
+      floors,
+      terrain,
     });
     push("success", "Plano exportado como PNG");
     onClose();
@@ -86,6 +94,28 @@ export function ExportDialog({ open, onClose }: { open: boolean; onClose: () => 
             ? "Brújula oculta: la simulación solar está desactivada."
             : `La exportación incluye la brújula (Norte a ${compassAngle}°).`}
         </p>
+
+        {/* Opciones de exportación */}
+        <div className="mb-4 space-y-2">
+          <label className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
+            <input
+              type="checkbox"
+              checked={showCotas}
+              onChange={(e) => setShowCotas(e.target.checked)}
+              className="h-3.5 w-3.5 rounded border-gray-300"
+            />
+            Incluir cotas (dimensiones)
+          </label>
+          <label className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
+            <input
+              type="checkbox"
+              checked={showLegend}
+              onChange={(e) => setShowLegend(e.target.checked)}
+              className="h-3.5 w-3.5 rounded border-gray-300"
+            />
+            Incluir leyenda (FOS/FOT, zona)
+          </label>
+        </div>
 
         <div className="flex justify-end gap-2">
           <button

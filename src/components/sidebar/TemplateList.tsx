@@ -10,7 +10,7 @@
 
 import { useState } from "react";
 import { useFloorsStore } from "@/stores/floors.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { useToastStore } from "@/stores/toast.store";
 import {
   FLOOR_TEMPLATES,

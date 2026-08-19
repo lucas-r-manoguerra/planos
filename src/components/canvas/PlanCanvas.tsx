@@ -30,7 +30,7 @@ import { CoordinateDisplay } from "./CoordinateDisplay";
 import { useFixtureStore } from "@/stores/fixtures.store";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useWallsStore } from "@/stores/walls.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { useStructuralStore } from "@/stores/structural.store";
 import { getCatalogItem, calculateStairs } from "@/lib/fixtures-catalog";
 import { findNearestWallEntity } from "@/lib/wall-snap";
@@ -234,11 +234,13 @@ export function PlanCanvas() {
       const p = pointerToCanvas(stage);
       if (!p) return;
 
-      // Inicio del trazo: magnetismo efectivo (flag XOR Shift en el mousedown).
-      const magnetize = effectiveMagnetism(useCanvasStore.getState().magnetismEnabled, e.evt.shiftKey);
-      let start = magnetize ? snapToCanvasPoint(p) : p;
+      // Inicio del trazo: SIEMPRE snap a puntos de referencia (esquinas de
+      // habitaciones, extremos de paredes, esquinas del terreno). El toggle
+      // de magnetismo solo controla el snap del EXTREMO durante el gesto.
+      let start = snapToCanvasPoint(p);
 
       if (tool === "beam") {
+        const magnetize = effectiveMagnetism(useCanvasStore.getState().magnetismEnabled, e.evt.shiftKey);
         const { activeFloorId } = useFloorsStore.getState();
         const columns = useStructuralStore.getState().getColumnsForFloor(activeFloorId);
         const walls = useWallsStore.getState().getWallsForFloor(activeFloorId);

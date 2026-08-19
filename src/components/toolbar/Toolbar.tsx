@@ -8,7 +8,7 @@
 
 import { useState } from "react";
 import { useCanvasStore } from "@/stores/canvas.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { useSelectionStore } from "@/stores/selection.store";
 import { useHistoryStore } from "@/stores/history.store";
 import { useRulerStore } from "@/stores/ruler.store";
@@ -39,6 +39,8 @@ import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useSunStore } from "@/stores/sun.store";
 import { useValidationStore } from "@/stores/validation.store";
+import { useFloorsStore } from "@/stores/floors.store";
+import { calculateFosFot } from "@/lib/normative/gualeguay/fos-fot";
 
 export function Toolbar() {
   const { zoom, setZoom, toggleGrid, gridVisible, activeTool, setActiveTool, viewMode, setViewMode, centerTerrain, toggleMagnetism, magnetismEnabled } = useCanvasStore();
@@ -261,9 +263,12 @@ export function Toolbar() {
         </button>
       </div>
 
-      {/* Info del terreno */}
-      <div className="border-l border-gray-200 pl-2 text-gray-500 text-xs">
-        {(terrain.width / 100).toFixed(1)}m × {(terrain.height / 100).toFixed(1)}m
+      {/* Info del terreno + FOS/FOT */}
+      <div className="border-l border-gray-200 pl-2 text-xs flex items-center gap-2">
+        <span className="text-gray-500">
+          {(terrain.width / 100).toFixed(1)}m × {(terrain.height / 100).toFixed(1)}m
+        </span>
+        <FosFotIndicator />
       </div>
 
       {/* Selección activa */}
@@ -303,5 +308,31 @@ export function Toolbar() {
       {/* Diálogo de exportación */}
       {showExport && <ExportDialog open={showExport} onClose={() => setShowExport(false)} />}
     </div>
+  );
+}
+
+/**
+ * Mini FOS/FOT indicator for the toolbar.
+ * Shows current occupation factors with color coding.
+ */
+function FosFotIndicator() {
+  const terrain = useTerrainStore((s) => s.terrain);
+  const floors = useFloorsStore((s) => s.floors);
+  const result = calculateFosFot(floors, terrain, terrain.zoneId);
+
+  if (result.terrainAreaM2 === 0) return null;
+
+  return (
+    <span className="text-gray-500 font-mono">
+      FOS{" "}
+      <span className={result.fosExceeded ? "text-red-600 font-semibold" : ""}>
+        {(result.fos * 100).toFixed(0)}%
+      </span>
+      {" · "}
+      FOT{" "}
+      <span className={result.fotExceeded ? "text-red-600 font-semibold" : ""}>
+        {(result.fot * 100).toFixed(0)}%
+      </span>
+    </span>
   );
 }

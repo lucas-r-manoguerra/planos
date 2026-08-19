@@ -26,22 +26,30 @@ import {
   MIN_GARAGE,
   MIN_STAIR_REST,
   MIN_STAIR_WIDTH,
+  MIN_TERRAIN_AREA,
+  MIN_TERRAIN_FRONTAGE,
 } from "@/lib/normative-rules";
 
 import { calculateStairs } from "@/lib/fixtures-catalog";
 
 // ── Helpers ──────────────────────────────────────────────────────────
 
-let counter = 0;
-
-function nextId(feature: string, ref?: string): string {
-  counter += 1;
-  return `${feature}-${ref || "global"}-${counter}`;
+/** Simple content hash for deterministic violation IDs. */
+function contentHash(input: string): string {
+  let hash = 0;
+  for (let i = 0; i < input.length; i++) {
+    hash = ((hash << 5) - hash + input.charCodeAt(i)) | 0;
+  }
+  return Math.abs(hash).toString(36);
 }
 
-/** Reset counter (for deterministic testing). */
+function nextId(feature: string, ref: string, content: string): string {
+  return `${feature}-${ref}-${contentHash(content)}`;
+}
+
+/** Reset counter kept for backward compat (no-op — IDs are now deterministic). */
 export function resetValidationCounter(): void {
-  counter = 0;
+  // Intentional no-op: deterministic IDs don't need a counter.
 }
 
 /** Minimum edge-to-edge distance between two axis-aligned rects (0 if overlapping). */
@@ -97,7 +105,7 @@ export function validateMinDimensions(rooms: Room[]): Violation[] {
 
     if (areaM2 < rule.minArea) {
       violations.push({
-        id: nextId("min-dimensions", room.id),
+        id: nextId("min-dimensions", room.id, `${room.width}x${room.height}-area`),
         severity: "warning",
         category: "dimensions",
         roomId: room.id,
@@ -109,7 +117,7 @@ export function validateMinDimensions(rooms: Room[]): Violation[] {
 
     if (minSide < rule.minSide) {
       violations.push({
-        id: nextId("min-dimensions", room.id),
+        id: nextId("min-dimensions", room.id, `${room.width}x${room.height}-side`),
         severity: "warning",
         category: "dimensions",
         roomId: room.id,
@@ -129,24 +137,35 @@ export function validateMinDimensions(rooms: Room[]): Violation[] {
  * Determine which windows belong to a given room.
  *
  * A window is assigned to a room if:
- *  1. Its wallId matches one of the room's wall IDs (if walls are tracked),
- *     OR
- *  2. Its center falls inside the room's bounding box.
+ *  1. Its center falls inside the room's bounding box, OR
+ *  2. The window's bounding box overlaps the room's bounding box
+ *     (cross-wall illumination: a window on a shared wall provides
+ *     light to both adjacent rooms).
  */
 function windowsForRoom(rooms: Room[], fixtures: Fixture[], room: Room): Fixture[] {
   return fixtures.filter(f => {
     if (f.category !== "window") return false;
 
-    // Direct wall-based assignment
-    if (f.wallId) {
-      // The wall's roomId should match this room
-      // Since we don't have the Wall entities here, fall through to position check.
-    }
-
     // Position-based: window center inside room bounds
     const cx = f.x + f.width / 2;
     const cy = f.y + f.height / 2;
-    return pointInRoom(cx, cy, room);
+    if (pointInRoom(cx, cy, room)) return true;
+
+    // Cross-wall illumination: window bounding box overlaps room bounds.
+    // This handles windows on shared walls where the center is on the
+    // other side of the wall but the window still provides light.
+    const wMinX = f.x;
+    const wMaxX = f.x + f.width;
+    const wMinY = f.y;
+    const wMaxY = f.y + f.height;
+    const rMinX = room.x;
+    const rMaxX = room.x + room.width;
+    const rMinY = room.y;
+    const rMaxY = room.y + room.height;
+
+    const overlapsX = wMinX < rMaxX && wMaxX > rMinX;
+    const overlapsY = wMinY < rMaxY && wMaxY > rMinY;
+    return overlapsX && overlapsY;
   });
 }
 
@@ -184,7 +203,7 @@ export function validateNaturalLighting(
       const ratio = floorAreaM2 > 0 ? totalWindowAreaM2 / floorAreaM2 : 0;
       if (ratio < rule.minRatio) {
         violations.push({
-          id: nextId("natural-lighting", room.id),
+          id: nextId("natural-lighting", room.id, `ratio-${totalWindowAreaM2.toFixed(2)}`),
           severity: "warning",
           category: "lighting",
           roomId: room.id,
@@ -199,7 +218,7 @@ export function validateNaturalLighting(
 
     if (rule.minVentilated > 0 && totalWindowAreaM2 < rule.minVentilated) {
       violations.push({
-        id: nextId("natural-lighting", room.id),
+        id: nextId("natural-lighting", room.id, `vent-${totalWindowAreaM2.toFixed(2)}`),
         severity: "warning",
         category: "lighting",
         roomId: room.id,
@@ -239,13 +258,27 @@ export function validateBathroom(
       return pointInRoom(cx, cy, room);
     });
 
+    // Empty bathroom check
+    if (bathroomFixtures.length === 0) {
+      violations.push({
+        id: nextId("bathroom-empty", room.id, `${room.x}x${room.y}`),
+        severity: "warning",
+        category: "safety",
+        roomId: room.id,
+        feature: "bathroom-empty",
+        message: `Baño "${room.label}" no contiene elementos sanitarios`,
+        normativeRef: "Resolución 5/2022",
+      });
+      continue;
+    }
+
     // Pairwise center-to-center distance check
     for (let i = 0; i < bathroomFixtures.length; i++) {
       for (let j = i + 1; j < bathroomFixtures.length; j++) {
         const dist = centerDistance(bathroomFixtures[i], bathroomFixtures[j]);
         if (dist < 15) {
           violations.push({
-            id: nextId("bathroom-spacing", room.id),
+            id: nextId("bathroom-spacing", room.id, `${bathroomFixtures[i].id}-${bathroomFixtures[j].id}`),
             severity: "warning",
             category: "safety",
             roomId: room.id,
@@ -266,7 +299,7 @@ export function validateBathroom(
       const clearSpace = computeToiletClearSpace(inodoro, room);
       if (clearSpace < 60) {
         violations.push({
-          id: nextId("bathroom-toilet-clearance", room.id),
+          id: nextId("bathroom-toilet-clearance", room.id, inodoro.id),
           severity: "warning",
           category: "safety",
           roomId: room.id,
@@ -372,7 +405,7 @@ export function validateStairs(fixtures: Fixture[]): Violation[] {
 
     if (!calc.isCompliant) {
       violations.push({
-        id: nextId("stair-formula", stair.id),
+        id: nextId("stair-formula", stair.id, `${calc.formulaResult}`),
         severity: "warning",
         category: "safety",
         fixtureId: stair.id,
@@ -386,7 +419,7 @@ export function validateStairs(fixtures: Fixture[]): Violation[] {
 
     if (stairWidth < MIN_STAIR_WIDTH) {
       violations.push({
-        id: nextId("stair-width", stair.id),
+        id: nextId("stair-width", stair.id, `${stairWidth}`),
         severity: "warning",
         category: "safety",
         fixtureId: stair.id,
@@ -399,7 +432,7 @@ export function validateStairs(fixtures: Fixture[]): Violation[] {
 
     if (landingWidth < MIN_STAIR_REST) {
       violations.push({
-        id: nextId("stair-landing", stair.id),
+        id: nextId("stair-landing", stair.id, `${landingWidth}`),
         severity: "warning",
         category: "safety",
         fixtureId: stair.id,
@@ -441,7 +474,7 @@ export function validateGarage(
 
     if (!fitsNormal && !fitsRotated) {
       violations.push({
-        id: nextId("garage-dimensions", room.id),
+        id: nextId("garage-dimensions", room.id, `${room.width}x${room.height}`),
         severity: "warning",
         category: "dimensions",
         roomId: room.id,
@@ -570,7 +603,7 @@ export function validateSetbacks(
       }
 
       violations.push({
-        id: nextId("setbacks", room.id),
+        id: nextId("setbacks", room.id, sides.join(",")),
         severity: "warning",
         category: "dimensions",
         roomId: room.id,
@@ -580,6 +613,59 @@ export function validateSetbacks(
            normativeRef: "Resolución 5/2022",
       });
     }
+  }
+
+  return violations;
+}
+
+// ── FOS / FOT ───────────────────────────────────────────────────────
+
+import { calculateFosFot } from "@/lib/normative/gualeguay/fos-fot";
+
+/**
+ * Gualeguay (Entre Ríos) — FOS/FOT limits.
+ *
+ * FOS = ground-floor built area / terrain area
+ * FOT = total built area (all floors) / terrain area
+ *
+ * Uses national baseline defaults; TODO: replace with Decreto 200/16
+ * values when available.
+ */
+export function validateFosFot(
+  floors: Floor[],
+  terrain: Terrain,
+): Violation[] {
+  const result = calculateFosFot(floors, terrain, terrain.zoneId);
+  const violations: Violation[] = [];
+
+  if (result.fosExceeded) {
+    violations.push({
+      id: nextId("fos-limit", "global", `${result.fos.toFixed(3)}`),
+      severity: "error",
+      category: "dimensions",
+      feature: "fos-limit",
+      message:
+        `FOS: ${(result.fos * 100).toFixed(1)}% ` +
+        `(máximo ${result.zone.id}: ${(result.zone.maxFos * 100).toFixed(0)}%). ` +
+        `Superficie ocupada: ${result.groundFloorAreaM2.toFixed(1)} m² / ` +
+        `${result.terrainAreaM2.toFixed(1)} m²`,
+      normativeRef: `Gualeguay ${result.zone.id}`,
+    });
+  }
+
+  if (result.fotExceeded) {
+    violations.push({
+      id: nextId("fot-limit", "global", `${result.fot.toFixed(3)}`),
+      severity: "error",
+      category: "dimensions",
+      feature: "fot-limit",
+      message:
+        `FOT: ${(result.fot * 100).toFixed(1)}% ` +
+        `(máximo ${result.zone.id}: ${(result.zone.maxFot * 100).toFixed(0)}%). ` +
+        `Superficie total: ${result.totalBuiltAreaM2.toFixed(1)} m² / ` +
+        `${result.terrainAreaM2.toFixed(1)} m²`,
+      normativeRef: `Gualeguay ${result.zone.id}`,
+    });
   }
 
   return violations;
@@ -621,7 +707,7 @@ export function validateStructuralContinuity(
 
       if (!aligned) {
         violations.push({
-          id: nextId("structural-continuity", col.id),
+          id: nextId("structural-continuity", col.id, `${col.x}-${col.y}`),
           severity: "error",
           category: "structural",
           feature: "structural-continuity",
@@ -629,6 +715,47 @@ export function validateStructuralContinuity(
             `Columna en "${upperFloor.name}" (${col.x}, ${col.y}) sin ` +
             `alineación en "${lowerFloor.name}" (tolerancia: ${COLUMN_ALIGNMENT_TOLERANCE} cm)`,
           normativeRef: "CIRSOC 201",
+        });
+      }
+    }
+  }
+
+  return violations;
+}
+
+// ── Room Overlap ─────────────────────────────────────────────────────
+
+/**
+ * Physical constraint — rooms cannot overlap each other.
+ *
+ * Two axis-aligned rectangles overlap if and only if they intersect
+ * in both X and Y projections. A shared edge (touching) is NOT an
+ * overlap — it means the rooms are adjacent.
+ */
+export function validateRoomOverlap(rooms: Room[]): Violation[] {
+  const violations: Violation[] = [];
+
+  for (let i = 0; i < rooms.length; i++) {
+    for (let j = i + 1; j < rooms.length; j++) {
+      const a = rooms[i];
+      const b = rooms[j];
+
+      // Strict overlap: both projections must overlap (shared edge = 0 gap = no overlap)
+      const overlapX = Math.min(a.x + a.width, b.x + b.width) - Math.max(a.x, b.x);
+      const overlapY = Math.min(a.y + a.height, b.y + b.height) - Math.max(a.y, b.y);
+
+      if (overlapX > 0 && overlapY > 0) {
+        const overlapAreaM2 = (overlapX * overlapY) / 10_000;
+        violations.push({
+          id: nextId("room-overlap", a.id, b.id),
+          severity: "error",
+          category: "dimensions",
+          roomId: a.id,
+          feature: "room-overlap",
+          message:
+            `"${a.label}" se superpone con "${b.label}" ` +
+            `(${overlapAreaM2.toFixed(2)} m² de intersección)`,
+          normativeRef: "Restricción física",
         });
       }
     }
@@ -676,7 +803,7 @@ export function validateFurnitureCirculation(
         );
         if (dist < MIN_CLEAR_PASSAGE) {
           violations.push({
-            id: nextId("furniture-circulation", room.id),
+            id: nextId("furniture-circulation", room.id, `${a.id}-${b.id}`),
             severity: "warning",
             category: "circulation",
             roomId: room.id,
@@ -708,7 +835,7 @@ export function validateFurnitureCirculation(
         const minWallDist = Math.min(distToLeft, distToRight, distToTop, distToBottom);
         if (minWallDist <= 0) {
           violations.push({
-            id: nextId("furniture-wall-circulation", room.id),
+            id: nextId("furniture-wall-circulation", room.id, fixture.id),
             severity: "warning",
             category: "circulation",
             roomId: room.id,
@@ -724,6 +851,71 @@ export function validateFurnitureCirculation(
   }
 
   return violations;
+}
+
+// ── Terrain Minimum Area ──────────────────────────────────────────
+
+/**
+ * Gualeguay — Terrain minimum area per zone (Decreto 203/16 placeholder).
+ *
+ * Checks that the terrain meets the minimum area for its declared zone.
+ */
+export function validateTerrainMinArea(terrain: Terrain): Violation[] {
+  const zoneId = terrain.zoneId ?? "R1";
+  const minArea = MIN_TERRAIN_AREA[zoneId];
+  if (minArea === undefined) return [];
+
+  const terrainAreaM2 = (terrain.width * terrain.height) / 10_000;
+  if (terrainAreaM2 >= minArea) return [];
+
+  return [
+    {
+      id: nextId("terrain-min-area", "global", `${terrainAreaM2.toFixed(1)}`),
+      severity: "error",
+      category: "dimensions",
+      feature: "terrain-min-area",
+      message:
+        `Superficie del terreno: ${terrainAreaM2.toFixed(1)} m² ` +
+        `(mínimo para zona ${zoneId}: ${minArea} m²)`,
+      normativeRef: `Gualeguay ${zoneId} — Decreto 203/16 (placeholder)`,
+    },
+  ];
+}
+
+// ── Terrain Minimum Frontage ──────────────────────────────────────
+
+/**
+ * Gualeguay — Terrain minimum frontage per zone (Decreto 203/16 placeholder).
+ *
+ * Checks that the terrain's street-facing dimension meets the minimum
+ * frontage for its declared zone.
+ */
+export function validateMinFrontage(terrain: Terrain): Violation[] {
+  const zoneId = terrain.zoneId ?? "R1";
+  const minFrontage = MIN_TERRAIN_FRONTAGE[zoneId];
+  if (minFrontage === undefined) return [];
+
+  // The frontage dimension depends on the terrain's front orientation.
+  // front="top" or "bottom" → frontage = width; "left" or "right" → frontage = height.
+  const frontage =
+    terrain.front === "left" || terrain.front === "right"
+      ? terrain.height
+      : terrain.width;
+
+  if (frontage >= minFrontage) return [];
+
+  return [
+    {
+      id: nextId("terrain-min-frontage", "global", `${frontage}`),
+      severity: "error",
+      category: "dimensions",
+      feature: "terrain-min-frontage",
+      message:
+        `Frente del terreno: ${(frontage / 100).toFixed(2)} m ` +
+        `(mínimo para zona ${zoneId}: ${(minFrontage / 100).toFixed(2)} m)`,
+      normativeRef: `Gualeguay ${zoneId} — Decreto 203/16 (placeholder)`,
+    },
+  ];
 }
 
 // ── Master Validator ─────────────────────────────────────────────────
@@ -745,12 +937,16 @@ export function validateAll(state: ValidationState): Violation[] {
 
   return [
     ...validateMinDimensions(state.rooms),
+    ...validateRoomOverlap(state.rooms),
     ...validateNaturalLighting(state.rooms, state.fixtures),
     ...validateBathroom(state.rooms, state.fixtures),
     ...validateStairs(state.fixtures),
     ...validateGarage(state.rooms, state.fixtures),
     ...validateSetbacks(state.rooms, state.terrain),
+    ...validateFosFot(state.floors, state.terrain),
     ...validateStructuralContinuity(state.columns, state.floors),
     ...validateFurnitureCirculation(state.rooms, state.fixtures),
+    ...validateTerrainMinArea(state.terrain),
+    ...validateMinFrontage(state.terrain),
   ];
 }

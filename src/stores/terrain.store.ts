@@ -19,6 +19,7 @@ interface TerrainStore {
   setTerrainImage: (image: string | undefined) => void;
   setTerrainFront: (front: Terrain["front"]) => void;
   setTerrainAngle: (angle: number) => void;
+  setTerrainZone: (zoneId: string) => void;
 }
 
 export const useTerrainStore = create<TerrainStore>((set, get) => {
@@ -61,6 +62,10 @@ export const useTerrainStore = create<TerrainStore>((set, get) => {
     setTerrainAngle: (angle) => {
       recordHistory();
       set((state) => ({ terrain: { ...state.terrain, northAngle: angle } }));
+    },
+    setTerrainZone: (zoneId) => {
+      recordHistory();
+      set((state) => ({ terrain: { ...state.terrain, zoneId } }));
     },
   };
 });

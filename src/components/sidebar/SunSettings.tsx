@@ -10,7 +10,7 @@
 import { useState } from "react";
 import { ChevronDown, ChevronRight, Sun } from "lucide-react";
 import { useSunStore } from "@/stores/sun.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";

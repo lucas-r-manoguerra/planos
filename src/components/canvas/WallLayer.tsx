@@ -22,7 +22,7 @@ import { useWallsStore } from "@/stores/walls.store";
 import { useSelectionStore } from "@/stores/selection.store";
 import { useCanvasStore } from "@/stores/canvas.store";
 import { useHistoryStore } from "@/stores/history.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { Wall } from "@/types/plan";
 import { snapWallPoint } from "@/lib/wall-snap";
 import { resolveWallEnd, effectiveMagnetism, isSnapped } from "@/lib/wall-angle-snap";

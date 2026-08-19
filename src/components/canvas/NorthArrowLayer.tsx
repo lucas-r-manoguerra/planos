@@ -3,7 +3,7 @@
 import { useRef, useState, useCallback } from "react";
 import { Group, Line, Text, Circle } from "react-konva";
 import { useSunStore } from "@/stores/sun.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import Konva from "konva";
 
 const ROSE_RADIUS = 45;

@@ -4,7 +4,7 @@ import { memo } from "react";
 import { Line, Text } from "react-konva";
 import { useSunStore } from "@/stores/sun.store";
 import { useFloorsStore } from "@/stores/floors.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { computeShadowVector, computeShadowPolygon } from "@/lib/shadow";
 import { useCanvasColors } from "./canvas-colors";
 

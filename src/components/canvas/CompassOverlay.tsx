@@ -2,7 +2,7 @@
 
 import { useCallback, useRef } from "react";
 import { useSunStore } from "@/stores/sun.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { useHistoryStore } from "@/stores/history.store";
 import { COMPASS_SIZE, COMPASS_ROSE_RADIUS } from "@/lib/compass";
 import { useCanvasColors } from "./canvas-colors";

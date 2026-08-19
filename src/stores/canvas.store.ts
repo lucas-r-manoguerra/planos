@@ -11,7 +11,7 @@ import { CanvasState, ViewMode } from "@/types/plan";
 import { DEFAULT_GRID_SIZE, ZOOM_MIN, ZOOM_MAX } from "@/lib/constants";
 import { clamp } from "@/lib/utils";
 import { fitToView } from "@/lib/canvas-fit";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 
 // Estado inicial del canvas
 const initialState: CanvasState = {

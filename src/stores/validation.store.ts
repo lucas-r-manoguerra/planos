@@ -40,7 +40,7 @@ export const useValidationStore = create<ValidationStore>((set, get) => ({
     areas: true,
     cotas: true,
     setbacks: true,
-    validationPanel: false,
+    validationPanel: true,
     sunHours: false,
     circulation: false,
   },

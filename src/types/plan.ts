@@ -76,6 +76,8 @@ export interface Terrain {
   front: "top" | "bottom" | "left" | "right"; // Lado del frente (calle)
   northAngle: number; // grados desde Norte (0° = Norte arriba, sentido horario)
   setbacks?: { front: number; left: number; right: number; rear: number };
+  /** Zona normativa Gualeguay (R1, R2, C1, etc.) — defaults to R1 */
+  zoneId?: string;
 }
 
 // Interfaz para una planta del edificio

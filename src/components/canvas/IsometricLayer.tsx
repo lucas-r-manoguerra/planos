@@ -22,7 +22,7 @@ import { useShallow } from "zustand/react/shallow";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useWallsStore } from "@/stores/walls.store";
 import { useFixtureStore } from "@/stores/fixtures.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { useSunStore } from "@/stores/sun.store";
 import { useStructuralStore } from "@/stores/structural.store";
 import {

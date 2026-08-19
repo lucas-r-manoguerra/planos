@@ -11,7 +11,7 @@ import { create } from "zustand";
 import { Beam, Column, StructuralElement } from "@/types/plan";
 import { useHistoryStore } from "@/stores/history.store";
 import { useFloorsStore } from "@/stores/floors.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { useFixtureStore } from "@/stores/fixtures.store";
 import { useWallsStore } from "@/stores/walls.store";
 
@@ -34,6 +34,7 @@ interface StructuralStore {
   removeColumn: (id: string) => void;
 
   addBeam: (beam: Omit<Beam, "id" | "floorId">) => void;
+  moveBeam: (id: string, x1: number, y1: number, x2: number, y2: number) => void;
   updateBeam: (id: string, updates: Partial<Pick<Beam, "width">>) => void;
   removeBeam: (id: string) => void;
 
@@ -119,6 +120,18 @@ export const useStructuralStore = create<StructuralStore>((set, get) => {
       const floorId = useFloorsStore.getState().activeFloorId;
       const beam: Beam = { ...beamData, id, floorId };
       set((state) => ({ beams: [...state.beams, beam] }));
+    },
+
+    moveBeam: (id, x1, y1, x2, y2) => {
+      const beam = get().beams.find((b) => b.id === id);
+      if (!beam) return;
+      if (beam.x1 === x1 && beam.y1 === y1 && beam.x2 === x2 && beam.y2 === y2) return;
+      recordHistory();
+      set((state) => ({
+        beams: state.beams.map((b) =>
+          b.id === id ? { ...b, x1, y1, x2, y2 } : b
+        ),
+      }));
     },
 
     updateBeam: (id, updates) => {

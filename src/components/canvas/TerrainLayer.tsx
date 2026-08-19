@@ -3,7 +3,7 @@
 import { memo } from "react";
 import { Rect, Text, Image as KonvaImage, Line } from "react-konva";
 import { useEffect, useState } from "react";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { cmToDisplay } from "@/lib/utils";
 import { useCanvasColors } from "./canvas-colors";
 

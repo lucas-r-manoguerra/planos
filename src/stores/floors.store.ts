@@ -10,7 +10,7 @@ import { Floor, Room } from "@/types/plan";
 import { generateId, snapToGrid, clampPosition, applyWallMergeSnap } from "@/lib/utils";
 import { SNAP_THRESHOLD } from "@/lib/constants";
 import { useHistoryStore } from "@/stores/history.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { useFixtureStore } from "@/stores/fixtures.store";
 import { useWallsStore } from "@/stores/walls.store";
 
@@ -262,7 +262,10 @@ export const useFloorsStore = create<FloorStore>((set, get) => {
       const snapEnabled = room.snapEnabled !== false;
       const clamped = snapEnabled
         ? clampPosition(x, y, room, terrain, 25, otherRooms)
-        : { x: Math.max(0, Math.min(x, terrain.width - room.width)), y: Math.max(0, Math.min(y, terrain.height - room.height)) };
+        : {
+            x: Math.max(0, Math.min(x, Math.max(0, terrain.width - room.width))),
+            y: Math.max(0, Math.min(y, Math.max(0, terrain.height - room.height))),
+          };
 
       // Semi-magnetism for wall merging (5cm threshold)
       // This runs even when snapEnabled is false — it's specifically for wall alignment

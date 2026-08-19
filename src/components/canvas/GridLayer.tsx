@@ -15,7 +15,7 @@
 import { memo } from "react";
 import { Line } from "react-konva";
 import { useCanvasStore } from "@/stores/canvas.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { useCanvasColors } from "./canvas-colors";
 import { getVisibleGridRange, getWorldViewport } from "@/lib/grid";
 

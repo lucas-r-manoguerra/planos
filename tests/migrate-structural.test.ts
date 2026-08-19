@@ -42,7 +42,7 @@ describe("migrateProjectData (full chain)", () => {
     };
 
     const result = migrateProjectData(data);
-    expect(result.version).toBe(5);
+    expect(result.version).toBe(6);
     expect(result.structural).toEqual([]);
     expect(result.walls).toBeDefined();
   });
@@ -58,7 +58,7 @@ describe("migrateProjectData (full chain)", () => {
     const first = migrateProjectData(data);
     const second = migrateProjectData(first);
     expect(second.structural).toEqual([]);
-    expect(second.version).toBe(5);
+    expect(second.version).toBe(6);
   });
 
   it("preserves existing structural across full migration", () => {

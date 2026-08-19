@@ -1,14 +1,16 @@
 /**
  * Información de superficie total
  *
- * Muestra los m² construidos vs los m² disponibles del terreno
+ * Muestra los m² construidos vs los m² disponibles del terreno,
+ * incluyendo FOS/FOT según normativa Gualeguay.
  */
 
 "use client";
 
 import { useFloorsStore } from "@/stores/floors.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { SquareStack } from "lucide-react";
+import { calculateFosFot } from "@/lib/normative/gualeguay/fos-fot";
 
 export function SurfaceInfo() {
   const { floors } = useFloorsStore();
@@ -26,6 +28,8 @@ export function SurfaceInfo() {
   }
 
   const percentage = terrainArea > 0 ? Math.round((totalBuiltArea / terrainArea) * 100) : 0;
+
+  const fosFot = calculateFosFot(floors, terrain, terrain.zoneId);
 
   return (
     <div className="space-y-2">
@@ -50,6 +54,34 @@ export function SurfaceInfo() {
           <span className="font-medium text-gray-800">{totalRooms}</span>
         </div>
 
+        {/* FOS / FOT */}
+        {terrainArea > 0 && (
+          <>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">FOS</span>
+              <span className={`font-medium ${fosFot.fosExceeded ? "text-red-600" : "text-gray-800"}`}>
+                {(fosFot.fos * 100).toFixed(1)}%
+                <span className="text-gray-400 text-xs ml-1">
+                  (máx {(fosFot.zone.maxFos * 100).toFixed(0)}%)
+                </span>
+              </span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">FOT</span>
+              <span className={`font-medium ${fosFot.fotExceeded ? "text-red-600" : "text-gray-800"}`}>
+                {(fosFot.fot * 100).toFixed(1)}%
+                <span className="text-gray-400 text-xs ml-1">
+                  (máx {(fosFot.zone.maxFot * 100).toFixed(0)}%)
+                </span>
+              </span>
+            </div>
+            <div className="flex justify-between text-xs text-gray-400">
+              <span>Zona</span>
+              <span>{fosFot.zone.id} — {fosFot.zone.label}</span>
+            </div>
+          </>
+        )}
+
         <div className="pt-1">
           <div className="flex justify-between text-xs text-gray-500 mb-1">
             <span>Ocupación</span>
@@ -70,6 +102,13 @@ export function SurfaceInfo() {
               aria-label={`Ocupación del terreno: ${percentage}%`}
             />
           </div>
+        </div>
+
+        {/* Decreto 203/16 — placeholder warning */}
+        <div className="mt-2 rounded bg-amber-50 border border-amber-200 px-2 py-1.5 text-xs text-amber-700">
+          ⚠ Valores FOS/FOT y retiros corresponden al{' '}
+          <span className="font-medium">Decreto 203/16 (Gualeguay)</span>{' '}
+          usando baseline nacional. Pendiente de ajuste con normativa local vigente.
         </div>
       </div>
     </div>

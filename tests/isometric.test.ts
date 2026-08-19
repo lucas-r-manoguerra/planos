@@ -16,7 +16,7 @@ import {
   unprojectIsometric,
 } from "@/lib/isometric";
 import { useCanvasStore } from "@/stores/canvas.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { fitToView } from "@/lib/canvas-fit";
 import { ZOOM_MIN, ZOOM_MAX } from "@/lib/constants";
 import { Wall } from "@/types/plan";

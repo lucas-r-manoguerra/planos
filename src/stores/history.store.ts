@@ -12,7 +12,7 @@
 import { create } from "zustand";
 import { Floor, Fixture, StructuralElement, Terrain, Wall } from "@/types/plan";
 import { useFloorsStore } from "@/stores/floors.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { useFixtureStore } from "@/stores/fixtures.store";
 import { useWallsStore } from "@/stores/walls.store";
 import { useStructuralStore } from "@/stores/structural.store";

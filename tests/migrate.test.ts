@@ -56,15 +56,15 @@ describe("migrateProjectData", () => {
       floors: [floorA, floorB],
       fixtures: [opening({ id: "a", wallId: undefined, wallSide: undefined, wallOffset: undefined })],
     });
-    expect(result.version).toBe(5);
+    expect(result.version).toBe(6);
     expect(result.fixtures?.[0]?.floorId).toBe("f1");
     expect(result.walls).toEqual([]);
     expect(result.structural).toEqual([]);
   });
 
-  it("v5 idempotente: devuelve el mismo objeto", () => {
+  it("v6 idempotente: devuelve el mismo objeto", () => {
     const data = {
-      version: 5,
+      version: 6,
       floors: [floorOf("f1", [])],
       walls: [],
       structural: [],
@@ -78,7 +78,7 @@ describe("migrateProjectData", () => {
       version: 3,
       floors: [floorOf("f1", [room])],
     });
-    expect(result.version).toBe(5);
+    expect(result.version).toBe(6);
     expect(result.structural).toEqual([]);
     expect(result.walls).toHaveLength(4);
     expect(result.walls?.every((w) => w.floorId === "f1")).toBe(true);

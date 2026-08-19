@@ -2,7 +2,7 @@
 
 import { useCallback, useRef } from "react";
 import { useSunStore } from "@/stores/sun.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { useHistoryStore } from "@/stores/history.store";
 import { COMPASS_SIZE, COMPASS_ROSE_RADIUS } from "@/lib/compass";
 import { useCanvasColors } from "./canvas-colors";
@@ -12,8 +12,9 @@ const CENTER = SIZE / 2;
 const ROSE_RADIUS = COMPASS_ROSE_RADIUS;
 
 export function CompassOverlay() {
-  const { enabled } = useSunStore();
-  const { terrain, setTerrainAngle } = useTerrainStore();
+  const enabled = useSunStore((s) => s.enabled);
+  const terrain = useTerrainStore((s) => s.terrain);
+  const setTerrainAngle = useTerrainStore((s) => s.setTerrainAngle);
   const { compassBg, compassStroke, textMuted } = useCanvasColors();
   const isDragging = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);

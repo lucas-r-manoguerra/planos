@@ -8,10 +8,10 @@
 
 "use client";
 
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { Line, Circle, Text } from "react-konva";
 import { useSunStore } from "@/stores/sun.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { getSunPosition } from "@/lib/solar";
 import { useCanvasColors } from "./canvas-colors";
 
@@ -28,45 +28,35 @@ export const SunArcLayer = memo(function SunArcLayer() {
   const terrain = useTerrainStore((s) => s.terrain);
   const { textMuted } = useCanvasColors();
 
+  // All derived values and hooks BEFORE early return
+  const cx = terrain.width / 2;
+  const cy = terrain.height / 2;
+  const maxRadius = Math.min(terrain.width, terrain.height) * 0.4;
+  const canvasNorthAngle = (terrain.northAngle ?? 0) - 90;
+
+  // Memoize arc computation — only recompute when location/terrain/date changes
+  const arcPoints = useMemo(() => {
+    if (!enabled) return [];
+    const pts: number[] = [];
+    for (let i = 0; i <= ARC_SAMPLES; i++) {
+      const sampleTime = (i / ARC_SAMPLES) * 24;
+      const pos = getSunPosition(
+        location.latitude,
+        location.longitude,
+        date,
+        sampleTime
+      );
+      if (pos.elevation <= 0) continue;
+      const canvasAngle = ((canvasNorthAngle + pos.azimuth) * Math.PI) / 180;
+      const r = maxRadius * (pos.elevation / 90);
+      pts.push(cx + r * Math.cos(canvasAngle), cy + r * Math.sin(canvasAngle));
+    }
+    return pts;
+  }, [enabled, location.latitude, location.longitude, date, canvasNorthAngle, maxRadius, cx, cy]);
+
   if (!enabled) return null;
 
   const { azimuth, elevation } = getPos();
-
-  // Centro del terreno
-  const cx = terrain.width / 2;
-  const cy = terrain.height / 2;
-
-  // Radio máximo del arco (que quepa dentro del terreno)
-  const maxRadius = Math.min(terrain.width, terrain.height) * 0.4;
-
-  // northAngle: 0° = Norte arriba (canvas -y), sentido horario
-  // Canvas angle = northAngle - 90 (para que 0° geográfico = -90° canvas = arriba)
-  const canvasNorthAngle = (terrain.northAngle ?? 0) - 90;
-
-  // Dibujar arco: muestrear posiciones solares a lo largo del día
-  const arcPoints: number[] = [];
-
-  for (let i = 0; i <= ARC_SAMPLES; i++) {
-    const sampleTime = (i / ARC_SAMPLES) * 24;
-    const pos = getSunPosition(
-      location.latitude,
-      location.longitude,
-      date,
-      sampleTime
-    );
-
-    if (pos.elevation <= 0) continue; // saltar debajo del horizonte
-
-    // Proyectar azimuth como ángulo desde el centro del terreno
-    const canvasAngle = ((canvasNorthAngle + pos.azimuth) * Math.PI) / 180;
-
-    // Radio proporcional a la elevación: más cerca = sol más bajo
-    const r = maxRadius * (pos.elevation / 90);
-    const px = cx + r * Math.cos(canvasAngle);
-    const py = cy + r * Math.sin(canvasAngle);
-
-    arcPoints.push(px, py);
-  }
 
   // Posición actual del sol
   const currentAngle = ((canvasNorthAngle + azimuth) * Math.PI) / 180;

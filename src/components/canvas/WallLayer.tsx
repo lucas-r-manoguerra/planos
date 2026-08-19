@@ -22,7 +22,7 @@ import { useWallsStore } from "@/stores/walls.store";
 import { useSelectionStore } from "@/stores/selection.store";
 import { useCanvasStore } from "@/stores/canvas.store";
 import { useHistoryStore } from "@/stores/history.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { Wall } from "@/types/plan";
 import { snapWallPoint } from "@/lib/wall-snap";
 import { resolveWallEnd, effectiveMagnetism, isSnapped } from "@/lib/wall-angle-snap";
@@ -59,6 +59,16 @@ export interface WallDrawPreview {
 }
 
 const SELECT_COLOR = "#3b82f6";
+
+const WALL_STYLE: Record<string, { stroke: string; strokeWidth: number; dash?: number[] }> = {
+  exterior: { stroke: "#1e3a5f", strokeWidth: 3 },
+  interior: { stroke: "#6b7280", strokeWidth: 1 },
+  medianera: { stroke: "#9333ea", strokeWidth: 2, dash: [8, 4] },
+};
+
+function getWallStyle(type?: string) {
+  return WALL_STYLE[type ?? "interior"] ?? WALL_STYLE.interior;
+}
 
 /** Pared resaltada en modo colocación puerta/ventana (línea central) */
 function WallPreviewLine({ preview }: { preview: WallPreview }) {
@@ -112,7 +122,7 @@ function WallDrawPreviewLine({ preview }: { preview: WallDrawPreview }) {
  * posicionamiento y para poder snapear el punto arrastrado.
  * Cada drag es UN paso de undo (beginGesture/endGesture).
  */
-function WallEntity({ wall }: { wall: Wall }) {
+const WallEntity = memo(function WallEntity({ wall }: { wall: Wall }) {
   const moveWall = useWallsStore((s) => s.moveWall);
   const resizeWall = useWallsStore((s) => s.resizeWall);
   const selectedId = useSelectionStore((s) => s.selectedId);
@@ -125,6 +135,7 @@ function WallEntity({ wall }: { wall: Wall }) {
   // Pared degenerada (longitud cero): no se dibuja
   if (wall.x1 === wall.x2 && wall.y1 === wall.y2) return null;
   const band = wallBandPoints(wall.x1, wall.y1, wall.x2, wall.y2, wall.thickness);
+  const wallStyle = getWallStyle(wall.type);
 
   /** Firma de listeners de arrastre: mueve o redimensiona la pared */
   const startDrag = (e: Konva.KonvaEventObject<MouseEvent>, mode: "move" | "start" | "end") => {
@@ -217,8 +228,9 @@ function WallEntity({ wall }: { wall: Wall }) {
         points={band}
         closed
         fill={wallColor}
-        stroke={isSelected ? SELECT_COLOR : undefined}
-        strokeWidth={isSelected ? 2 : 0}
+        stroke={isSelected ? SELECT_COLOR : wallStyle.stroke}
+        strokeWidth={isSelected ? 2 : wallStyle.strokeWidth}
+        dash={isSelected ? undefined : wallStyle.dash}
         onMouseDown={(e) => startDrag(e, "move")}
       />
       {isSelected && activeTool === "select" && (
@@ -241,7 +253,7 @@ function WallEntity({ wall }: { wall: Wall }) {
       )}
     </>
   );
-}
+});
 
 export const WallLayer = memo(function WallLayer({
   wallPreview,

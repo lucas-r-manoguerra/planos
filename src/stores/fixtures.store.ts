@@ -8,7 +8,7 @@ import { create } from "zustand";
 import { Fixture, FixtureSubtype } from "@/types/plan";
 import { generateId } from "@/lib/utils";
 import { useHistoryStore } from "@/stores/history.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useWallsStore } from "@/stores/walls.store";
 
@@ -76,6 +76,7 @@ export const useFixtureStore = create<FixtureStore>((set, get) => {
     },
 
     moveFixture: (id, x, y) => {
+      recordHistory();
       set((state) => ({
         fixtures: state.fixtures.map((f) =>
           f.id === id ? { ...f, x, y } : f

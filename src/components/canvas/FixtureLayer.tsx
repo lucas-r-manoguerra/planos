@@ -13,9 +13,8 @@
 
 "use client";
 
-import { memo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { Group, Rect, Text } from "react-konva";
-import { useShallow } from "zustand/react/shallow";
 import { useFixtureStore } from "@/stores/fixtures.store";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useSelectionStore } from "@/stores/selection.store";
@@ -100,9 +99,16 @@ const FixtureRect = memo(function FixtureRect({ fixture }: { fixture: Fixture })
 
 export const FixtureLayer = memo(function FixtureLayer() {
   const activeFloorId = useFloorsStore((s) => s.activeFloorId);
-  const visibleFixtures = useFixtureStore(
-    useShallow((s) => s.getFixturesForFloor(activeFloorId))
-  );
+  const fixtures = useFixtureStore((s) => s.fixtures);
+
+  // Filter fixtures for the active floor with a stable reference.
+  // useMemo avoids re-rendering every FixtureRect when unrelated store
+  // state changes (the old useShallow + getFixturesForFloor pattern
+  // created a new array on every store mutation).
+  const visibleFixtures = useMemo(() => {
+    const firstFloorId = useFloorsStore.getState().floors[0]?.id;
+    return fixtures.filter((f) => (f.floorId ?? firstFloorId) === activeFloorId);
+  }, [fixtures, activeFloorId]);
 
   return (
     <Group>

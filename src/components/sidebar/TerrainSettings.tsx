@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Terrain } from "@/types/plan";
 import { MapPin } from "lucide-react";
+import { GUALEGUAY_ZONES } from "@/lib/normative/gualeguay/fos-fot";
 
 export function TerrainSettings() {
-  const { terrain, updateTerrain, setTerrainColor, setTerrainImage, setTerrainFront } = useTerrainStore();
+  const { terrain, updateTerrain, setTerrainColor, setTerrainImage, setTerrainFront, setTerrainZone } = useTerrainStore();
 
   const [widthMeters, setWidthMeters] = useState(terrain.width / 100);
   const [heightMeters, setHeightMeters] = useState(terrain.height / 100);
@@ -127,6 +128,22 @@ export function TerrainSettings() {
           <option value="bottom">Abajo</option>
           <option value="left">Izquierda</option>
           <option value="right">Derecha</option>
+        </select>
+      </div>
+
+      <div className="space-y-2">
+        <Label>Zona Normativa (Gualeguay)</Label>
+        <select
+          value={terrain.zoneId ?? "R1"}
+          onChange={(e) => setTerrainZone(e.target.value)}
+          aria-label="Zona normativa"
+          className="flex h-9 w-full rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-900 shadow-sm"
+        >
+          {GUALEGUAY_ZONES.map((zone) => (
+            <option key={zone.id} value={zone.id}>
+              {zone.id} — {zone.label} (FOS {(zone.maxFos * 100).toFixed(0)}%, FOT {(zone.maxFot * 100).toFixed(0)}%)
+            </option>
+          ))}
         </select>
       </div>
     </div>

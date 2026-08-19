@@ -4,7 +4,7 @@ import { memo } from "react";
 import { Line, Text } from "react-konva";
 import { useSunStore } from "@/stores/sun.store";
 import { useFloorsStore } from "@/stores/floors.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { computeShadowVector, computeShadowPolygon } from "@/lib/shadow";
 import { useCanvasColors } from "./canvas-colors";
 
@@ -32,15 +32,15 @@ export const ShadowLayer = memo(function ShadowLayer() {
   const cumulativeHeight = (floorIndex + 1) * floorHeight;
 
   // Dirección de la sombra para debug (rotada según northAngle)
-  const dirVector = computeShadowVector(azimuth, elevation, cumulativeHeight);
+  const rawVector = computeShadowVector(azimuth, elevation, cumulativeHeight);
 
   // Rotar vector geográfico (Norte = -y, Este = +x) al canvas según northAngle
   const northAngle = terrain.northAngle ?? 0;
   const rad = (northAngle * Math.PI) / 180;
   // Rotación: canvas_x = geo_x * cos(θ) + geo_y * sin(θ)
   //           canvas_y = -geo_x * sin(θ) + geo_y * cos(θ)
-  const dirDx = dirVector.x * Math.cos(rad) + dirVector.y * Math.sin(rad);
-  const dirDy = -dirVector.x * Math.sin(rad) + dirVector.y * Math.cos(rad);
+  const dirDx = rawVector.x * Math.cos(rad) + rawVector.y * Math.sin(rad);
+  const dirDy = -rawVector.x * Math.sin(rad) + rawVector.y * Math.cos(rad);
 
   const dirAngle = (Math.atan2(dirDy, dirDx) * 180) / Math.PI;
   let dirLabel = "";
@@ -56,24 +56,17 @@ export const ShadowLayer = memo(function ShadowLayer() {
   return (
     <>
       {activeFloor.rooms.map((room) => {
-        const vector = computeShadowVector(
-          azimuth,
-          elevation,
-          cumulativeHeight
-        );
+        // Reuse pre-computed rotated vector (was duplicated as computeShadowVector per room)
+        const vx = dirDx;
+        const vy = dirDy;
 
-        // Rotar vector geográfico (Norte = -y, Este = +x) al canvas según northAngle
-        const canvasDx = vector.x * Math.cos(rad) + vector.y * Math.sin(rad);
-        const canvasDy = -vector.x * Math.sin(rad) + vector.y * Math.cos(rad);
-
-        vector.x = canvasDx;
-        vector.y = canvasDy;
-
-        const length = Math.sqrt(vector.x ** 2 + vector.y ** 2);
+        const length = Math.sqrt(vx ** 2 + vy ** 2);
+        let vectorX = vx;
+        let vectorY = vy;
         if (length > MAX_SHADOW_LENGTH) {
           const scale = MAX_SHADOW_LENGTH / length;
-          vector.x *= scale;
-          vector.y *= scale;
+          vectorX *= scale;
+          vectorY *= scale;
         }
 
         const polygon = computeShadowPolygon(
@@ -81,7 +74,7 @@ export const ShadowLayer = memo(function ShadowLayer() {
           room.y,
           room.width,
           room.height,
-          vector
+          { x: vectorX, y: vectorY }
         );
 
         const points = polygon.flatMap((p) => [p.x, p.y]);

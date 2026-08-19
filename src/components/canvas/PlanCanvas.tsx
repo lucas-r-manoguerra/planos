@@ -15,6 +15,7 @@ import { useCanvasStore } from "@/stores/canvas.store";
 import { useRulerStore } from "@/stores/ruler.store";
 import { GridLayer } from "./GridLayer";
 import { TerrainLayer } from "./TerrainLayer";
+import { SetbackLayer } from "./SetbackLayer";
 import { ShadowLayer } from "./ShadowLayer";
 import { RoomLayer } from "./RoomLayer";
 import { FixtureLayer } from "./FixtureLayer";
@@ -22,13 +23,14 @@ import { WallLayer, WallPreview, WallDrawPreview } from "./WallLayer";
 import { IsometricLayer } from "./IsometricLayer";
 import { MeasurementLayer } from "./MeasurementLayer";
 import { SunArcLayer } from "./SunArcLayer";
+import { ValidationOverlayLayer } from "./ValidationOverlayLayer";
 import { FloorOverlayLayer } from "./FloorOverlayLayer";
 import { CompassOverlay } from "./CompassOverlay";
 import { CoordinateDisplay } from "./CoordinateDisplay";
 import { useFixtureStore } from "@/stores/fixtures.store";
 import { useFloorsStore } from "@/stores/floors.store";
 import { useWallsStore } from "@/stores/walls.store";
-import { useTerrainStore } from "@/stores/rooms.store";
+import { useTerrainStore } from "@/stores/terrain.store";
 import { useStructuralStore } from "@/stores/structural.store";
 import { getCatalogItem, calculateStairs } from "@/lib/fixtures-catalog";
 import { findNearestWallEntity } from "@/lib/wall-snap";
@@ -52,7 +54,20 @@ export function PlanCanvas() {
   /** Listener de window mouseup del trazo activo (identidad para removal) */
   const windowMouseUpRef = useRef<((e: MouseEvent) => void) | null>(null);
 
-  const { zoom, panX, panY, smoothZoom, setPan, activeTool, setActiveTool, viewMode } = useCanvasStore();
+  // Throttle refs to avoid re-render storm on mousemove (~60Hz → ~30Hz)
+  const lastCursorUpdateRef = useRef(0);
+  const lastSnapUpdateRef = useRef(0);
+  const lastSnapPosRef = useRef({ x: 0, y: 0 });
+
+  // Fine-grained selectors — only re-render when the specific value changes
+  const zoom = useCanvasStore((s) => s.zoom);
+  const panX = useCanvasStore((s) => s.panX);
+  const panY = useCanvasStore((s) => s.panY);
+  const activeTool = useCanvasStore((s) => s.activeTool);
+  const viewMode = useCanvasStore((s) => s.viewMode);
+  const smoothZoom = useCanvasStore((s) => s.smoothZoom);
+  const setPan = useCanvasStore((s) => s.setPan);
+  const setActiveTool = useCanvasStore((s) => s.setActiveTool);
   const { active: rulerActive, pointA, setPointA, setPointerPos, addMeasurement, deactivate } = useRulerStore();
   const { placingFixture, addFixture, setPlacingFixture } = useFixtureStore();
 
@@ -75,6 +90,11 @@ export function PlanCanvas() {
   useEffect(() => {
     useCanvasStore.setState({ stageRef: stageRef.current });
     return () => useCanvasStore.setState({ stageRef: null });
+  }, []);
+
+  // Cleanup: cancel any in-flight zoom animation on unmount
+  useEffect(() => {
+    return () => { useCanvasStore.getState().cancelZoomAnimation(); };
   }, []);
 
   /** Punto del cursor en coordenadas de canvas (cm) */
@@ -214,11 +234,13 @@ export function PlanCanvas() {
       const p = pointerToCanvas(stage);
       if (!p) return;
 
-      // Inicio del trazo: magnetismo efectivo (flag XOR Shift en el mousedown).
-      const magnetize = effectiveMagnetism(useCanvasStore.getState().magnetismEnabled, e.evt.shiftKey);
-      let start = magnetize ? snapToCanvasPoint(p) : p;
+      // Inicio del trazo: SIEMPRE snap a puntos de referencia (esquinas de
+      // habitaciones, extremos de paredes, esquinas del terreno). El toggle
+      // de magnetismo solo controla el snap del EXTREMO durante el gesto.
+      let start = snapToCanvasPoint(p);
 
       if (tool === "beam") {
+        const magnetize = effectiveMagnetism(useCanvasStore.getState().magnetismEnabled, e.evt.shiftKey);
         const { activeFloorId } = useFloorsStore.getState();
         const columns = useStructuralStore.getState().getColumnsForFloor(activeFloorId);
         const walls = useWallsStore.getState().getWallsForFloor(activeFloorId);
@@ -273,55 +295,75 @@ export function PlanCanvas() {
       if (pos) {
         const x = Math.round((pos.x - panX) / zoom);
         const y = Math.round((pos.y - panY) / zoom);
-        setCursorPos({ x, y });
+        const now = Date.now();
+
+        // Throttle cursor state updates to ~30fps to avoid re-render storm
+        if (now - lastCursorUpdateRef.current > 32) {
+          lastCursorUpdateRef.current = now;
+          setCursorPos({ x, y });
+        }
         if (rulerActive) {
           setPointerPos(x, y);
         }
 
         // Actualizar preview de trazo de pared o viga en curso
+        // Throttle snaps to ~30fps with 5cm distance threshold
         if (drawStartRef.current) {
-          const start = drawStartRef.current;
-          const magnetize = effectiveMagnetism(useCanvasStore.getState().magnetismEnabled, e.evt.shiftKey);
+          const dx = x - lastSnapPosRef.current.x;
+          const dy = y - lastSnapPosRef.current.y;
+          const moved = dx * dx + dy * dy > 25; // > 5cm
+          if (moved && now - lastSnapUpdateRef.current > 32) {
+            lastSnapUpdateRef.current = now;
+            lastSnapPosRef.current = { x, y };
 
-          if (useCanvasStore.getState().activeTool === "beam") {
-            const { activeFloorId } = useFloorsStore.getState();
-            const columns = useStructuralStore.getState().getColumnsForFloor(activeFloorId);
-            const walls = useWallsStore.getState().getWallsForFloor(activeFloorId);
-            const end = snapBeamEndpoint({ x, y }, columns, walls, magnetize);
-            setBeamPreview({ x1: start.x, y1: start.y, x2: end.x, y2: end.y });
-          } else {
-            const end = resolveCanvasWallEnd({ x, y }, start, magnetize);
-            setDrawPreview({
-              x1: start.x,
-              y1: start.y,
-              x2: end.x,
-              y2: end.y,
-              snapped: isSnapped({ x, y }, end),
-            });
+            const start = drawStartRef.current;
+            const magnetize = effectiveMagnetism(useCanvasStore.getState().magnetismEnabled, e.evt.shiftKey);
+
+            if (useCanvasStore.getState().activeTool === "beam") {
+              const { activeFloorId } = useFloorsStore.getState();
+              const columns = useStructuralStore.getState().getColumnsForFloor(activeFloorId);
+              const walls = useWallsStore.getState().getWallsForFloor(activeFloorId);
+              const end = snapBeamEndpoint({ x, y }, columns, walls, magnetize);
+              setBeamPreview({ x1: start.x, y1: start.y, x2: end.x, y2: end.y });
+            } else {
+              const end = resolveCanvasWallEnd({ x, y }, start, magnetize);
+              setDrawPreview({
+                x1: start.x,
+                y1: start.y,
+                x2: end.x,
+                y2: end.y,
+                snapped: isSnapped({ x, y }, end),
+              });
+            }
           }
         }
 
         // Detectar pared (entidad Wall) al colocar puertas/ventanas (solo 2D)
+        // Throttle wall detection to match snap throttle
         if (placingFixture && viewMode === "2d") {
           const catalogItem = getCatalogItem(placingFixture);
           if (catalogItem && (catalogItem.category === "door" || catalogItem.category === "window")) {
-            const { activeFloorId } = useFloorsStore.getState();
-            const walls = useWallsStore.getState().getWallsForFloor(activeFloorId);
-            const hit = findNearestWallEntity({ x, y }, walls);
-            setWallPreview(
-              hit
-                ? {
-                    wallId: hit.wall.id,
-                    x1: hit.wall.x1,
-                    y1: hit.wall.y1,
-                    x2: hit.wall.x2,
-                    y2: hit.wall.y2,
-                    x: hit.x,
-                    y: hit.y,
-                    offset: hit.offset,
-                  }
-                : null,
-            );
+            const dx2 = x - lastSnapPosRef.current.x;
+            const dy2 = y - lastSnapPosRef.current.y;
+            if (dx2 * dx2 + dy2 * dy2 > 25) {
+              const { activeFloorId } = useFloorsStore.getState();
+              const walls = useWallsStore.getState().getWallsForFloor(activeFloorId);
+              const hit = findNearestWallEntity({ x, y }, walls);
+              setWallPreview(
+                hit
+                  ? {
+                      wallId: hit.wall.id,
+                      x1: hit.wall.x1,
+                      y1: hit.wall.y1,
+                      x2: hit.wall.x2,
+                      y2: hit.wall.y2,
+                      x: hit.x,
+                      y: hit.y,
+                      offset: hit.offset,
+                    }
+                  : null,
+              );
+            }
           } else {
             setWallPreview(null);
           }
@@ -530,6 +572,9 @@ export function PlanCanvas() {
               <TerrainLayer />
             </Layer>
             <Layer>
+              <SetbackLayer />
+            </Layer>
+            <Layer>
               <ShadowLayer />
             </Layer>
             <Layer>
@@ -567,6 +612,9 @@ export function PlanCanvas() {
             </Layer>
             <Layer>
               <SunArcLayer />
+            </Layer>
+            <Layer>
+              <ValidationOverlayLayer />
             </Layer>
           </>
         )}
